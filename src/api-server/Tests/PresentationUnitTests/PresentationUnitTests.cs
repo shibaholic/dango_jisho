@@ -5,7 +5,7 @@ using Presentation;
 using Presentation.Controllers;
 using Xunit.Abstractions;
 
-namespace Tests;
+namespace Tests.PresentationUnitTests;
 
 public class PresentationUnitTests
 {
@@ -17,7 +17,7 @@ public class PresentationUnitTests
     }
     
     [Fact]
-    public void WeatherForecast_Get_ReturnsOkResult()
+    public void WeatherForecast_GetRequest_ReturnsOkResult()
     {
         // Arrange
         var mockLogger = new Mock<ILogger<WeatherForecastController>>();
