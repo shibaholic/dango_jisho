@@ -2,6 +2,7 @@ using Application.Response;
 using Application.UseCaseQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Utilities;
 
 namespace Presentation.Controllers;
 
@@ -17,15 +18,11 @@ public class EntryController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] EntryQueryRequest request)
+    public async Task<IActionResult> GetById([FromQuery] EntryQueryRequest request)
     {
         var response = await _mediatr.Send(request);
-
-        if (!response.Successful)
-        {
-            return Problem(response.Message);
-        }
-
-        return Ok(response);
+        
+        // ToDo: Also need to implement Automapper and Dtos
+        return ResultMapper.ToActionResult(response);
     }
-}
+}   

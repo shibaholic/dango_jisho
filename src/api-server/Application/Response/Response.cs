@@ -23,9 +23,11 @@ public class ResponseBase
 
 public enum Status
 {
-    Success,
-    NotFound,
-    ServerError
+    Ok,      // 200
+    NoContent,    // 204
+    BadRequest,   // 400
+    NotFound,     // 404
+    ServerError   // 500
 }
 
 public class Response<T> : ResponseBase
@@ -43,17 +45,14 @@ public class Response<T> : ResponseBase
         
     }
 
-    public static Response<T> Success(string message, T? data = default)
-    {
-        return new Response<T>(message, Status.Success, true, data);
-    }
-
-    public static Response<T> NotFound(string message)
-    {
-        return new Response<T>(message, Status.NotFound, true);
-    }
-    public static Response<T> Error(string message, Status status)
-    {
-        return new Response<T>(message, status, false);
-    }
+    public static Response<T> Ok(string message, T? data = default) => 
+        new Response<T>(message, Status.Ok, true, data);
+    public static Response<T> NoContent(string message) => 
+        new Response<T>(message, Status.NoContent, true);
+    public static Response<T> BadRequest(string message) =>
+        new Response<T>(message, Status.BadRequest, false);
+    public static Response<T> NotFound(string message) =>
+        new Response<T>(message, Status.NotFound, false);
+    public static Response<T> ServerError(string message) =>
+         new Response<T>(message, Status.ServerError, false);
 }

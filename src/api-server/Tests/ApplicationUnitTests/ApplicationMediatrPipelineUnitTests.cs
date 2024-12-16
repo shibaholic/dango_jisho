@@ -39,7 +39,6 @@ public class ApplicationMediatrPipelineUnitTests
                 CancellationToken.None);
         
         // Assert
-        Assert.NotNull(result);
         Assert.Equal(Status.ServerError, result.Status);
         Assert.False(result.Successful);
     }
@@ -48,12 +47,14 @@ public class ApplicationMediatrPipelineUnitTests
     public async Task ExceptionPipeline_EntryQuery_ReturnsResponse()
     {
         // Arrange
+        var response = Response<Entry>.Ok("Test result", new Entry { ent_seq = "1234" });
+        
         var exceptionPipeline = new ExceptionHandlingPipelineBehavior<EntryQueryRequest, Response<Entry>>();
         
         var mockHandler = new Mock<IRequestHandler<EntryQueryRequest, Response<Entry>>>();
         mockHandler.Setup(h => h.Handle(It.IsAny<EntryQueryRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Response<Entry>("Test result", Status.Success, true));
+            .ReturnsAsync(response);
         
         var request = new EntryQueryRequest();
         
@@ -63,8 +64,6 @@ public class ApplicationMediatrPipelineUnitTests
             CancellationToken.None);
         
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(Status.Success, result.Status);
-        Assert.True(result.Successful);
+        Assert.Equal(response, result);
     }
 }

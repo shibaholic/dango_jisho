@@ -28,6 +28,6 @@ public class EntryQuery : IRequestHandler<EntryQueryRequest, Response<Entry>>
 
         if (result == null) return Response<Entry>.NotFound("Entry not found");
         
-        return Response<Entry>.Success("Entry found", result);
+        return Response<Entry>.Ok("Entry found", result);
     }
-}
+}   
