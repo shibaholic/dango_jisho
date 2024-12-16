@@ -4,9 +4,9 @@ namespace Application.Response;
 
 public class ResponseBase
 {
-    public bool Successful { get; set; }
-    public string Message { get; set; }
-    public Status Status { get; set; }
+    public bool Successful { get; }
+    public string Message { get; }
+    public Status Status { get; }
     
     [JsonConstructor] // for deserialization
     public ResponseBase(string message, Status status, bool successful)
@@ -32,7 +32,7 @@ public class Response<T> : ResponseBase
 {
     public T? Data { get; set; }
 
-    [JsonConstructor] // for deserialization
+    [JsonConstructor]
     private Response(string message, Status status, bool successful, T? data=default): base(message, status, successful)
     {
         Data = data;
@@ -47,7 +47,12 @@ public class Response<T> : ResponseBase
     {
         return new Response<T>(message, Status.Success, true, data);
     }
-    public static Response<T> Failure(string message, Status status)
+
+    public static Response<T> NotFound(string message)
+    {
+        return new Response<T>(message, Status.NotFound, true);
+    }
+    public static Response<T> Error(string message, Status status)
     {
         return new Response<T>(message, status, false);
     }

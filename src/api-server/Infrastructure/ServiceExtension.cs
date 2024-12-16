@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.RepositoryInterfaces;
 using Infrastructure.DbContext;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,6 @@ public static class ServiceExtensions
             }
         );
 
-        services.AddScoped<IBaseRepository<Entry>, BaseRepository<Entry>>();
+        services.AddScoped<IEntryRepository, EntryRepository>();
     }
 }

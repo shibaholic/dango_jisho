@@ -26,7 +26,7 @@ public class EntryQuery : IRequestHandler<EntryQueryRequest, Response<Entry>>
     {
         var result = await _entryRepo.GetBy_ent_seq(request.ent_seq);
 
-        if (result == null) return Response<Entry>.Failure("No entry found", Status.NotFound);
+        if (result == null) return Response<Entry>.NotFound("Entry not found");
         
         return Response<Entry>.Success("Entry found", result);
     }
