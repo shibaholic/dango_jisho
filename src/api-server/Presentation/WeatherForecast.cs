@@ -1,4 +1,4 @@
-namespace Program;
+namespace Presentation;
 
 public class WeatherForecast
 {
