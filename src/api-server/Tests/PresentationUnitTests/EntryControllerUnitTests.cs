@@ -1,3 +1,4 @@
+using Application.Automapper.EntityDtos;
 using Application.Response;
 using Application.UseCaseQueries;
 using Domain.Entities;
@@ -22,7 +23,7 @@ public class EntryControllerUnitTests {
     public async void GetById_ValidInput_ReturnsOkResultObject()
     {
         // Arrange
-        var response = Response<Entry>.Ok("Entry found", new Entry { ent_seq = "1234" });
+        var response = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
         
         var mockMediatr = new Mock<IMediator>();
         mockMediatr.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
@@ -44,7 +45,7 @@ public class EntryControllerUnitTests {
     public async void GetById_MediatrUnsuccessful_ReturnsBadRequest()
     {
         // Arrange
-        var response = Response<Entry>.ServerError("Test error");
+        var response = Response<EntryDto>.ServerError("Test error");
         
         var mockMediatr = new Mock<IMediator>();
         mockMediatr.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))

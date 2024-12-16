@@ -1,7 +1,11 @@
+using Application.Automapper.EntityDtos;
+using Application.Mappings;
 using Application.Response;
 using Application.UseCaseQueries;
+using AutoMapper;
 using Domain.Entities;
 using Domain.RepositoryInterfaces;
+using FluentAssertions;
 using Infrastructure.Repositories;
 using Moq;
 using Xunit.Abstractions;
@@ -12,45 +16,54 @@ public class ApplicationQueryUnitTests
 {
     private readonly ITestOutputHelper _output;
 
+    private readonly Mock<IEntryRepository> _mockRepo;
+    private readonly IMapper _mapper;
+    private readonly EntryQuery _handler;
+    
     public ApplicationQueryUnitTests(ITestOutputHelper output)
     {
         _output = output;
+        
+        // Arrange
+        _mockRepo = new Mock<IEntryRepository>();
+        
+        var mapperConfig = new MapperConfiguration(cfg =>
+            cfg.AddProfile<Mappings>()
+        );
+        _mapper = mapperConfig.CreateMapper();
+        
+        _handler = new EntryQuery(_mockRepo.Object, _mapper);
     }
 
     [Fact]
     public async void EntryQueryHandle_ValidInput_ReturnsEntry()
     {
         // Arrange
-        var mockRepo = new Mock<IEntryRepository>();
-        mockRepo.Setup(service => service.GetBy_ent_seq(It.IsAny<string>()))
+        _mockRepo.Setup(service => service.GetBy_ent_seq(It.IsAny<string>()))
             .ReturnsAsync( new Entry { ent_seq = "1234" } );
-        
-        var entryQueryUseCase = new EntryQuery(mockRepo.Object);
         
         var request = new EntryQueryRequest { ent_seq = "1234" }; 
         
         // Act
-        var result = await entryQueryUseCase.Handle(request, It.IsAny<CancellationToken>());
+        var result = await _handler.Handle(request, It.IsAny<CancellationToken>());
         
         // Assert
-        Assert.NotNull(result);
-        Assert.NotNull(result.Data);
-        Assert.NotEmpty(result.Data.ent_seq);
+        var expectedResult = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
+        result.Should().BeEquivalentTo(expectedResult);
     }
     
     [Fact]
     public async void EntryQueryHandle_DbThrows_ReturnsFailure()
     {
         // Arrange
-        var mockRepo = new Mock<IEntryRepository>();
-        mockRepo.Setup(service => service.GetBy_ent_seq(It.IsAny<string>()))
+        _mockRepo.Setup(service => 
+            service.GetBy_ent_seq(It.IsAny<string>()))
             .Throws(new Exception("Test exception"));
-        
-        var entryQueryUseCase = new EntryQuery(mockRepo.Object);
         
         var request = new EntryQueryRequest { ent_seq = "1234" }; 
         
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(async () => await entryQueryUseCase.Handle(request, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<Exception>(async () => 
+            await _handler.Handle(request, It.IsAny<CancellationToken>()));
     }
 }

@@ -1,3 +1,4 @@
+using Application.Automapper.EntityDtos;
 using Application.MediatrPipeline;
 using Application.Response;
 using Application.UseCaseQueries;
@@ -24,9 +25,9 @@ public class ApplicationMediatrPipelineUnitTests
     public async Task ExceptionPipeline_EntryQuery_ThrowsException()
     {
         // Arrange
-        var exceptionPipeline = new ExceptionHandlingPipelineBehavior<EntryQueryRequest, Response<Entry>>();
+        var exceptionPipeline = new ExceptionHandlingPipelineBehavior<EntryQueryRequest, Response<EntryDto>>();
         
-        var mockHandler = new Mock<IRequestHandler<EntryQueryRequest, Response<Entry>>>();
+        var mockHandler = new Mock<IRequestHandler<EntryQueryRequest, Response<EntryDto>>>();
         mockHandler.Setup(h => h.Handle(It.IsAny<EntryQueryRequest>(),
                 It.IsAny<CancellationToken>()))
             .Throws(new Exception("Test exception"));
@@ -47,11 +48,11 @@ public class ApplicationMediatrPipelineUnitTests
     public async Task ExceptionPipeline_EntryQuery_ReturnsResponse()
     {
         // Arrange
-        var response = Response<Entry>.Ok("Test result", new Entry { ent_seq = "1234" });
+        var response = Response<EntryDto>.Ok("Test result", new EntryDto { ent_seq = "1234" });
         
-        var exceptionPipeline = new ExceptionHandlingPipelineBehavior<EntryQueryRequest, Response<Entry>>();
+        var exceptionPipeline = new ExceptionHandlingPipelineBehavior<EntryQueryRequest, Response<EntryDto>>();
         
-        var mockHandler = new Mock<IRequestHandler<EntryQueryRequest, Response<Entry>>>();
+        var mockHandler = new Mock<IRequestHandler<EntryQueryRequest, Response<EntryDto>>>();
         mockHandler.Setup(h => h.Handle(It.IsAny<EntryQueryRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
