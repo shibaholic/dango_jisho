@@ -16,6 +16,8 @@ public class Sense
     public List<LSource> lsource { get; set; }
     public List<string> dial { get; set; }
     public List<string> gloss { get; set; }
+    public string ent_seq { get; set; } // Foreign key
+    public Entry Entry  { get; set; }   // Nav
 
     public Sense()
     {
@@ -35,6 +37,7 @@ public class Sense
 
 public class LSource
 {
+    public int Id { get; set; }
     public string langValue { get; set; }
     public string? lang { get; set; }
     public bool ls_part { get; set; }

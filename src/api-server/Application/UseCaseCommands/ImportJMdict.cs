@@ -188,7 +188,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                 }
                             }
                             
-                            entry.SensesNav.Add(sense);
+                            entry.SenseNavs.Add(sense);
                             break;
                         
                         default:

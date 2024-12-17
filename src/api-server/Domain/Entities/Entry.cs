@@ -5,17 +5,11 @@ namespace Domain.Entities;
 public class Entry : IBaseEntity
 {
     public string ent_seq { get; set; }
-    public List<int> KanjiElementIds { get; set; }
-    public List<KanjiElement> KanjiElementNavs { get; set; }
-    public List<int> ReadingElementIds { get; set; }
-    public List<ReadingElement> ReadingElementNavs { get; set; }
-    public List<Sense> SensesNav { get; set; }
-    public List<int> Senses { get; set; }
+    public List<KanjiElement> KanjiElementNavs { get; } = new List<KanjiElement>();
+    public List<ReadingElement> ReadingElementNavs { get; } = new List<ReadingElement>();
+    public List<Sense> SenseNavs { get; } = new List<Sense>();
     public Entry()
     {
-        KanjiElementNavs = new List<KanjiElement>();
-        ReadingElementNavs = new List<ReadingElement>();
-        SensesNav = new List<Sense>();
     }
 
     public Entry(string entSeq)
@@ -33,16 +27,6 @@ public class Entry : IBaseEntity
         {
             output.Append($"  Kanji keb: {kE.keb}\n");
             if (kE.ke_pri is not null) output.Append($"    ke_pri: {kE.ke_pri}\n");
-            // if (kE.ke_inf.Count != 0)
-            // {
-            //     output.Append("    ke_inf: ");
-            //     foreach (var ke_inf in kE.ke_inf)
-            //     {
-            //         output.Append($"{ke_inf}, ");
-            //     }
-            //     output.Remove(output.Length - 2, 2);
-            //     output.Append("\n");
-            // }
             output.Append(PrintList(kE.ke_inf, "ke_inf", "    "));
         }
 
@@ -55,7 +39,7 @@ public class Entry : IBaseEntity
             if (rE.re_pri is not null) output.Append($"    re_pri: {rE.re_pri}\n");
         }
 
-        foreach (var sense in SensesNav)
+        foreach (var sense in SenseNavs)
         {
             output.Append($"  Sense\n");
             output.Append(PrintList(sense.stagk, "stagk", "    "));

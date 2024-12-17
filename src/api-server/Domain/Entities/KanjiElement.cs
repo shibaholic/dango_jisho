@@ -7,6 +7,8 @@ public class KanjiElement
     public List<string> ke_inf { get; set; }
     public string? ke_pri { get; set; }
 
+    public string ent_seq { get; set; } // Foreign key to Entry
+    public Entry Entry { get; set; }    // Nav to parent
     public KanjiElement()
     {
         ke_inf = new List<string>();

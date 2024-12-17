@@ -41,13 +41,13 @@ public class ImportJMdictUnitTests
     }
     
     [Fact]
-    public async void ImportJMdict_ValidInput_ReturnsEntry()
+    public async void ImportJMdict_ValidInput_ReturnsOk()
     {
         // Arrange
         string testsDir = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName,
             "Tests");
         string testDataDir = "TestData";
-        string testFileName = "JMdict_10k.xml";
+        string testFileName = "JMdict_1k.xml";
         string filePath = Path.Combine(testsDir, testDataDir, testFileName);
         if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
         
@@ -58,6 +58,7 @@ public class ImportJMdictUnitTests
         var result = await _handler.Handle(request, CancellationToken.None);
         
         // Assert
-        Assert.NotNull(result);
+        Assert.Equal(Status.Ok, result.Status);
+        Console.WriteLine($"{result.Message}");
     }
 }

@@ -13,11 +13,12 @@ public class ExceptionHandlingPipelineBehavior<TRequest, TResponse> : IPipelineB
         {
             return await next();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             return (TResponse)Activator.CreateInstance(typeof(TResponse), new object[]
                 {
-                    "Server error", 
+                    e.Message,
+                    //"Server error", 
                     Status.ServerError, 
                     false
                 }

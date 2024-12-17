@@ -5,7 +5,7 @@ using Presentation;
 
 namespace Program;
 
-public static class Program
+public class Program
 {
     public static void Main(string[] args)
     {
@@ -24,8 +24,11 @@ public static class Program
         
         app.Run();
     }
-    
-    private static void CheckIfDatabaseCreated(this WebApplication app)
+}
+
+public static class ApplicationBuilderExtensions
+{
+    public static void CheckIfDatabaseCreated(this WebApplication app)
     {
         var serviceScope = app.Services.CreateScope();
         var dataContext = serviceScope.ServiceProvider.GetService<MyDbContext>();
@@ -34,7 +37,7 @@ public static class Program
         {
             if (app.Environment.IsDevelopment())
             {
-                // dataContext.Database.EnsureDeleted();
+                dataContext.Database.EnsureDeleted();
                 dataContext.Database.EnsureCreated();
             }
         }

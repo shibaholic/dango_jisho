@@ -9,7 +9,7 @@ using Presentation.Utilities;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/entry")]
 public class EntryController : ControllerBase
 {
     private readonly IMediator _mediatr;

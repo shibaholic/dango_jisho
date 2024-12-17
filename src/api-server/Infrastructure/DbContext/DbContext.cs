@@ -25,4 +25,5 @@ public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
         return true;
     }
     public DbSet<Entry> Entries { get; set; }
+    public DbSet<KanjiElement> KanjiElements { get; set; }
 }
