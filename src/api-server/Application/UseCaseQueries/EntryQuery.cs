@@ -8,14 +8,14 @@ using MediatR;
 namespace Application.UseCaseQueries;
 
 // "using" Alias Directive, change the generic type to suit the Handler return type.
-// using Response = Response<Entry>;
+using Response = Response<EntryDto>;
 
-public record EntryQueryRequest : IRequest<Response<EntryDto>>
+public record EntryQueryRequest : IRequest<Response>
 {
     public string ent_seq { get; init; }
 }
 
-public class EntryQuery : IRequestHandler<EntryQueryRequest, Response<EntryDto>>
+public class EntryQuery : IRequestHandler<EntryQueryRequest, Response>
 {
     private readonly IEntryRepository _entryRepo;
     private readonly IMapper _mapper;
@@ -26,14 +26,14 @@ public class EntryQuery : IRequestHandler<EntryQueryRequest, Response<EntryDto>>
         _mapper = mapper;
     }
     
-    public async Task<Response<EntryDto>> Handle(EntryQueryRequest request, CancellationToken cancellationToken)
+    public async Task<Response> Handle(EntryQueryRequest request, CancellationToken cancellationToken)
     {
         var result = await _entryRepo.GetBy_ent_seq(request.ent_seq);
 
-        if (result == null) return Response<EntryDto>.NotFound("Entry not found");
+        if (result == null) return Response.NotFound("Entry not found");
         
         var dto = _mapper.Map<EntryDto>(result);
         
-        return Response<EntryDto>.Ok("Entry found", dto);
+        return Response.Ok("Entry found", dto);
     }
 }

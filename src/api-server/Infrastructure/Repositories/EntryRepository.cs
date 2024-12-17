@@ -12,7 +12,6 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     {
         _context = context;
     }
-    
     public async Task<Entry?> GetBy_ent_seq(string ent_seq)
     {
         return await _context.Entries.Where(entry => entry.ent_seq == ent_seq).FirstOrDefaultAsync();

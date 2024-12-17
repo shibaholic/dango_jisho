@@ -9,11 +9,11 @@ using Xunit.Abstractions;
 
 namespace Tests.ApplicationUnitTests;
 
-public class ApplicationMediatrPipelineUnitTests
+public class MediatrPipelineUnitTests
 {
     private readonly ITestOutputHelper _output;
 
-    public ApplicationMediatrPipelineUnitTests(ITestOutputHelper output)
+    public MediatrPipelineUnitTests(ITestOutputHelper output)
     {
         _output = output;
     }

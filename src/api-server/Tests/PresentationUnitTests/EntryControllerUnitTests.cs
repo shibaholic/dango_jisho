@@ -1,8 +1,12 @@
+using System.Text;
 using Application.Automapper.EntityDtos;
 using Application.Response;
+using Application.UseCaseCommands;
 using Application.UseCaseQueries;
 using Domain.Entities;
+using FluentAssertions;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,27 +18,30 @@ namespace Tests.PresentationUnitTests;
 public class EntryControllerUnitTests {
     private readonly ITestOutputHelper _output;
 
+    private readonly Mock<IMediator> _mockMediator;
+    private readonly EntryController _controller;
     public EntryControllerUnitTests(ITestOutputHelper output)
     {
         _output = output;
+        
+        // Arrange
+        _mockMediator = new Mock<IMediator>();
+        _controller = new EntryController(_mockMediator.Object);
     }
-
+    
     [Fact]
     public async void GetById_ValidInput_ReturnsOkResultObject()
     {
         // Arrange
         var response = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
         
-        var mockMediatr = new Mock<IMediator>();
-        mockMediatr.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
+        _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
-
-        var controller = new EntryController(mockMediatr.Object);
-
+        
         var request = new EntryQueryRequest {ent_seq = "1234"};
         
         // Act
-        var result = await controller.GetById(request);
+        var result = await _controller.GetById(request);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -47,21 +54,74 @@ public class EntryControllerUnitTests {
         // Arrange
         var response = Response<EntryDto>.ServerError("Test error");
         
-        var mockMediatr = new Mock<IMediator>();
-        mockMediatr.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
+        _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
-        
-        var controller = new EntryController(mockMediatr.Object);
         
         EntryQueryRequest? request = new EntryQueryRequest {ent_seq = "1234"};
         
         // Act
-        var result = await controller.GetById(request);
+        var result = await _controller.GetById(request);
         
         // Assert
         
         // To test for HttpStatusCode 500 ServerError use ObjectResult.
         var serverErrorResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(response.Message, serverErrorResult.Value);
+    }
+
+    [Fact]
+    public async void UploadJMdict_ValidInput_ReturnsOk()
+    {
+        // Arrange
+        var mockFile = new Mock<IFormFile>();
+        var fileContent = "<root><message>Hello, XML!</message></root>";
+        var fileName = "test.xml";
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent));
+
+        mockFile.Setup(f => f.OpenReadStream()).Returns(stream);
+        mockFile.Setup(f => f.FileName).Returns(fileName);
+        mockFile.Setup(f => f.Length).Returns(stream.Length);
+        mockFile.Setup(f => f.ContentType).Returns("application/xml");
+        
+        var formFile = mockFile.Object;
+        
+        var payload = new EntryController.UploadJMdictPayload(formFile);
+        
+        _mockMediator.Setup(m => m.Send(It.IsAny<ImportJMdictRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Response<object>.Ok("Test success"));
+        
+        // Act
+        var result = await _controller.UploadJMdict(payload, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+    }
+    
+    [Fact]
+    public async void UploadJMdict_InvalidInput_ReturnsBadRequest()
+    {
+        // Arrange
+        var mockFile = new Mock<IFormFile>();
+        var fileContent = "<root><message>Hello, XML!</message></root>";
+        var fileName = "test.xml";
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent));
+
+        mockFile.Setup(f => f.OpenReadStream()).Returns(stream);
+        mockFile.Setup(f => f.FileName).Returns(fileName);
+        mockFile.Setup(f => f.Length).Returns(stream.Length);
+        mockFile.Setup(f => f.ContentType).Returns("application/xml");
+        
+        var formFile = mockFile.Object;
+        
+        var payload = new EntryController.UploadJMdictPayload(formFile);
+        
+        _mockMediator.Setup(m => m.Send(It.IsAny<ImportJMdictRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Response<object>.Ok("Test success"));
+        
+        // Act
+        var result = await _controller.UploadJMdict(payload, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
     }
 }

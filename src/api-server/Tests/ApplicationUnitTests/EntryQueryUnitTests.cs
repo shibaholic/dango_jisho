@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace Tests.ApplicationUnitTests;
 
-public class ApplicationQueryUnitTests
+public class EntryQueryUnitTests
 {
     private readonly ITestOutputHelper _output;
 
@@ -20,7 +20,7 @@ public class ApplicationQueryUnitTests
     private readonly IMapper _mapper;
     private readonly EntryQuery _handler;
     
-    public ApplicationQueryUnitTests(ITestOutputHelper output)
+    public EntryQueryUnitTests(ITestOutputHelper output)
     {
         _output = output;
         

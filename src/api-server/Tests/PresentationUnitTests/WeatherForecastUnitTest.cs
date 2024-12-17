@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace Tests.PresentationUnitTests;
 
-public class PresentationUnitTests
+public class WeatherForecastUnitTests
 {
     private readonly ITestOutputHelper _output;
 
-    public PresentationUnitTests(ITestOutputHelper output)
+    public WeatherForecastUnitTests(ITestOutputHelper output)
     {
         _output = output;
     }
