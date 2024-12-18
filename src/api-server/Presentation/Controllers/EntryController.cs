@@ -18,8 +18,8 @@ public class EntryController : ControllerBase
         _mediatr = mediatr;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetById([FromQuery] EntryQueryRequest request)
+    [HttpGet("/id")]
+    public async Task<IActionResult> GetById([FromQuery] EntryIdGetRequest request)
     {
         var response = await _mediatr.Send(request);
         

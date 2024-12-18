@@ -1,4 +1,4 @@
-using Application.Automapper.EntityDtos;
+using Application.Mappings.EntityDtos;
 using Application.Response;
 using AutoMapper;
 using Domain.Entities;
@@ -10,36 +10,28 @@ namespace Application.UseCaseQueries;
 // "using" Alias Directive, change the generic type to suit the Handler return type.
 using Response = Response<EntryDto>;
 
-public record EntryQueryRequest : IRequest<Response>
+public record EntryIdGetRequest : IRequest<Response>
 {
     public string ent_seq { get; init; }
 }
 
-public class EntryQuery : IRequestHandler<EntryQueryRequest, Response>
+public class EntryIdGet : IRequestHandler<EntryIdGetRequest, Response>
 {
     private readonly IEntryRepository _entryRepo;
     private readonly IMapper _mapper;
 
-    public EntryQuery(IEntryRepository entryRepo, IMapper mapper)
+    public EntryIdGet(IEntryRepository entryRepo, IMapper mapper)
     {
         _entryRepo = entryRepo;
         _mapper = mapper;
     }
     
-    public async Task<Response> Handle(EntryQueryRequest request, CancellationToken cancellationToken)
+    public async Task<Response> Handle(EntryIdGetRequest request, CancellationToken cancellationToken)
     {
         var result = await _entryRepo.GetBy_ent_seq(request.ent_seq);
-
-        Console.WriteLine($"[Handle] {result == null}");
-        
         if (result == null) return Response.NotFound("Entry not found");
         
-        Console.WriteLine($"[Handle] {result.ent_seq}");
-        
         var dto = _mapper.Map<EntryDto>(result);
-        
-        Console.WriteLine($"[Handle] {dto.ent_seq}");
-        
         return Response.Ok("Entry found", dto);
     }
 }

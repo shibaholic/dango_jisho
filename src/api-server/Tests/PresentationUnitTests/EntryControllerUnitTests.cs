@@ -35,10 +35,10 @@ public class EntryControllerUnitTests {
         // Arrange
         var response = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
         
-        _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
+        _mockMediator.Setup(m => m.Send(It.IsAny<EntryIdGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
         
-        var request = new EntryQueryRequest {ent_seq = "1234"};
+        var request = new EntryIdGetRequest {ent_seq = "1234"};
         
         // Act
         var result = await _controller.GetById(request);
@@ -54,10 +54,10 @@ public class EntryControllerUnitTests {
         // Arrange
         var response = Response<EntryDto>.ServerError("Test error");
         
-        _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
+        _mockMediator.Setup(m => m.Send(It.IsAny<EntryIdGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
         
-        EntryQueryRequest? request = new EntryQueryRequest {ent_seq = "1234"};
+        EntryIdGetRequest? request = new EntryIdGetRequest {ent_seq = "1234"};
         
         // Act
         var result = await _controller.GetById(request);
