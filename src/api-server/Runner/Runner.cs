@@ -25,6 +25,6 @@ file class ApplicationUnitTestRunners
         var _output = new TestOutputHelper();
         var Tests = new ImportJMdictUnitTests(_output);
         
-        Tests.ImportJMdict_ValidInput_ReturnsOk();
+        Tests.ImportJMdict_ValidInput_ReturnsNoContent();
     }
 }

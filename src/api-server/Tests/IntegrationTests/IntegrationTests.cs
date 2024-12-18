@@ -1,8 +1,5 @@
-using System.Text;
-using System.Text.Json;
-using FluentAssertions;
+using System.Net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Presentation.Controllers;
 using Xunit.Abstractions;
 
@@ -24,13 +21,27 @@ public class IntegrationTests : IClassFixture<WebAppFactory>
     }
 
     [Fact]
-    public async Task UploadJMdict_Post_ReturnsOk()
+    public async Task WeatherForecast_Get_ReturnsOk()
+    {
+        // Arrange
+        
+        // Act
+        var response = await _client.GetAsync("/WeatherForecast");
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var responseContent = await response.Content.ReadAsStringAsync();
+        Assert.NotNull(responseContent);
+    }
+    
+    [Fact]
+    public async Task UploadJMdict_Post_ReturnsNoContent()
     {
         // Arrange
         string testsDir = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName,
             "Tests");
         string testDataDir = "TestData";
-        string testFileName = "JMdict_10k.xml";
+        string testFileName = "JMdict_e.xml";
         string filePath = Path.Combine(testsDir, testDataDir, testFileName);
         if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
 
@@ -57,22 +68,7 @@ public class IntegrationTests : IClassFixture<WebAppFactory>
         var response = await _client.PostAsync("/api/entry", content);
 
         // Assert
-        response.Should().BeOfType<HttpResponseMessage>();
-    }
-    
-    [Fact]
-    public async Task WeatherForecast_Get_ReturnsOk()
-    {
-        // Arrange
-        
-        // Act
-        var response = await _client.GetAsync("/WeatherForecast");
-
-        // Assert
-        response.Should().BeOfType<OkObjectResult>();
-        
-        response.EnsureSuccessStatusCode();
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Assert.NotNull(responseContent);
+        var statusCode = response.StatusCode;
+        Assert.Equal(HttpStatusCode.NoContent, statusCode);
     }
 }

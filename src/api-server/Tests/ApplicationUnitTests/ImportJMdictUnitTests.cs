@@ -41,7 +41,7 @@ public class ImportJMdictUnitTests
     }
     
     [Fact]
-    public async void ImportJMdict_ValidInput_ReturnsOk()
+    public async void ImportJMdict_ValidInput_ReturnsNoContent()
     {
         // Arrange
         string testsDir = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName,
@@ -58,7 +58,7 @@ public class ImportJMdictUnitTests
         var result = await _handler.Handle(request, CancellationToken.None);
         
         // Assert
-        Assert.Equal(Status.Ok, result.Status);
+        Assert.Equal(Status.NoContent, result.Status);
         Console.WriteLine($"{result.Message}");
     }
 }

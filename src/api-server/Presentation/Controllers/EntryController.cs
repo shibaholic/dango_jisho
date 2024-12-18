@@ -13,7 +13,6 @@ namespace Presentation.Controllers;
 public class EntryController : ControllerBase
 {
     private readonly IMediator _mediatr;
-
     public EntryController(IMediator mediatr)
     {
         _mediatr = mediatr;
@@ -24,8 +23,9 @@ public class EntryController : ControllerBase
     {
         var response = await _mediatr.Send(request);
         
-        // ToDo: Also need to implement Automapper and Dtos
-        return ResultMapper.ToActionResult(response);
+        Console.WriteLine($"[Controller] {response.Message} {response.Status} {response.Data?.ent_seq}");
+        
+        return this.ToActionResult(response);
     }
 
     public record UploadJMdictPayload(
@@ -46,6 +46,6 @@ public class EntryController : ControllerBase
         
         var response = await _mediatr.Send(command, cancellationToken);
         
-        return ResultMapper.ToActionResult(response);
+        return this.ToActionResult(response);
     }
-}   
+}

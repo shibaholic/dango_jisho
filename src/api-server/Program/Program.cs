@@ -37,7 +37,7 @@ public static class ApplicationBuilderExtensions
         {
             if (app.Environment.IsDevelopment())
             {
-                dataContext.Database.EnsureDeleted();
+                // dataContext.Database.EnsureDeleted();
                 dataContext.Database.EnsureCreated();
             }
         }

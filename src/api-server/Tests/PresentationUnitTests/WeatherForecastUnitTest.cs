@@ -17,7 +17,7 @@ public class WeatherForecastUnitTests
     }
     
     [Fact]
-    public void Get_NoInput_ReturnsOkResult()
+    public void Get_NoInput_ReturnsNotEmpty()
     {
         // Arrange
         var mockLogger = new Mock<ILogger<WeatherForecastController>>();

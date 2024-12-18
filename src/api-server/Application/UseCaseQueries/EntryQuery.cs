@@ -30,9 +30,15 @@ public class EntryQuery : IRequestHandler<EntryQueryRequest, Response>
     {
         var result = await _entryRepo.GetBy_ent_seq(request.ent_seq);
 
+        Console.WriteLine($"[Handle] {result == null}");
+        
         if (result == null) return Response.NotFound("Entry not found");
         
+        Console.WriteLine($"[Handle] {result.ent_seq}");
+        
         var dto = _mapper.Map<EntryDto>(result);
+        
+        Console.WriteLine($"[Handle] {dto.ent_seq}");
         
         return Response.Ok("Entry found", dto);
     }

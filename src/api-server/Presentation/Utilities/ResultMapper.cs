@@ -1,21 +1,22 @@
 using Application.Response;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Utilities;
 
 public static class ResultMapper
 {
-    public static IActionResult ToActionResult<T>(Response<T> response)
+    public static IActionResult ToActionResult<T>(this ControllerBase controller, Response<T> response)
         where T : class // ToDo: replace with Dto
     {
         return response.Status switch
         {
-            Status.Ok => new OkObjectResult(response.Data),
-            Status.NoContent => new NoContentResult(),
-            Status.BadRequest => new BadRequestObjectResult(response.Message),
-            Status.NotFound => new NotFoundObjectResult(response.Message),
-            Status.ServerError => new ObjectResult(response.Message) { StatusCode = 500 },
-            _ => new StatusCodeResult(500) // Default fallback
+            Status.Ok => controller.Ok(response),
+            Status.NoContent => controller.NoContent(),
+            Status.BadRequest => controller.BadRequest(response.Message),
+            Status.NotFound => controller.NotFound(response.Message),
+            Status.ServerError => controller.StatusCode(500, response.Message),
+            _ => controller.StatusCode(500) // Default fallback
         };
     }
 }

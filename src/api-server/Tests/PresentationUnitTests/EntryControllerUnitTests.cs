@@ -30,7 +30,7 @@ public class EntryControllerUnitTests {
     }
     
     [Fact]
-    public async void GetById_ValidInput_ReturnsOkResultObject()
+    public async void GetById_ValidInput_ReturnsOk()
     {
         // Arrange
         var response = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
@@ -45,7 +45,7 @@ public class EntryControllerUnitTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(response.Data, okResult.Value);
+        Assert.Equal(response.Data, (okResult.Value as Response<EntryDto>).Data);
     }
     
     [Fact]
@@ -70,7 +70,7 @@ public class EntryControllerUnitTests {
     }
 
     [Fact]
-    public async void UploadJMdict_ValidInput_ReturnsOk()
+    public async void UploadJMdict_ValidInput_ReturnsNoContent()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -88,13 +88,13 @@ public class EntryControllerUnitTests {
         var payload = new EntryController.UploadJMdictPayload(formFile);
         
         _mockMediator.Setup(m => m.Send(It.IsAny<ImportJMdictRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Response<object>.Ok("Test success"));
+            .ReturnsAsync(Response<object>.NoContent("Test success"));
         
         // Act
         var result = await _controller.UploadJMdict(payload, CancellationToken.None);
 
         // Assert
-        result.Should().BeOfType<OkObjectResult>();
+        result.Should().BeOfType<NoContentResult>();
     }
     
     [Fact]
@@ -116,12 +116,12 @@ public class EntryControllerUnitTests {
         var payload = new EntryController.UploadJMdictPayload(formFile);
         
         _mockMediator.Setup(m => m.Send(It.IsAny<ImportJMdictRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Response<object>.Ok("Test success"));
+            .ReturnsAsync(Response<object>.BadRequest("Test fail"));
         
         // Act
         var result = await _controller.UploadJMdict(payload, CancellationToken.None);
 
         // Assert
-        result.Should().BeOfType<OkObjectResult>();
+        result.Should().BeOfType<BadRequestObjectResult>();
     }
 }
