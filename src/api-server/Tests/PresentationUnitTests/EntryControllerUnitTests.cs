@@ -1,5 +1,5 @@
 using System.Text;
-using Application.Automapper.EntityDtos;
+using Application.Mappings.EntityDtos;
 using Application.Response;
 using Application.UseCaseCommands;
 using Application.UseCaseQueries;
@@ -67,6 +67,30 @@ public class EntryControllerUnitTests {
         // To test for HttpStatusCode 500 ServerError use ObjectResult.
         var serverErrorResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(response.Message, serverErrorResult.Value);
+    }
+
+    [Fact]
+    public async void Search_ValidInput_ReturnsOk()
+    {
+        // Arrange
+        var responseData = new List<EntryDto> { { new EntryDto() { ent_seq = "1234" } } };
+        var response = Response<List<EntryDto>>.Ok("Test response", responseData);
+        
+        _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+        
+        // Act
+        var request = new EntryQueryRequest { query = "Test search query" };
+        var result = await _controller.Search(request);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+        
+        var objectResult = result.As<OkObjectResult>();
+        objectResult.Value.Should().BeOfType<Response<List<EntryDto>>>();
+        
+        var resultContent = objectResult.Value.As<Response<List<EntryDto>>>();
+        resultContent.Should().BeEquivalentTo(response);
     }
 
     [Fact]

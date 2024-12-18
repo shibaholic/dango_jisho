@@ -23,9 +23,15 @@ public class EntryController : ControllerBase
     {
         var response = await _mediatr.Send(request);
         
-        Console.WriteLine($"[Controller] {response.Message} {response.Status} {response.Data?.ent_seq}");
-        
         return this.ToActionResult(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Search([FromQuery] EntryQueryRequest request)
+    {
+        var response = await _mediatr.Send(request);
+        
+        return Ok(response);
     }
 
     public record UploadJMdictPayload(

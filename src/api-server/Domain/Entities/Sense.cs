@@ -5,6 +5,7 @@ namespace Domain.Entities;
 public class Sense
 {
     public int Id { get; set; }
+    public string ent_seq { get; set; } // Foreign key
     public List<string> stagk { get; set; }
     public List<string> stagr { get; set; }
     public List<string> pos { get; set; }
@@ -16,7 +17,7 @@ public class Sense
     public List<LSource> lsource { get; set; }
     public List<string> dial { get; set; }
     public List<string> gloss { get; set; }
-    public string ent_seq { get; set; } // Foreign key
+
     public Entry Entry  { get; set; }   // Nav
 
     public Sense()

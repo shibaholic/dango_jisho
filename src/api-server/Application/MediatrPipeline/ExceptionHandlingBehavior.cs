@@ -15,6 +15,7 @@ public class ExceptionHandlingPipelineBehavior<TRequest, TResponse> : IPipelineB
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             return (TResponse)Activator.CreateInstance(typeof(TResponse), new object[]
                 {
                     e.Message,

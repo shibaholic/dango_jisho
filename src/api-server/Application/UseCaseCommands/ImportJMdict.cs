@@ -97,7 +97,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                 }
                             }
                             
-                            entry.KanjiElementNavs.Add(k_ele);
+                            entry.KanjiElements.Add(k_ele);
                             break;
                         
                         case "r_ele":
@@ -130,7 +130,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                 }
                             }
                             
-                            entry.ReadingElementNavs.Add(r_ele);
+                            entry.ReadingElements.Add(r_ele);
                             break;
                         
                         case "sense":
@@ -188,7 +188,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                 }
                             }
                             
-                            entry.SenseNavs.Add(sense);
+                            entry.Senses.Add(sense);
                             break;
                         
                         default:

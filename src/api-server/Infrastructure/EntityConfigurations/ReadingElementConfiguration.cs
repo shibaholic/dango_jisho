@@ -8,6 +8,6 @@ public class ReadingElementConfiguration : IEntityTypeConfiguration<ReadingEleme
 {
     public void Configure(EntityTypeBuilder<ReadingElement> builder)
     {
-        builder.HasKey(k => k.Id);
+        builder.HasKey(s => s.Id);
     }
 }

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Application.Automapper.EntityDtos;
 using Application.Mappings;
 using Application.Response;
 using Application.UseCaseCommands;

@@ -10,17 +10,17 @@ public class EntryConfiguration: IEntityTypeConfiguration<Entry>
     {
         builder.HasKey(entry => entry.ent_seq);
 
-        builder.HasMany(e => e.KanjiElementNavs)
+        builder.HasMany(e => e.KanjiElements)
             .WithOne(k => k.Entry)
             .HasForeignKey(k => k.ent_seq)
             .IsRequired();
         
-        builder.HasMany(e => e.ReadingElementNavs)
+        builder.HasMany(e => e.ReadingElements)
             .WithOne(k => k.Entry)
             .HasForeignKey(k => k.ent_seq)
             .IsRequired();
         
-        builder.HasMany(e => e.SenseNavs)
+        builder.HasMany(e => e.Senses)
             .WithOne(k => k.Entry)
             .HasForeignKey(k => k.ent_seq)
             .IsRequired();
