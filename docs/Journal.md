@@ -23,3 +23,9 @@ Documenting daily work on the project.
 - Used XUnit to unit test Presentation layer controllers, Application layer Mediatr handlers, Application layer Mediatr Pipeline.
 
 - Using FluentAssertions for deep object comparisons.
+
+## December 17 2024
+
+- Created the ImportJMdict handler, which parses the XML (using System.Xml) into C# objects and then uses the repository to RangeAdd them. No optimizations needed as 200,000 entries are parsed in about 2 seconds. I am keeping each XML Entity's namespace instead of it's string value, as I will implement custom string values on the client side.
+
+- Created the UploadJMdict endpoint and integration test using WebApplicationFactory so this process can be automatically tested.
