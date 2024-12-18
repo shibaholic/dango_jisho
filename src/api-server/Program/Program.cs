@@ -12,7 +12,7 @@ public class Program
         // BUILD
         var builder = WebApplication.CreateBuilder(args);
         
-        builder.Services.ConfigurePresentationServices();
+        builder.ConfigurePresentationServices();
         builder.Services.ConfigureApplicationServices();
         builder.Services.ConfigureInfrastructureServices(builder.Configuration);
         
