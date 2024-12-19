@@ -37,8 +37,19 @@ public static class ApplicationBuilderExtensions
         {
             if (app.Environment.IsDevelopment())
             {
-                // dataContext.Database.EnsureDeleted();
-                dataContext.Database.EnsureCreated();
+                var deleteCreate = (string)app.Configuration.GetValue(typeof(string), "EFCORE_DELETECREATE");
+                if (deleteCreate == "true")
+                {
+                    dataContext.Database.EnsureDeleted();
+                    dataContext.Database.EnsureCreated();
+                    Console.WriteLine("Database ensure deleted and created.");
+                }
+                else
+                {
+                    dataContext.Database.EnsureCreated();
+                    Console.WriteLine("Database ensure created.");
+                }
+                
             }
         }
         else

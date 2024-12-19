@@ -53,7 +53,7 @@ public record EntryDto
             {
                 foreach (var lsource_element in sense.lsource)
                 {
-                    output.Append("    " + $"lsource: {lsource_element.langValue}\n");
+                    output.Append("    " + $"lsource: {lsource_element.LangValue}\n");
                     if(lsource_element.ls_part) output.Append("      part: true\n");
                     if(lsource_element.ls_wasei) output.Append("      wasei: true\n");
                 }

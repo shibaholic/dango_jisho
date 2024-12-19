@@ -172,7 +172,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         var lsource = new LSource();
                                         lsource.lang = reader.GetAttribute("xml:lang");
                                         lsource.ls_part = reader.GetAttribute("ls_wasei") is not null;
-                                        lsource.langValue = reader.ReadElementContentAsString();
+                                        lsource.LangValue = reader.ReadElementContentAsString();
                                         sense.lsource.Add(lsource);
                                         break;
                                     case "dial":

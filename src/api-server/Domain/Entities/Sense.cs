@@ -39,7 +39,7 @@ public class Sense
 public class LSource
 {
     public int Id { get; set; }
-    public string langValue { get; set; }
+    public string LangValue { get; set; }
     public string? lang { get; set; }
     public bool ls_part { get; set; }
     public bool ls_wasei { get; set; }
@@ -54,7 +54,7 @@ public class LSource
     public override string ToString()
     {
         var output = new StringBuilder();
-        output.Append($"lsource: {langValue}\n");
+        output.Append($"lsource: {LangValue}\n");
         if(lang is not null) output.Append($"      lang: {lang}\n");
         if(ls_part) output.Append("      part: true\n");
         if(ls_wasei) output.Append("      wasei: true\n");
