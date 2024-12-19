@@ -18,22 +18,24 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     }
     public async Task<List<Entry>> Search(string query)
     {
-        // Start by checking for Where on KanjiElement
-        var k_query = _context.Set<KanjiElement>().AsQueryable();
+        var queryable = _context.Entries.AsQueryable();
         
-        k_query = k_query.Where(k => k.keb.Contains(query));
+        queryable = queryable.Where(q => q.KanjiElements.Any(k => k.keb.Contains(query)) || 
+                                         q.ReadingElements.Any(r => r.reb.Contains(query)) ||
+                                         q.Senses.Any(s => s.gloss.FirstOrDefault(g => g.Contains(query)) != null)
+                                         );
 
-        var join_query = k_query.Join(_context.Entries,
-            k => k.ent_seq,
-            e => e.ent_seq,
-            (k, e) => new { k, e });
-        
-        var e_query = join_query.Select(join => join.e)
-            .Include(join => join.KanjiElements)
-            .Include(join => join.ReadingElements)
-            .Include(join => join.Senses)
+        queryable = queryable
+            .Include(q => q.KanjiElements)
+            .Include(q => q.ReadingElements)
+            .Include(q => q.Senses)
             .ThenInclude(s => s.lsource);
+
+        var entries = queryable.ToList();
         
-        return e_query.ToList();
+        var orderedEntries = entries.OrderBy(e => e.KanjiElements.Min(k => k.keb.Length))
+            .ThenBy(e => e.ReadingElements.Min(r => r.reb.Length));
+        
+        return orderedEntries.ToList();
     }
 }

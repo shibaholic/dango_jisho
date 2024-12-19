@@ -29,3 +29,9 @@ Documenting daily work on the project.
 - Created the ImportJMdict handler, which parses the XML (using System.Xml) into C# objects and then uses the repository to RangeAdd them. No optimizations needed as 200,000 entries are parsed in about 2 seconds. I am keeping each XML Entity's namespace instead of it's string value, as I will implement custom string values on the client side.
 
 - Created the UploadJMdict endpoint and integration test using WebApplicationFactory so this process can be automatically tested.
+
+## December 18 2024
+
+- Created the EntryQuery handler, which currently simply runs the repository for searching the "keb" and "reb" for entries and then sorts by shortest length. The search algorithm can be improved, with features such as exact match, switch depending on keb/reb or gloss.
+
+- Create the EntryQuery endpoint.
