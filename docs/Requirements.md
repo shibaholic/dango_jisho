@@ -6,13 +6,13 @@ This is essentially the requirement backlog for the first sprint for the MVP, wi
 
 ### Must
 
-| # | Name                     | Description                                                    |
-|:-:|--------------------------|----------------------------------------------------------------|
-| 1 | ~~J-E entries data model~~   | Use data from JMdict                                           |
-| 2 | REST API                 |                                                                |
-| 3 | User progress data model | Word progress (review history, score, next review calculation) |
-| 4 | User UseCases            | Review word, add to new words                                  |
-| 5 | User data model          | User only                                                      |
+| # | Name                       | Description                                                    |
+|:-:|----------------------------|----------------------------------------------------------------|
+| 1 | ~~J-E entries data model~~ | Use data from JMdict                                           |
+| 2 | REST API                   |                                                                |
+| 3 | User progress data model   | Word progress (review history, score, next review calculation) |
+| 4 | User UseCases              | Review word, add to new words                                  |
+| 5 | User data model            | User only                                                      |
 
 ### Should
 
