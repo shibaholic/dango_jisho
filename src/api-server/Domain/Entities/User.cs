@@ -1,3 +1,5 @@
+using Domain.Entities.Tracking;
+
 namespace Domain.Entities;
 
 public class User : IBaseEntity
@@ -8,6 +10,8 @@ public class User : IBaseEntity
     public string Email { get; set; }
     public Guid? RefreshToken { get; set; }
     public bool IsAdmin { get; set; } = false;
+    
+    public List<Tag> Tags { get; set; } = new List<Tag>();
     
     public void GenerateRefreshToken()
     {

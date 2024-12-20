@@ -1,4 +1,5 @@
 using System.Text;
+using Domain.Entities.Tracking;
 
 namespace Domain.Entities.JMDict;
 
@@ -8,6 +9,7 @@ public class Entry : IBaseEntity
     public List<KanjiElement> KanjiElements { get; set; } = new List<KanjiElement>();
     public List<ReadingElement> ReadingElements { get; set; } = new List<ReadingElement>();
     public List<Sense> Senses { get; set; } = new List<Sense>();
+    public List<EntryIsTagged> EntryIsTaggeds { get; set; } = new List<EntryIsTagged>();
     public Entry()
     {
     }
