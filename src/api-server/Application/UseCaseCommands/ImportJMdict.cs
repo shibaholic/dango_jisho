@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Xml;
 using Application.Response;
 using Domain.Entities;
@@ -33,6 +34,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
         var entries = new List<Entry>();
         using var stream = new MemoryStream(request.Content);
         
+        var stopwatch = Stopwatch.StartNew();
+        
         using (XmlTextReader reader = new XmlTextReader(stream))
         {
             reader.DtdProcessing = DtdProcessing.Parse;
@@ -53,6 +56,12 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
             {
                 throw new Exception("JMdict DTD is required.");
             }
+            
+            // entity Ids for KanjiElement, ReadingElement, Sense, LSource
+            int k_ele_id = 0;
+            int r_ele_id = 0;
+            int sense_id = 0;
+            int lsource_id = 0;
             
             // loop through the <JMdict> Element which contains the data
             while (reader.Read())
@@ -75,6 +84,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                     {
                         case "k_ele":
                             var k_ele = new KanjiElement();
+                            k_ele.ent_seq = entry.ent_seq;
+                            k_ele.Id = k_ele_id++;
                             while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement &&
                                                       reader.Name == "k_ele"))
                             {
@@ -102,6 +113,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                         
                         case "r_ele":
                             var r_ele = new ReadingElement();
+                            r_ele.ent_seq = entry.ent_seq;
+                            r_ele.Id = r_ele_id++;
                             while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement &&
                                                       reader.Name == "r_ele"))
                             {
@@ -135,6 +148,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                         
                         case "sense":
                             var sense = new Sense();
+                            sense.ent_seq = entry.ent_seq;
+                            sense.Id = sense_id++;
                             while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement &&
                                                       reader.Name == "sense"))
                             {
@@ -170,6 +185,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         break;
                                     case "lsource":
                                         var lsource = new LSource();
+                                        lsource.SenseId = sense.Id;
+                                        lsource.Id = lsource_id++;
                                         lsource.lang = reader.GetAttribute("xml:lang");
                                         lsource.ls_part = reader.GetAttribute("ls_wasei") is not null;
                                         lsource.LangValue = reader.ReadElementContentAsString();
@@ -200,10 +217,19 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                 
             }
         }
+
+        stopwatch.Stop();
+        Console.WriteLine($"  Parsing JMdict took {stopwatch.ElapsedMilliseconds} ms.");
         
-        await _repository.RangeCreate(entries);
+        stopwatch.Restart();
+
+        await _repository.BulkInsertAsync(entries);
+        // await _repository.RangeCreate(entries);
         
         await _unitOfWork.Commit(cancellationToken);
+        
+        stopwatch.Stop();
+        Console.WriteLine($"  Copying to database took {stopwatch.ElapsedMilliseconds} ms.");
         
         return Response.NoContent($"Successfully imported {entries.Count} entries.");
     }

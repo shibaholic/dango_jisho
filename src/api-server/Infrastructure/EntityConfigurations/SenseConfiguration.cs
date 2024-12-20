@@ -8,7 +8,12 @@ public class SenseConfiguration : IEntityTypeConfiguration<Sense>
 {
     public void Configure(EntityTypeBuilder<Sense> builder)
     {
-        builder.HasKey(k => k.Id);
+        builder.HasKey(s => s.Id);
+        
+        builder.HasMany(s => s.lsource)
+            .WithOne(l => l.Sense)
+            .HasForeignKey(l => l.SenseId)
+            .IsRequired();
     }
 }
 

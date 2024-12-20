@@ -39,10 +39,12 @@ public class Sense
 public class LSource
 {
     public int Id { get; set; }
+    public int SenseId { get; set; } // foreign key
     public string LangValue { get; set; }
     public string? lang { get; set; }
     public bool ls_part { get; set; }
     public bool ls_wasei { get; set; }
+    public Sense Sense { get; set; } // parent nav
 
     public LSource()
     {

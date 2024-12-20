@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application;
 using Application.UseCaseCommands;
 using Infrastructure;
@@ -70,15 +71,22 @@ public static class ApplicationBuilderExtensions
                     Console.WriteLine("Could not find seed data.");
                     System.Environment.Exit(1);
                 }
+                var stopwatch = Stopwatch.StartNew();
                 using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filePath)));
                 var request = new ImportJMdictRequest { Content = stream.ToArray() };
+                stopwatch.Stop();
+                Console.WriteLine($"  Loading JMdict from {filePath} took {stopwatch.ElapsedMilliseconds} ms.");
+                stopwatch.Restart();
                 var result = await mediator.Send(request, CancellationToken.None);
+                
                 if (!result.Successful)
                 {
                     Console.WriteLine("Error while importing JMdict_e.xml.");
                     System.Environment.Exit(1);
                 }
                 Console.WriteLine($"{result.Message}");
+                stopwatch.Stop();
+                Console.WriteLine($"  ImportJMdict took {stopwatch.ElapsedMilliseconds} ms.");
             }
             else
             {
