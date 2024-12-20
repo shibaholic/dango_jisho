@@ -1,5 +1,6 @@
 using System.Data;
 using Domain.Entities;
+using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
 using Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;

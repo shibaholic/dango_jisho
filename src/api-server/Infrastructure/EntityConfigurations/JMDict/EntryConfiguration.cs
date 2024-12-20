@@ -1,8 +1,8 @@
-using Domain.Entities;
+using Domain.Entities.JMDict;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.EntityConfigurations;
+namespace Infrastructure.EntityConfigurations.JMDict;
 
 public class EntryConfiguration: IEntityTypeConfiguration<Entry>
 {

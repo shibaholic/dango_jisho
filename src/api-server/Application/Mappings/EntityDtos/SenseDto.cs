@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Entities.JMDict;
 
 namespace Application.Mappings.EntityDtos;
 

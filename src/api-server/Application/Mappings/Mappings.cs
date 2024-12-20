@@ -1,6 +1,7 @@
 using Application.Mappings.EntityDtos;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.JMDict;
 
 namespace Application.Mappings;
 

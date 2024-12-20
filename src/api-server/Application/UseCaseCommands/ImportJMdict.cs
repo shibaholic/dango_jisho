@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Xml;
 using Application.Response;
 using Domain.Entities;
+using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
 using MediatR;
 

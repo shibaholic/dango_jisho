@@ -4,6 +4,7 @@ using Application.Response;
 using Application.UseCaseQueries;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
 using FluentAssertions;
 using Moq;

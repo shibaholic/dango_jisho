@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Domain.Entities;
+namespace Domain.Entities.JMDict;
 
 public class Entry : IBaseEntity
 {
