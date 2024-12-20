@@ -205,6 +205,6 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
         
         await _unitOfWork.Commit(cancellationToken);
         
-        return Response.NoContent("Successfully imported {entries.Count} entries.");
+        return Response.NoContent($"Successfully imported {entries.Count} entries.");
     }
 }
