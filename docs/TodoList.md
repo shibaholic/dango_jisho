@@ -1,5 +1,7 @@
 # Todo List
 
+## Dec 12 2024
+
 1. ✅ Backend review system
    - TrackedEntry
      - Creation, deletion
@@ -13,3 +15,7 @@
    - Makes testing and seeding data easier and faster.
 5. ✅ Switch to PostgreSQL copy for JMdict repository instead of AddRange
 6. Review Score algorithm
+
+## Jan 2 2025
+
+1. AddToTag

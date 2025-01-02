@@ -1,3 +1,4 @@
+using Application;
 using Application.Response;
 using Application.UseCaseCommands;
 using Application.UseCaseQueries;
@@ -9,7 +10,7 @@ using Presentation.Utilities;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("/api/entry")]
+[Route("/entry")]
 public class EntryController : ControllerBase
 {
     private readonly IMediator _mediatr;
@@ -18,7 +19,7 @@ public class EntryController : ControllerBase
         _mediatr = mediatr;
     }
     
-    [HttpGet("/id")]
+    [HttpGet]
     public async Task<IActionResult> GetById([FromQuery] EntryIdGetRequest request)
     {
         var response = await _mediatr.Send(request);
@@ -26,7 +27,7 @@ public class EntryController : ControllerBase
         return this.ToActionResult(response);
     }
 
-    [HttpGet]
+    [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] EntryQueryRequest request)
     {
         var response = await _mediatr.Send(request);

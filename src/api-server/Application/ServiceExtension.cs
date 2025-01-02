@@ -1,5 +1,5 @@
 using System.Reflection;
-using Application.MediatrPipeline;
+using Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +15,7 @@ public static class ServiceExtension
         // Mediatr
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingPipelineBehavior<,>));
+        // CrudService
+        services.AddTransient(typeof(ICrudService<,>), typeof(CrudService<,>));
     }
 }

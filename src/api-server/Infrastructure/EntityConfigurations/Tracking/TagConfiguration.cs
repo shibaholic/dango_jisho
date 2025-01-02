@@ -14,5 +14,11 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
             .WithMany(u => u.Tags)
             .HasForeignKey(t => t.UserId)
             .IsRequired(false);
+
+        builder.Property(t => t.Name)
+            .IsRequired();
+        
+        builder.Property(t => t.Created)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

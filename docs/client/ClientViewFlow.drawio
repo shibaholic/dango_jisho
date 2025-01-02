@@ -1,0 +1,120 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+  <diagram name="Page-1" id="13e1069c-82ec-6db2-03f1-153e76fe0fe0">
+    <mxGraphModel dx="1622" dy="1480" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="x6vr0-9JkpvdH0na1ney-50" value="Client:&lt;div&gt;Word detail view&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="560" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-55" value="-dictionary search&lt;div&gt;-show tag word list&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="x6vr0-9JkpvdH0na1ney-51" target="x6vr0-9JkpvdH0na1ney-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-57" value="start&lt;div&gt;review&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="x6vr0-9JkpvdH0na1ney-51" target="x6vr0-9JkpvdH0na1ney-53" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-51" value="Client:&lt;div&gt;Tag view / landing&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-56" value="show word&lt;div&gt;detail&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="x6vr0-9JkpvdH0na1ney-52" target="x6vr0-9JkpvdH0na1ney-50" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-52" value="Client:&lt;div&gt;List of words query view&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-58" value="reveal back" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="x6vr0-9JkpvdH0na1ney-53" target="x6vr0-9JkpvdH0na1ney-54" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-53" value="Client:&lt;div&gt;Flashcard front&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="360" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-59" value="show&amp;nbsp;&lt;div&gt;word detail&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="x6vr0-9JkpvdH0na1ney-54" target="x6vr0-9JkpvdH0na1ney-50" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="190" />
+              <mxPoint x="620" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-10" value="next word" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="x6vr0-9JkpvdH0na1ney-54" target="x6vr0-9JkpvdH0na1ney-53" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-54" value="Client:&lt;div&gt;Flashcard back&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="560" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-60" value="&lt;u&gt;Functions&lt;/u&gt;&lt;div&gt;- entry search&lt;/div&gt;&lt;div&gt;- start review&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="x6vr0-9JkpvdH0na1ney-61" value="&lt;u&gt;Data&lt;/u&gt;&lt;div&gt;- Tag&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-80" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-1" value="&lt;u&gt;Functions&lt;/u&gt;&lt;div&gt;- add to tag&lt;/div&gt;&lt;div&gt;- add to group&lt;/div&gt;&lt;div&gt;- // add to blacklist&lt;/div&gt;&lt;div&gt;- show word detail&lt;/div&gt;&lt;div&gt;- next pagination&lt;/div&gt;&lt;div&gt;- change pagination&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="200" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-2" value="&lt;u&gt;Data&lt;/u&gt;&lt;div&gt;- Entry&lt;/div&gt;&lt;div&gt;- TrackedEntry (might be tagged)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-80" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-3" value="&lt;u&gt;Variations&lt;/u&gt;&lt;br&gt;&lt;div&gt;- dictionary search&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-200" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-4" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;- tag word list&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-200" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-5" value="&lt;i&gt;above&lt;/i&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-80" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-6" value="&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;&lt;i&gt;above and&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;- // bulk select and change status&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;- change entry order&lt;/span&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-7" value="&lt;u&gt;Functions&lt;/u&gt;&lt;div&gt;- reveal back&lt;br&gt;&lt;/div&gt;&lt;div&gt;- // come back later&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="360" y="-40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-8" value="&lt;u&gt;Functions&lt;/u&gt;&lt;div&gt;- review entry&lt;/div&gt;&lt;div&gt;- add to tag&lt;/div&gt;&lt;div&gt;- add to group&lt;/div&gt;&lt;div&gt;- // add to blacklist&lt;/div&gt;&lt;div&gt;- choose reb&lt;/div&gt;&lt;div&gt;- choose keb&lt;/div&gt;&lt;div&gt;- edit note&lt;/div&gt;&lt;div&gt;- edit sense&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="680" y="40" width="120" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-9" value="&lt;u&gt;Data&lt;/u&gt;&lt;div&gt;- Entry&lt;br&gt;&lt;/div&gt;&lt;div&gt;- TrackedEntry&lt;/div&gt;&lt;div&gt;- ReviewEvent&lt;/div&gt;&lt;div&gt;- // word groups&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="800" y="40" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-11" value="&lt;u&gt;Functions&lt;/u&gt;&lt;div&gt;- add to tag&lt;/div&gt;&lt;div&gt;- add to group&lt;/div&gt;&lt;div&gt;- // add to blacklist&lt;/div&gt;&lt;div&gt;&lt;div&gt;- choose reb&lt;/div&gt;&lt;div&gt;- choose keb&lt;/div&gt;&lt;div&gt;- edit note&lt;/div&gt;&lt;div&gt;- edit sense&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="680" y="200" width="120" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-12" value="&lt;u&gt;Data&lt;/u&gt;&lt;div&gt;- Entry&lt;br&gt;&lt;/div&gt;&lt;div&gt;- TrackedEntry&lt;/div&gt;&lt;div&gt;- ReviewEvent&lt;/div&gt;&lt;div&gt;- // word groups&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="800" y="200" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-13" value="" style="endArrow=none;html=1;rounded=1;strokeWidth=4;curved=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="400" as="sourcePoint" />
+            <mxPoint x="310" y="400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="280" y="400" />
+              <mxPoint x="320" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-16" value="" style="endArrow=none;html=1;rounded=1;strokeWidth=4;curved=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="410" as="sourcePoint" />
+            <mxPoint x="310" y="410" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="280" y="410" />
+              <mxPoint x="320" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-17" value="" style="endArrow=none;html=1;rounded=1;strokeWidth=4;curved=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="420" as="sourcePoint" />
+            <mxPoint x="310" y="420" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="280" y="420" />
+              <mxPoint x="320" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DPpqvLGcfzkkGb3_Guzr-18" value="&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;Burger menu for&lt;/div&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;- add to tag&lt;/div&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;- add to group&lt;/div&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;- // add to blacklist&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="330" y="390" width="130" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

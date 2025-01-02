@@ -13,7 +13,15 @@ public class SenseDto
     public List<string> field { get; set; }
     public List<string> misc { get; set; }
     public List<string> s_inf { get; set; }
-    public List<LSource> lsource { get; set; }
+    public List<LSourceDto> lsource { get; set; }
     public List<string> dial { get; set; }
     public List<string> gloss { get; set; }
+}
+
+public class LSourceDto
+{
+    public string LangValue { get; set; }
+    public string? lang { get; set; }
+    public bool ls_part { get; set; }
+    public bool ls_wasei { get; set; }
 }

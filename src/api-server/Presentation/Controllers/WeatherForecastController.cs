@@ -1,3 +1,6 @@
+using Application;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -29,5 +32,11 @@ public class WeatherForecastController : ControllerBase
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+    }
+    
+    [HttpGet("Error")]
+    public IActionResult Error()
+    {
+        throw new ProblemException("Test Error", "Error Details");
     }
 }

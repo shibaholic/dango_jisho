@@ -1,6 +1,6 @@
 namespace Domain.Entities.Tracking;
 
-public class TrackedEntry
+public class TrackedEntry : IBaseEntity
 {
     public string ent_seq { get; set; }
     public Guid TagId { get; set; }

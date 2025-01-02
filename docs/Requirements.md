@@ -16,10 +16,11 @@ This is essentially the requirement backlog for the first sprint for the MVP, wi
 
 ### Should
 
-| # | Name                 | Description                           |
-|:-:|----------------------|---------------------------------------|
-| 1 | Import common tags   | JLPT levels, common words, top words  |
-| 2 | Tags                 | User created tags and "official" tags |
+| # | Name                                                   | Description                           |
+|:-:|--------------------------------------------------------|---------------------------------------|
+| 1 | Import common tags                                     | JLPT levels, common words, top words  |
+| 2 | Tags                                                   | User created tags and "official" tags |
+| 3 | JMDict import: new column for reb romaji for searching | Use romaji for searching              |
 
 ### Would
 

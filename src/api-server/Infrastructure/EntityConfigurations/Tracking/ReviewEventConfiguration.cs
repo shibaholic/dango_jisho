@@ -17,5 +17,8 @@ public class ReviewEventConfiguration: IEntityTypeConfiguration<ReviewEvent>
             .WithMany(te => te.ReviewEvents)
             .HasForeignKey(re => new { re.ent_seq, TagId = re.TagId })
             .IsRequired();
+        
+        builder.Property(re => re.Created)
+            .HasDefaultValueSql("NOW()");
     }
 }

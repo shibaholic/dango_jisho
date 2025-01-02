@@ -1,4 +1,7 @@
 using System.Data;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+using System.Text.Unicode;
 using Domain.Entities;
 using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
@@ -147,24 +150,59 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     }
     public async Task<List<Entry>> Search(string query)
     {
-        var queryable = _context.Entries.AsQueryable();
+        var pageSize = 10;  // Number of entries per page
+        var pageNumber = 1; // Current page (1-based index)
         
-        queryable = queryable.Where(q => q.KanjiElements.Any(k => k.keb.Contains(query)) || 
-                                         q.ReadingElements.Any(r => r.reb.Contains(query)) ||
-                                         q.Senses.Any(s => s.gloss.FirstOrDefault(g => g.Contains(query)) != null)
-                                         );
-
-        queryable = queryable
+        // detect what type of query it is.
+        // if it contains kanji then search in the kanji elements
+        // next if it contains hiragana/katakana then search reading elements
+        // finally search gloss
+        Expression<Func<Entry, bool>> whereExpr;
+        Func<Entry, bool> exactMatchExpr;
+        if (Regex.IsMatch(query, @"[\u4E00-\u9FAF]"))
+        {
+            Console.WriteLine("Searching kanji");
+            whereExpr = q => q.KanjiElements.Any(k => k.keb.Contains(query));
+            exactMatchExpr = e => e.KanjiElements.Any(k => k.keb == query);
+        }
+        else if (Regex.IsMatch(query, @"[\u3040-\u309F\u30A0-\u30FF]"))
+        {
+            Console.WriteLine("Searching kana");
+            whereExpr = q => q.ReadingElements.Any(r => r.reb.Contains(query));
+            exactMatchExpr = e => e.ReadingElements.Any(r => r.reb == query);
+        }
+        else
+        {
+            Console.WriteLine("Searching gloss");
+            whereExpr = q => q.Senses.Any(s => s.gloss.Any(g => g.Contains(query)));
+            exactMatchExpr = e => e.Senses.Any(s => s.gloss.Any(g => g == query));
+        }
+        
+        // Start with base queryable
+        var queryable = _context.Entries
+            .Where(whereExpr)
             .Include(q => q.KanjiElements)
             .Include(q => q.ReadingElements)
             .Include(q => q.Senses)
             .ThenInclude(s => s.lsource);
+        
+        // Apply ordering logic
+        var orderedQueryable = queryable
+            .OrderBy(e => e.KanjiElements.Any() ? e.KanjiElements.Min(k => k.keb.Length) : int.MaxValue)
+            .ThenBy(e => e.ReadingElements.Any() ? e.ReadingElements.Min(r => r.reb.Length) : int.MaxValue);
+        
+        // Apply pagination
+        var list = await orderedQueryable
+            // .Skip((pageNumber - 1) * pageSize)
+            // .Take(pageSize)
+            .ToListAsync();
+        
+        // find exact matches and put them first in the order
+        var orderedList = list.OrderByDescending(exactMatchExpr)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-        var entries = queryable.ToList();
-        
-        var orderedEntries = entries.OrderBy(e => e.KanjiElements.Min(k => k.keb.Length))
-            .ThenBy(e => e.ReadingElements.Min(r => r.reb.Length));
-        
-        return orderedEntries.ToList();
+        return orderedList;
     }
 }

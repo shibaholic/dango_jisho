@@ -20,5 +20,7 @@ public class EntryIsTaggedConfiguration : IEntityTypeConfiguration<EntryIsTagged
             .HasForeignKey(eit => eit.ent_seq)
             .IsRequired();
 
+        builder.Property(eit => eit.Created)
+            .HasDefaultValueSql("NOW()");
     }
 }

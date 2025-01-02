@@ -4,7 +4,9 @@ using Application.UseCaseCommands;
 using Infrastructure;
 using Infrastructure.DbContext;
 using MediatR;
+using Microsoft.AspNetCore.Http.Features;
 using Presentation;
+using Presentation.ExceptionHandler;
 
 namespace Program;
 
@@ -18,20 +20,38 @@ public class Program
         builder.ConfigurePresentationServices();
         builder.Services.ConfigureApplicationServices();
         builder.Services.ConfigureInfrastructureServices(builder.Configuration);
+
+        builder.Services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+                
+                // var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+                string? traceId = System.Diagnostics.Activity.Current?.TraceId.ToString();
+                context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
+            };
+        });
+
+        builder.Services.AddExceptionHandler<ProblemExceptionHandler>();
         
         // APP
         var app = builder.Build();
     
         app.RunPresentationServices();
         app.CheckIfDatabaseCreated();
-        await app.SeedData();
+        app.SeedData();
+
+        app.UseExceptionHandler();
         
         Console.WriteLine("app.Run()");
         app.Run();
     }
 }
 
-public static class ApplicationBuilderExtensions
+public static class ApplicationExtensions
 {
     public static void CheckIfDatabaseCreated(this WebApplication app)
     {
@@ -93,7 +113,7 @@ public static class ApplicationBuilderExtensions
                 Console.WriteLine("Database ensuring created...");
                 dataContext.Database.EnsureCreated();
             }
-                
+            
         }
     }
 }

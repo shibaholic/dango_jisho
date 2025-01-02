@@ -4,6 +4,7 @@ using Moq;
 using Tests.ApplicationUnitTests;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using AddEntryToTag = Application.UseCaseCommands.AddEntryToTag;
 
 namespace Runner;
 
@@ -14,7 +15,7 @@ class Runner
     {
         Console.WriteLine("Runner start");
 
-        ApplicationUnitTestRunners.ImportJMdict_ValidInput_ReturnsOk();
+        ApplicationUnitTestRunners.AddEntryToTag_GetByentseqNull_ThrowsProblemException();
     }
 }
 
@@ -26,5 +27,13 @@ file class ApplicationUnitTestRunners
         var Tests = new ImportJMdictUnitTests(_output);
         
         Tests.ImportJMdict_ValidInput_ReturnsNoContent();
+    }
+
+    public static void AddEntryToTag_GetByentseqNull_ThrowsProblemException()
+    {
+        var _output = new TestOutputHelper();
+        var Tests = new AddEntryToTagUnitTests(_output);
+        
+        Tests.AddEntryToTag_GetByentseqNull_ThrowsProblemException();
     }
 }

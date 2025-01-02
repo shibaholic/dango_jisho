@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Mappings.EntityDtos;
 using Application.Response;
 using AutoMapper;
@@ -33,7 +34,11 @@ public class EntryQuery : IRequestHandler<EntryQueryRequest, Response>
     /// <exception cref="NotImplementedException"></exception>
     public async Task<Response> Handle(EntryQueryRequest request, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew();
         var result = await _entryRepo.Search(request.query);
+        stopwatch.Stop();
+        
+        Console.WriteLine($"Entry Search Query time: {stopwatch.ElapsedMilliseconds} ms.");
         
         var dto = _mapper.Map<List<EntryDto>>(result);
         return Response.Ok("Query results", dto);
