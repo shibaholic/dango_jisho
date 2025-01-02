@@ -20,6 +20,7 @@ public class AddEntryToTagUnitTests
 
     private readonly Mock<ITagRepository> _mockTagRepo;
     private readonly Mock<IEntryRepository> _mockEntryRepo;
+    private readonly Mock<ITrackingRepository> _mockTrackingRepo;
     private readonly IMapper _mapper;
     private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly AddEntryToTag _handler;
@@ -32,6 +33,7 @@ public class AddEntryToTagUnitTests
         
         _mockTagRepo = new Mock<ITagRepository>();
         _mockEntryRepo = new Mock<IEntryRepository>();
+        _mockTrackingRepo = new Mock<ITrackingRepository>(); // not used. maybe will actually use if testing db exceptions
         _unitOfWork = new Mock<IUnitOfWork>();
         
         var mapperConfig = new MapperConfiguration(cfg =>
@@ -39,7 +41,7 @@ public class AddEntryToTagUnitTests
         );
         _mapper = mapperConfig.CreateMapper();
         
-        _handler = new AddEntryToTag(_mockTagRepo.Object, _mockEntryRepo.Object, _unitOfWork.Object, _mapper);
+        _handler = new AddEntryToTag(_mockTagRepo.Object, _mockEntryRepo.Object, _mockTrackingRepo.Object, _unitOfWork.Object, _mapper);
     }
     
     [Fact]
@@ -49,10 +51,6 @@ public class AddEntryToTagUnitTests
         _mockEntryRepo.Setup(service =>
                 service.GetBy_ent_seq(It.IsAny<string>()))
             .ReturnsAsync(new Entry());
-        
-        _mockTagRepo.Setup(service =>
-                service.CreateEntryIsTaggedAsync(It.IsAny<EntryIsTagged>()))
-            .ReturnsAsync(new EntryIsTagged());
 
         _mockTagRepo.Setup(service =>
                 service.ReadByIdUserIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))

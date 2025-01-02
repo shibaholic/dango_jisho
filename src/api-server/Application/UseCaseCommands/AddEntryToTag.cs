@@ -21,13 +21,15 @@ public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITagRepository _tagRepo;
     private readonly IEntryRepository _entryRepo;
+    private readonly ITrackingRepository _trackingRepo;
     private readonly IMapper _mapper;
 
-    public AddEntryToTag(ITagRepository tagRepo, IEntryRepository entryRepo, IUnitOfWork unitOfWork, IMapper mapper)
+    public AddEntryToTag(ITagRepository tagRepo, IEntryRepository entryRepo, ITrackingRepository trackingRepo, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _entryRepo = entryRepo;
         _tagRepo = tagRepo;
+        _trackingRepo = trackingRepo;
         _mapper = mapper;
     }
 
@@ -41,7 +43,14 @@ public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
         if(tag == null) throw new ProblemException("Tag not found", $"Tag with id: {request.TagId} does not exist.");
         
         var entryIsTagged = new EntryIsTagged() { ent_seq = entry.ent_seq, TagId = tag.Id, UserOrder = tag.TotalEntries };
-        await _tagRepo.CreateEntryIsTaggedAsync(entryIsTagged);
+        await _trackingRepo.CreateEntryIsTaggedAsync(entryIsTagged);
+        
+        // Add TrackedEntry 1-1 entity
+        var trackedEntry = new TrackedEntry()
+        {
+            ent_seq = entry.ent_seq, TagId = tag.Id, NextReviewDate = null, Score = 0, Status = TrackedStatus.New
+        };
+        await _trackingRepo.CreateTrackedEntryAsync(trackedEntry);
 
         await _unitOfWork.Commit(cancellationToken);
         

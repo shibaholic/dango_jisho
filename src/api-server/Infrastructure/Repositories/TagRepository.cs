@@ -20,11 +20,4 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
 
         return await query.FirstOrDefaultAsync();
     }
-
-    public async Task<EntryIsTagged> CreateEntryIsTaggedAsync(EntryIsTagged entryIsTagged)
-    {
-        await _context.EntryIsTagged.AddAsync(entryIsTagged);
-
-        return entryIsTagged;
-    }
 }

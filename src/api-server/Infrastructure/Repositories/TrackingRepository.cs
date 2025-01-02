@@ -12,9 +12,18 @@ public class TrackingRepository: BaseRepository<EntryIsTagged>, ITrackingReposit
         _context = context;
     }
 
-    public async Task AddEntryToTag(string ent_seq, Guid TagId, Guid UserId)
+    public async Task<EntryIsTagged> CreateEntryIsTaggedAsync(EntryIsTagged entryIsTagged)
     {
-        throw new NotImplementedException();
+        await _context.EntryIsTagged.AddAsync(entryIsTagged);
+
+        return entryIsTagged;
+    }
+
+    public async Task<TrackedEntry> CreateTrackedEntryAsync(TrackedEntry trackedEntry)
+    {
+        await _context.TrackedEntries.AddAsync(trackedEntry);
+        
+        return trackedEntry;
     }
     
 }
