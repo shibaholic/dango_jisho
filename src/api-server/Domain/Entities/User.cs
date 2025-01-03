@@ -12,6 +12,7 @@ public class User : IBaseEntity
     public bool IsAdmin { get; set; } = false;
     
     public List<Tag> Tags { get; set; } = new List<Tag>();
+    public List<TrackedEntry> TrackedEntries { get; set; } = new List<TrackedEntry>();
     
     public void GenerateRefreshToken()
     {

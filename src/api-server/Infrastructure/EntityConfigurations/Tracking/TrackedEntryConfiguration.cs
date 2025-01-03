@@ -8,11 +8,16 @@ public class TrackedEntryConfiguration : IEntityTypeConfiguration<TrackedEntry>
 {
     public void Configure(EntityTypeBuilder<TrackedEntry> builder)
     {
-        builder.HasKey(te => new { te.ent_seq, te.TagId });
+        builder.HasKey(te => new { te.ent_seq, te.UserId });
         
-        builder.HasOne(te => te.EntryIsTagged)
-            .WithOne(eit => eit.TrackedEntry)
-            .HasForeignKey<TrackedEntry>(eit => new { eit.ent_seq, eit.TagId })
+        builder.HasOne(te => te.Entry)
+            .WithMany(e => e.TrackedEntries)
+            .HasForeignKey(te => te.ent_seq)
+            .IsRequired();
+        
+        builder.HasOne(te => te.User)
+            .WithMany(u => u.TrackedEntries)
+            .HasForeignKey(te => te.UserId)
             .IsRequired();
     }
 }

@@ -8,14 +8,14 @@ public class ReviewEventConfiguration: IEntityTypeConfiguration<ReviewEvent>
 {
     public void Configure(EntityTypeBuilder<ReviewEvent> builder)
     {
-        builder.HasKey(re => new { re.ent_seq, UserId = re.TagId, re.Serial });
+        builder.HasKey(re => new { re.ent_seq, UserId = re.UserId, re.Serial });
 
         builder.Property(re => re.Serial)
             .ValueGeneratedOnAdd();
 
         builder.HasOne(re => re.TrackedEntry)
             .WithMany(te => te.ReviewEvents)
-            .HasForeignKey(re => new { re.ent_seq, TagId = re.TagId })
+            .HasForeignKey(re => new { re.ent_seq, TagId = re.UserId })
             .IsRequired();
         
         builder.Property(re => re.Created)
