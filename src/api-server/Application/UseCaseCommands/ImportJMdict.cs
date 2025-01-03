@@ -232,6 +232,6 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
         stopwatch.Stop();
         Console.WriteLine($"  Copying to database took {stopwatch.ElapsedMilliseconds} ms.");
         
-        return Response.NoContent($"Successfully imported {entries.Count} entries.");
+        return Response.NoContent();
     }
 }

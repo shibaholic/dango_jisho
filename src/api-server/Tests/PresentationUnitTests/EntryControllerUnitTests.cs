@@ -112,7 +112,7 @@ public class EntryControllerUnitTests {
         var payload = new EntryController.UploadJMdictPayload(formFile);
         
         _mockMediator.Setup(m => m.Send(It.IsAny<ImportJMdictRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Response<object>.NoContent("Test success"));
+            .ReturnsAsync(Response<object>.NoContent());
         
         // Act
         var result = await _controller.UploadJMdict(payload, CancellationToken.None);

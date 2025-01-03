@@ -47,8 +47,8 @@ public class Response<T> : ResponseBase
 
     public static Response<T> Ok(string message, T data) => 
         new Response<T>(message, Status.Ok, true, data);
-    public static Response<T> NoContent(string message) => 
-        new Response<T>(message, Status.NoContent, true);
+    public static Response<T> NoContent() => 
+        new Response<T>("", Status.NoContent, true);
     public static Response<T> BadRequest(string message) =>
         new Response<T>(message, Status.BadRequest, false);
     public static Response<T> NotFound(string message) =>
