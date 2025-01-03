@@ -45,7 +45,7 @@ public class AddEntryToTagUnitTests
     }
     
     [Fact]
-    public async void AddEntryToTag_ValidInput_ReturnsNoContent()
+    public async void AddEntryToTag_ValidInputNotNullTracking_ReturnsNoContentNoSideEffect()
     {
         // Arrange
         _mockEntryRepo.Setup(service =>
@@ -56,14 +56,54 @@ public class AddEntryToTagUnitTests
                 service.ReadByIdUserIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Tag());
         
+        _mockTrackingRepo.Setup(service =>
+            service.ReadTrackedEntryByIdsAsync(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new TrackedEntry());
+        
         var request = new AddEntryToTagRequest { ent_seq = "1234", TagId = new Guid(), UserId = new Guid() };
         
         // Act
-        var result = await _handler.Handle(request, It.IsAny<CancellationToken>());
+        var result = await _handler.Handle(request, new CancellationToken());
         
         // Assert
-        var expectedResult = Response<object>.NoContent("Entry added to tag");
+        var expectedResult = Response<object>.NoContent();
         result.Should().BeEquivalentTo(expectedResult);
+        
+        _mockTrackingRepo.Verify(service => 
+            service.CreateTrackedEntryAsync(It.IsAny<TrackedEntry>()), 
+            Times.Never
+        );
+    }
+    
+    [Fact]
+    public async void AddEntryToTag_ValidInputNullTracking_ReturnsNoContentWithSideEffect()
+    {
+        // Arrange
+        _mockEntryRepo.Setup(service =>
+                service.GetBy_ent_seq(It.IsAny<string>()))
+            .ReturnsAsync(new Entry());
+
+        _mockTagRepo.Setup(service =>
+                service.ReadByIdUserIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Tag());
+        
+        _mockTrackingRepo.Setup(service =>
+                service.ReadTrackedEntryByIdsAsync(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync((TrackedEntry?)null);
+        
+        var request = new AddEntryToTagRequest { ent_seq = "1234", TagId = new Guid(), UserId = new Guid() };
+        
+        // Act
+        var result = await _handler.Handle(request, new CancellationToken());
+        
+        // Assert
+        var expectedResult = Response<object>.NoContent();
+        result.Should().BeEquivalentTo(expectedResult);
+        
+        _mockTrackingRepo.Verify(service => 
+                service.CreateTrackedEntryAsync(It.IsAny<TrackedEntry>()), 
+            Times.Once
+        );
     }
     
     [Fact]

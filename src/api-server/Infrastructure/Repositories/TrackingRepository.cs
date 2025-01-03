@@ -1,6 +1,7 @@
 using Domain.Entities.Tracking;
 using Domain.RepositoryInterfaces;
 using Infrastructure.DbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -25,5 +26,18 @@ public class TrackingRepository: BaseRepository<EntryIsTagged>, ITrackingReposit
         
         return trackedEntry;
     }
-    
+
+    public async Task<TrackedEntry?> ReadTrackedEntryByIdsAsync(string ent_seq, Guid userId)
+    {
+        return await _context.TrackedEntries
+            .Where(te => te.ent_seq == ent_seq && te.UserId == userId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<ReviewEvent> CreateReviewEventAsync(ReviewEvent reviewEvent)
+    {
+        await _context.ReviewEvents.AddAsync(reviewEvent);
+        
+        return reviewEvent;
+    }
 }
