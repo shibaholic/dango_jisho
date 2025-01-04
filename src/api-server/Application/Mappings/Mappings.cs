@@ -20,5 +20,6 @@ public class Mappings : Profile
         
         // Tracking
         CreateMap<Tag, TagDto>();
+        CreateMap<ReviewEvent, ReviewEventDto>();
     }
 }

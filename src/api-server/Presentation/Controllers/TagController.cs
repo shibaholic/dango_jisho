@@ -38,7 +38,7 @@ public class TagController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateTagRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
     {
         if (request.Name is null) return BadRequest();
 
