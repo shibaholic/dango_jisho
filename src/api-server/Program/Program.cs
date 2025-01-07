@@ -1,6 +1,13 @@
 using System.Diagnostics;
 using Application;
+using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.Tracking;
+using Application.Response;
+using Application.Services;
 using Application.UseCaseCommands;
+using Domain.Entities;
+using Domain.Entities.JMDict;
+using Domain.Entities.Tracking;
 using Infrastructure;
 using Infrastructure.DbContext;
 using MediatR;
@@ -42,7 +49,7 @@ public class Program
     
         app.RunPresentationServices();
         app.CheckIfDatabaseCreated();
-        app.SeedData();
+        await app.CheckEnsureCreated();
 
         app.UseExceptionHandler();
         
@@ -69,11 +76,10 @@ public static class ApplicationExtensions
         }
     }
 
-    public static async Task SeedData(this WebApplication app)
+    public static async Task CheckEnsureCreated(this WebApplication app)
     {
         var serviceScope = app.Services.CreateScope();
         var dataContext = serviceScope.ServiceProvider.GetService<MyDbContext>();
-        var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
         
         if (app.Environment.IsDevelopment())
         {
@@ -83,30 +89,10 @@ public static class ApplicationExtensions
                 Console.WriteLine("Database ensuring deleted and created...");
                 dataContext.Database.EnsureDeleted();
                 dataContext.Database.EnsureCreated();
-                    
-                Console.WriteLine("Seeding with JMDict data...");
-                string filePath = Path.Combine(AppContext.BaseDirectory, "SeedData", "JMdict_e.xml");
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine("Could not find seed data.");
-                    System.Environment.Exit(1);
-                }
-                var stopwatch = Stopwatch.StartNew();
-                using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filePath)));
-                var request = new ImportJMdictRequest { Content = stream.ToArray() };
-                stopwatch.Stop();
-                Console.WriteLine($"  Loading JMdict from {filePath} took {stopwatch.ElapsedMilliseconds} ms.");
-                stopwatch.Restart();
-                var result = await mediator.Send(request, CancellationToken.None);
-                
-                if (!result.Successful)
-                {
-                    Console.WriteLine("Error while importing JMdict_e.xml.");
-                    System.Environment.Exit(1);
-                }
-                Console.WriteLine($"{result.Message}");
-                stopwatch.Stop();
-                Console.WriteLine($"  ImportJMdict took {stopwatch.ElapsedMilliseconds} ms.");
+
+                await SeedJMDictData(serviceScope);
+                await SeedUserData(serviceScope);
+                await SeedTrackingData(serviceScope);
             }
             else
             {
@@ -115,5 +101,156 @@ public static class ApplicationExtensions
             }
             
         }
+    }
+
+    private static async Task SeedJMDictData(IServiceScope serviceScope)
+    {
+        var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
+        
+        Console.WriteLine("Seeding with JMDict data...");
+        string filePath = Path.Combine(AppContext.BaseDirectory, "SeedData", "JMdict_e.xml");
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine("  Could not find seed data.");
+            System.Environment.Exit(1);
+        }
+        var stopwatch = Stopwatch.StartNew();
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filePath)));
+        var request = new ImportJMdictRequest { Content = stream.ToArray() };
+        stopwatch.Stop();
+        Console.WriteLine($"  Loading JMdict from {filePath} took {stopwatch.ElapsedMilliseconds} ms.");
+        stopwatch.Restart();
+        var result = await mediator.Send(request, CancellationToken.None);
+                
+        if (!result.Successful)
+        {
+            Console.WriteLine("  Error while importing JMdict_e.xml.");
+            System.Environment.Exit(1);
+        }
+        stopwatch.Stop();
+        Console.WriteLine($"JMDict seeding took {stopwatch.ElapsedMilliseconds} ms.\n");
+    }
+
+    private static async Task SeedUserData(IServiceScope serviceScope)
+    {
+        Console.WriteLine("Seeding with User data...");
+        
+        var userCrud = serviceScope.ServiceProvider.GetService<ICrudService<User,User>>();
+
+        if (userCrud == null)
+        {
+            Console.WriteLine("  Error while getting CrudService<User,User>");
+            System.Environment.Exit(1);
+        }
+
+        var user = new User
+        {
+            Id = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"), Username = "myuser", Password = "password",
+            Email = "myuser@mail.com", IsAdmin = false
+        };
+
+        var result = await userCrud.CreateAsync(user);
+        if (!result.Successful)
+        {
+            Console.WriteLine("  Error while seeding user.");
+            System.Environment.Exit(1);
+        }
+        
+        Console.WriteLine("Successfully seeded user.\n");
+    }
+    
+    private static async Task SeedTrackingData(IServiceScope serviceScope)
+    {
+        Console.WriteLine("Seeding with Tracking data...");
+        
+        var tagCrud =     serviceScope.ServiceProvider.GetService<ICrudService<Tag,TagDto>>();
+        var eitCrud =     serviceScope.ServiceProvider.GetService<ICrudService<EntryIsTagged,EntryIsTagged>>();
+        var trackedCrud = serviceScope.ServiceProvider.GetService<ICrudService<TrackedEntry,TrackedEntry>>();
+        var tissCrud =    serviceScope.ServiceProvider.GetService<ICrudService<TagInStudySet,TagInStudySet>>();
+        var studyCrud =   serviceScope.ServiceProvider.GetService<ICrudService<StudySet,StudySetDto>>();
+
+        if (tagCrud == null || eitCrud == null || trackedCrud == null || tissCrud == null || studyCrud == null)
+        {
+            Console.WriteLine("  Error while getting CrudService<,>(s)");
+            System.Environment.Exit(1);
+        }
+        
+        // Tag
+        
+        var tag = new Tag
+        {
+            Id = new Guid("f57c7dff-1d29-4e50-b18c-f0471694262d"), 
+            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
+            Name = "MyTag"
+        };
+        
+        var tagResult = await tagCrud.CreateAsync(tag);
+
+        // EntryIsTagged
+        
+        var entryIsTaggeds = new List<EntryIsTagged> {
+            new EntryIsTagged { TagId = tag.Id, UserOrder = 1, ent_seq = "1471130" },
+            new EntryIsTagged { TagId = tag.Id, UserOrder = 2, ent_seq = "1317830" },
+            new EntryIsTagged { TagId = tag.Id, UserOrder = 3, ent_seq = "1467550" },
+            new EntryIsTagged { TagId = tag.Id, UserOrder = 2, ent_seq = "1511500" },
+            new EntryIsTagged { TagId = tag.Id, UserOrder = 3, ent_seq = "1474050" },
+         };
+
+        var entryIsTaggedResults = new List<Response<EntryIsTagged>>();
+
+        foreach (var entryIsTagged in entryIsTaggeds)
+        {
+            entryIsTaggedResults.Add(await eitCrud.CreateAsync(entryIsTagged));
+        }
+
+        // TrackedEntry
+        
+        var trackedEntries = new List<TrackedEntry>();
+        
+        foreach (var entryIsTagged in entryIsTaggeds)
+        {
+            var trackedEntry = new TrackedEntry
+            {
+                ent_seq = entryIsTagged.ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.New,
+                SpecialCategory = null
+            };
+            trackedEntries.Add(trackedEntry);
+        }
+        
+        var trackedEntriesResults = new List<Response<TrackedEntry>>();
+
+        foreach (var trackedEntry in trackedEntries)
+        {
+            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
+        }
+        
+        // StudySet
+
+        var studySet = new StudySet
+        {
+            Id = new Guid("8fac6386-976e-4eb4-bd8e-ab0f9db9270a"), UserId = tag.UserId, LastStartDate = null,
+            NewEntryGoal = 30, NewEntryCount = 0
+        };
+        
+        var studySetResult = await studyCrud.CreateAsync(studySet);
+        
+        // TagInStudySet
+
+        var tagInStudySet = new TagInStudySet
+        {
+            TagId = tag.Id, StudySetId = studySet.Id, Order = 1
+        };
+        
+        var tagInStudySetResult = await tissCrud.CreateAsync(tagInStudySet);
+
+        if (!(tagResult.Successful && studySetResult.Successful && tagInStudySetResult.Successful) || 
+            (entryIsTaggedResults.Any(eit => !eit.Successful) ||
+                trackedEntriesResults.Any(te => !te.Successful)))
+        {
+            Console.WriteLine("  Error while seeding tracking data.");
+            System.Environment.Exit(1);
+        }
+        
+        Console.WriteLine("Successfully seeded tracking data.\n");
     }
 }

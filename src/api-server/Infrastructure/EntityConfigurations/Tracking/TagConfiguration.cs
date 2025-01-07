@@ -20,5 +20,8 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         
         builder.Property(t => t.Created)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        
+        builder.Property(t => t.TotalEntries)
+            .HasDefaultValue(0);
     }
 }

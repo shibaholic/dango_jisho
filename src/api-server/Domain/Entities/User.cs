@@ -13,6 +13,7 @@ public class User : IBaseEntity
     
     public List<Tag> Tags { get; set; } = new List<Tag>();
     public List<TrackedEntry> TrackedEntries { get; set; } = new List<TrackedEntry>();
+    public List<StudySet> StudySets { get; set; } = new List<StudySet>();
     
     public void GenerateRefreshToken()
     {

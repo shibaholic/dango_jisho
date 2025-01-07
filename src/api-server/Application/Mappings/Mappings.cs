@@ -21,5 +21,9 @@ public class Mappings : Profile
         // Tracking
         CreateMap<Tag, TagDto>();
         CreateMap<ReviewEvent, ReviewEventDto>();
+        CreateMap<StudySet, StudySetDto>();
+        
+        // Other
+        CreateMap<User, UserDto>();
     }
 }

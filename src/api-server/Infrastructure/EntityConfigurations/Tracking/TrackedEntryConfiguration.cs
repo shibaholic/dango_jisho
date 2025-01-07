@@ -19,5 +19,8 @@ public class TrackedEntryConfiguration : IEntityTypeConfiguration<TrackedEntry>
             .WithMany(u => u.TrackedEntries)
             .HasForeignKey(te => te.UserId)
             .IsRequired();
+
+        builder.Property(te => te.Score)
+            .HasDefaultValue(0);
     }
 }

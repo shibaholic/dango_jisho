@@ -17,11 +17,6 @@ public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         // applies all entity configurations specified in types implementing IEntityTypeConfiguration
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
-        
-        // seed data
-        modelBuilder.Entity<User>().HasData(
-            new User {Id = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"), Username = "myuser", Password = "password", Email = "myuser@mail.com", IsAdmin = false}
-        );
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -47,4 +42,6 @@ public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<EntryIsTagged> EntryIsTagged { get; set; }
     public DbSet<TrackedEntry> TrackedEntries { get; set; }
     public DbSet<ReviewEvent> ReviewEvents { get; set; }
+    public DbSet<StudySet> StudySets { get; set; }
+    public DbSet<TagInStudySet> TagInStudySets { get; set; } 
 }

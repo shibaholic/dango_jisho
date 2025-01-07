@@ -11,7 +11,8 @@ public class Tag : IBaseEntity
     public string Name { get; set; }
     public DateTimeOffset Created { get; set; }
     public int TotalEntries { get; set; } = 0;
-    public List<EntryIsTagged> EntryIsTaggeds { get; set; } =  new List<EntryIsTagged>();
     
     public User User { get; set; } // nav
+    public List<EntryIsTagged> EntryIsTaggeds { get; set; } =  new List<EntryIsTagged>();
+    public List<TagInStudySet> TagInStudySets { get; set; } =  new List<TagInStudySet>();
 }
