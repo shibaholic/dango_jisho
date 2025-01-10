@@ -20,7 +20,7 @@ public class Mappings : Profile
         
         // Tracking
         CreateMap<Tag, TagDto>();
-        CreateMap<ReviewEvent, ReviewEventDto>();
+        CreateMap<EntryEvent, ReviewEventDto>();
         CreateMap<StudySet, StudySetDto>();
         
         // Other

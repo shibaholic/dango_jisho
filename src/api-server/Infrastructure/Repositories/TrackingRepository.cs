@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class TrackingRepository: BaseRepository<EntryIsTagged>, ITrackingRepository
+public class TrackingRepository: BaseRepository<TrackedEntry>, ITrackingRepository
 {
     private readonly MyDbContext _context;
     public TrackingRepository(MyDbContext context) : base(context)
@@ -34,10 +34,10 @@ public class TrackingRepository: BaseRepository<EntryIsTagged>, ITrackingReposit
             .FirstOrDefaultAsync();
     }
 
-    public async Task<ReviewEvent> CreateReviewEventAsync(ReviewEvent reviewEvent)
+    public async Task<EntryEvent> CreateReviewEventAsync(EntryEvent entryEvent)
     {
-        await _context.ReviewEvents.AddAsync(reviewEvent);
+        await _context.EntryEvents.AddAsync(entryEvent);
         
-        return reviewEvent;
+        return entryEvent;
     }
 }
