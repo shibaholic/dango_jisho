@@ -15,7 +15,7 @@ class Runner
     {
         Console.WriteLine("Runner start");
 
-        ApplicationUnitTestRunners.AddEntryToTag_GetByentseqNull_ThrowsProblemException();
+        ApplicationUnitTestRunners.StartStudySet_LastStartDateSame_ReturnsOkNotRestarted();
     }
 }
 
@@ -35,5 +35,19 @@ file class ApplicationUnitTestRunners
         var Tests = new AddEntryToTagUnitTests(_output);
         
         Tests.AddEntryToTag_GetByentseqNull_ThrowsProblemException();
+    }
+
+    public static void StartStudySet_LastStartDateSame_ReturnsOkNotRestarted()
+    {
+        var _output = new TestOutputHelper();
+        var Tests = new StartStudySetUnitTests(_output);
+
+        var testData = StartStudySetUnitTests.LastStartDateData;
+
+        foreach (var testCase in testData)
+        {
+            Tests.StartStudySet_LastStartDates_ReturnsOk((DateTime)testCase[0], (string)testCase[1]);
+        }
+        
     }
 }

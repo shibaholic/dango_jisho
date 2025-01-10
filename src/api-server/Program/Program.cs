@@ -183,18 +183,131 @@ public static class ApplicationExtensions
             UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
             Name = "MyTag"
         };
+        var tag2 = new Tag
+        {
+            Id = new Guid("f57c7dff-1d29-4e50-b18c-f0471694262e"),
+            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
+            Name = "MyTag2"
+        };
         
         var tagResult = await tagCrud.CreateAsync(tag);
+        var tag2Result = await tagCrud.CreateAsync(tag2);
 
-        // EntryIsTagged
+        // list of ent_seq
+        var ent_seqs_New = new List<string>
+        {
+            "1471130",
+            "1317830",
+            "1467550",
+            "1511500",
+            "1474050",
+            "1309550",
+            "1294540",
+            "1786080",
+            "1326600",
+            "1386350",
+            "1592380",
+            "1470020",
+            "1433840",
+            "1481670"
+        };
         
-        var entryIsTaggeds = new List<EntryIsTagged> {
-            new EntryIsTagged { TagId = tag.Id, UserOrder = 1, ent_seq = "1471130" },
-            new EntryIsTagged { TagId = tag.Id, UserOrder = 2, ent_seq = "1317830" },
-            new EntryIsTagged { TagId = tag.Id, UserOrder = 3, ent_seq = "1467550" },
-            new EntryIsTagged { TagId = tag.Id, UserOrder = 2, ent_seq = "1511500" },
-            new EntryIsTagged { TagId = tag.Id, UserOrder = 3, ent_seq = "1474050" },
-         };
+        var ent_seqs_Learning = new List<string>
+        {
+            "2740680",
+            "2859672",
+            "2172220",
+            "1579310"
+        };
+
+        var ent_seqs_Review = new List<string>
+        {
+            "1421540",
+            "1192700",
+            "1502790",
+            "1186760",
+            "1379430"
+        };
+
+        var ent_seqs_Know = new List<string>
+        {
+            "1775870",
+            "1412640",
+            "1630050",
+            "1792970",
+            "1500100",
+        };
+        
+        // TrackedEntry
+        
+        var trackedEntriesResults = new List<Response<TrackedEntry>>();
+        
+        foreach (var ent_seq in ent_seqs_New)
+        {
+            var trackedEntry = new TrackedEntry
+            {
+                ent_seq = ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.New
+            };
+            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
+        }
+        
+        foreach (var ent_seq in ent_seqs_Learning)
+        {
+            var trackedEntry = new TrackedEntry
+            {
+                ent_seq = ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.Learning
+            };
+            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
+        }
+        
+        var lastReviewDate = new DateTime(2025, 1, 1, 0, 0, 0);
+        var nextReviewDays = 9;
+        
+        foreach (var ent_seq in ent_seqs_Review)
+        {
+            var trackedEntry = new TrackedEntry
+            {
+                ent_seq = ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.Reviewing, 
+                LastReviewDate = lastReviewDate, NextReviewDays = nextReviewDays
+            };
+            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
+        }
+
+        foreach (var ent_seq in ent_seqs_Know)
+        {
+            var trackedEntry = new TrackedEntry
+            {
+                ent_seq = ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.Known, 
+                LastReviewDate = lastReviewDate, NextReviewDays = nextReviewDays
+            };
+            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
+        }
+        
+        // EntryIsTagged
+
+        var entryIsTaggeds = new List<EntryIsTagged>();
+        for (int i = 1; i <= 7; i++)
+        {
+            entryIsTaggeds.Add(new EntryIsTagged { TagId = tag.Id, ent_seq = ent_seqs_New[i - 1], UserId = tag.UserId, UserOrder = i });
+        }
+        for (int i = 1; i <= 7; i++)
+        {
+            entryIsTaggeds.Add(new EntryIsTagged { TagId = tag2.Id, ent_seq = ent_seqs_New[i + 6], UserId = tag.UserId, UserOrder = i });
+        }
+
+        int j = 8;
+        foreach (var ent_seq in ent_seqs_Learning)
+        {
+            entryIsTaggeds.Add(new EntryIsTagged {TagId = tag.Id, ent_seq = ent_seq, UserId = tag.UserId, UserOrder = j++});
+        }
+        foreach (var ent_seq in ent_seqs_Review)
+        {
+            entryIsTaggeds.Add(new EntryIsTagged {TagId = tag.Id, ent_seq = ent_seq, UserId = tag.UserId, UserOrder = j++});
+        }
+        foreach (var ent_seq in ent_seqs_Know)
+        {
+            entryIsTaggeds.Add(new EntryIsTagged {TagId = tag.Id, ent_seq = ent_seq, UserId = tag.UserId, UserOrder = j++});
+        }
 
         var entryIsTaggedResults = new List<Response<EntryIsTagged>>();
 
@@ -202,48 +315,29 @@ public static class ApplicationExtensions
         {
             entryIsTaggedResults.Add(await eitCrud.CreateAsync(entryIsTagged));
         }
-
-        // TrackedEntry
-        
-        var trackedEntries = new List<TrackedEntry>();
-        
-        foreach (var entryIsTagged in entryIsTaggeds)
-        {
-            var trackedEntry = new TrackedEntry
-            {
-                ent_seq = entryIsTagged.ent_seq, UserId = tag.UserId, LevelStateType = LevelStateType.New,
-                SpecialCategory = null
-            };
-            trackedEntries.Add(trackedEntry);
-        }
-        
-        var trackedEntriesResults = new List<Response<TrackedEntry>>();
-
-        foreach (var trackedEntry in trackedEntries)
-        {
-            trackedEntriesResults.Add(await trackedCrud.CreateAsync(trackedEntry));
-        }
         
         // StudySet
 
         var studySet = new StudySet
         {
             Id = new Guid("8fac6386-976e-4eb4-bd8e-ab0f9db9270a"), UserId = tag.UserId, LastStartDate = null,
-            NewEntryGoal = 30, NewEntryCount = 0
+            NewEntryGoal = 10, NewEntryCount = 0
         };
         
         var studySetResult = await studyCrud.CreateAsync(studySet);
         
         // TagInStudySet
 
-        var tagInStudySet = new TagInStudySet
+        var tagInStudySets = new List<TagInStudySet>
         {
-            TagId = tag.Id, StudySetId = studySet.Id, Order = 1
+            new TagInStudySet { TagId = tag.Id, StudySetId = studySet.Id, Order = 1 },
+            new TagInStudySet { TagId = tag2.Id, StudySetId = studySet.Id, Order = 2 }
         };
         
-        var tagInStudySetResult = await tissCrud.CreateAsync(tagInStudySet);
-
-        if (!(tagResult.Successful && studySetResult.Successful && tagInStudySetResult.Successful) || 
+        var tagInStudySet1Result = await tissCrud.CreateAsync(tagInStudySets[0]);
+        var tagInStudySet2Result = await tissCrud.CreateAsync(tagInStudySets[1]);
+        
+        if (!(tagResult.Successful && studySetResult.Successful && tagInStudySet1Result.Successful && tagInStudySet2Result.Successful) || 
             (entryIsTaggedResults.Any(eit => !eit.Successful) ||
                 trackedEntriesResults.Any(te => !te.Successful)))
         {

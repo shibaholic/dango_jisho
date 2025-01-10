@@ -19,6 +19,7 @@ public class ReviewEventConfiguration: IEntityTypeConfiguration<ReviewEvent>
             .IsRequired();
         
         builder.Property(re => re.Created)
+            .HasColumnType("timestamp")
             .HasDefaultValueSql("NOW()");
     }
 }

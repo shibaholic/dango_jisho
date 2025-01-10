@@ -17,5 +17,8 @@ public static class ServiceExtension
         
         // CrudService
         services.AddTransient(typeof(ICrudService<,>), typeof(CrudService<,>));
+        
+        // other
+        services.AddTransient(typeof(ITimeService), typeof(TimeService));
     }
 }

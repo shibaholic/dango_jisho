@@ -1,5 +1,7 @@
 # Todo List
 
+- Query string cleaning (white space)
+
 ## Dec 12 2024
 
 1. ✅ Backend review system

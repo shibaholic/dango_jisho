@@ -22,5 +22,8 @@ public class TrackedEntryConfiguration : IEntityTypeConfiguration<TrackedEntry>
 
         builder.Property(te => te.Score)
             .HasDefaultValue(0);
+
+        builder.Property(te => te.LastReviewDate)
+            .HasColumnType("timestamp");
     }
 }

@@ -4,7 +4,7 @@ public class StudySet : IBaseEntity
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public DateTimeOffset? LastStartDate { get; set; }
+    public DateTime? LastStartDate { get; set; }
     public int NewEntryGoal { get; set; }
     public int NewEntryCount { get; set; }
     // ent_seq of TrackedEntry

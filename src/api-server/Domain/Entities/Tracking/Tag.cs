@@ -9,7 +9,7 @@ public class Tag : IBaseEntity
     [Required(ErrorMessage = "The string cannot be null or empty.")]
     [MinLength(1, ErrorMessage = "The string must not be empty.")]
     public string Name { get; set; }
-    public DateTimeOffset Created { get; set; }
+    public DateTime Created { get; set; }
     public int TotalEntries { get; set; } = 0;
     
     public User User { get; set; } // nav
