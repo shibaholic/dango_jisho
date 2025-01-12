@@ -21,24 +21,28 @@ const WeatherForecastContent = () => {
   const queryClient = useQueryClient();
 
   // Queries
-  const weatherForecastQuery = useQuery({
+  const { data, refetch, isError } = useQuery({
     queryKey: ["weatherforecast"],
     queryFn: async () => {
       let result = await fetch(`${api_url}/WeatherForecast`);
       if (!result.ok) throw new Error("Network response was not ok");
       return result.json();
     },
+    enabled: false,
   });
 
-  function weatherForecastAction() {
-    const { isPending, isError, data, error } = weatherForecastQuery;
+  async function weatherForecastAction() {
+    const freshData = await refetch();
+    // const { isPending, isError, data, error, refetch } = weatherForecastQuery;
 
     if (isError) setWeatherForecastData("error");
 
-    console.debug(data);
+    const newData = freshData.data;
+
+    console.debug(newData);
 
     let weatherForecastParsed = new WeatherForecast();
-    Object.assign(weatherForecastParsed, data[0]);
+    Object.assign(weatherForecastParsed, newData[0]);
 
     console.debug(weatherForecastParsed);
     console.log(weatherForecastParsed.toString());
