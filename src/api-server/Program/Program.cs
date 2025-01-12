@@ -42,11 +42,23 @@ public class Program
             };
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder => builder
+                .WithOrigins(["http://192.168.86.100:5173", "http://localhost:5173"])
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+            );
+        });
+
         builder.Services.AddExceptionHandler<ProblemExceptionHandler>();
         
         // APP
         var app = builder.Build();
     
+        app.UseCors();
+        
         app.RunPresentationServices();
         app.CheckIfDatabaseCreated();
         await app.CheckEnsureCreated();
