@@ -21,7 +21,6 @@ public enum EventType
 
 public enum ReviewValue
 {
-    Zero,
     Again,
     Soon,
     Okay,

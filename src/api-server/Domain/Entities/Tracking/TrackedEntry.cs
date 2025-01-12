@@ -7,8 +7,8 @@ public class TrackedEntry : IBaseEntity
 {
     public string ent_seq { get; set; }
     public Guid UserId { get; set; }
-    public bool Ready { get; set; } = false; // what was the purpose of this field again?
     public LevelStateType LevelStateType { get; set; } = LevelStateType.New;
+    public LevelStateType? OldLevelStateType { get; set; } = null;
     [NotMapped] public ILevelState? LevelState { get; private set; } = null; // not stored in DB
 
     public SpecialCategory? SpecialCategory { get; set; } = null;
@@ -50,7 +50,8 @@ public enum SpecialCategory
 {
     NeverForget,
     Blacklist,
-    Cram
+    Cram,
+    Failed
 }
 
 public interface ILevelState
@@ -109,7 +110,19 @@ public class LevelStateLearning : ILevelState
                 // increment Score by 1
                 TrackedEntry.Score += 1;
                 // change nextReviewMinutes
-                TrackedEntry.NextReviewMinutes = 10;
+                TrackedEntry.NextReviewMinutes = TrackedEntry.Score * 10;
+                TrackedEntry.LastReviewDate = now;
+                if (TrackedEntry.Score >= 5)
+                {
+                    TrackedEntry.Score = 0;
+                    TrackedEntry.LevelStateType = LevelStateType.Reviewing;
+                    TrackedEntry.NextReviewDays = 1;
+                    TrackedEntry.NextReviewMinutes = null;
+                }
+            } else if (entryEvent.ReviewValue == ReviewValue.Again)
+            {
+                TrackedEntry.Score = 0;
+                TrackedEntry.NextReviewMinutes = 5;
                 TrackedEntry.LastReviewDate = now;
             }
         }
@@ -131,6 +144,39 @@ public class LevelStateReview : ILevelState
     public void UpdateBasedOnEntryEvent(EntryEvent entryEvent, DateTime now)
     {
         Console.WriteLine("[LevelStateReview] UpdateBasedOnEntryEvent");
+        if (entryEvent.EventType == EventType.Change)
+        {
+            // read the ChangeValue and change depending on that (this is same to all ILevelStates !!!!!!!
+            // TODO: implement same generic thing maybe???
+            
+        } else if (entryEvent.EventType == EventType.Review)
+        {
+            // read the ReviewValue
+            if (entryEvent.ReviewValue == ReviewValue.Okay)
+            {
+                // increment Score by 1
+                TrackedEntry.Score += 1;
+                // change nextReviewMinutes
+                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.LastReviewDate = now;
+                if (TrackedEntry.Score >= 6)
+                {
+                    TrackedEntry.LevelStateType = LevelStateType.Known;
+                }
+            } else if (entryEvent.ReviewValue == ReviewValue.Again)
+            {
+                throw new NotImplementedException();
+                // TrackedEntry.Score = 1;
+                // TrackedEntry.LastReviewDate = now;
+                // TrackedEntry.NextReviewMinutes = 5;
+                // TrackedEntry.SpecialCategory = SpecialCategory.Failed;
+                // // TODO: implement behavior for special category Failed.
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Unknown EntryEvent.EventType");
+        }
     }
 
     public void CheckReviewDate()
@@ -145,6 +191,42 @@ public class LevelStateKnown : ILevelState
     public void UpdateBasedOnEntryEvent(EntryEvent entryEvent, DateTime now)
     {
         Console.WriteLine("[LevelStateKnown] UpdateBasedOnEntryEvent");
+        if (entryEvent.EventType == EventType.Change)
+        {
+            // read the ChangeValue and change depending on that (this is same to all ILevelStates !!!!!!!
+            
+        } else if (entryEvent.EventType == EventType.Review)
+        {
+            // read the ReviewValue
+            if (entryEvent.ReviewValue == ReviewValue.Okay)
+            {
+                // increment Score by 1
+                TrackedEntry.Score += 3;
+                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.LastReviewDate = now;
+            } else if (entryEvent.ReviewValue == ReviewValue.Easy)
+            {
+                TrackedEntry.Score += 10;
+                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.LastReviewDate = now;
+            } else if(entryEvent.ReviewValue == ReviewValue.Soon)
+            {
+                TrackedEntry.Score = 3;
+                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.LastReviewDate = now;
+                // TODO: implement temporary soon
+            } else if (entryEvent.ReviewValue == ReviewValue.Again)
+            {
+                TrackedEntry.Score = 1;
+                TrackedEntry.LastReviewDate = now;
+                TrackedEntry.SpecialCategory = SpecialCategory.Failed;
+                // TODO: implement behavior for special category Failed.
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Unknown EntryEvent.EventType");
+        }
     }
 
     public void CheckReviewDate()

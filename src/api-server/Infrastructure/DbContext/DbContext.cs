@@ -41,7 +41,7 @@ public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<EntryIsTagged> EntryIsTagged { get; set; }
     public DbSet<TrackedEntry> TrackedEntries { get; set; }
-    public DbSet<EntryEvent> EntryEvents { get; set; }
+    public DbSet<EntryEvent> EntryEvents { get; set; }  
     public DbSet<StudySet> StudySets { get; set; }
     public DbSet<TagInStudySet> TagInStudySets { get; set; } 
 }
