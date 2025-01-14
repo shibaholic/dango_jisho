@@ -12,8 +12,8 @@ public interface ICrudService<T, TDto>
     Task<Response<TDto>> CreateAsync(T entity);
     Task<T> UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
-    Task<T> GetByIdAsync(Guid id);
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<T?> GetByIdAsync(Guid id);
+    Task<Response<IEnumerable<TDto>>> GetAllAsync();
 }
 
 public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
@@ -51,13 +51,15 @@ public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
         await _repo.DeleteAsync(id);
     }
 
-    public async Task<T> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
         return await _repo.ReadByIdAsync(id);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<Response<IEnumerable<TDto>>> GetAllAsync()
     {
-        return await _repo.ReadAllAsync();
+        var result = await _repo.ReadAllAsync();
+        var dto = _mapper.Map<IEnumerable<TDto>>(result);
+        return Response<IEnumerable<TDto>>.Ok("Entity results", dto);
     }
 }

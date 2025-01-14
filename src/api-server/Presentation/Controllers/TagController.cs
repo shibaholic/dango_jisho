@@ -6,6 +6,7 @@ using Domain.Entities.Tracking;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Utilities;
+using Application.Response;
 
 namespace Presentation.Controllers;
 
@@ -24,11 +25,11 @@ public class TagController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetById([FromQuery] Guid id)
     {
-        var result = await _crudService.GetByIdAsync(id);
+        Tag? result = await _crudService.GetByIdAsync(id);
         
         if (result == null) return NotFound();
         
-        return Ok(result);
+        return Ok(Response<Tag>.Ok("Found", result));
     }
 
     public record CreateTagRequest

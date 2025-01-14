@@ -22,6 +22,7 @@ public class Mappings : Profile
         CreateMap<Tag, TagDto>();
         CreateMap<EntryEvent, ReviewEventDto>();
         CreateMap<StudySet, StudySetDto>();
+        CreateMap<TrackedEntry, TrackedEntryDto>();
         
         // Other
         CreateMap<User, UserDto>();
