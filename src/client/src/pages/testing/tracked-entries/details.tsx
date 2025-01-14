@@ -1,6 +1,12 @@
 import { api_url } from "@/Api";
 import { useQuery } from "@tanstack/react-query";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 import {
   Collapsible,
@@ -8,7 +14,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, ArrowDownToLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -25,10 +31,60 @@ export interface DetailsRef {
 
 export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
   const [ent_seq, setEnt_seq] = useState<string | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    setES: (es: string) => {
+      setEnt_seq(es);
+    },
+  }));
+
+  return (
+    <>
+      {/* <Button onClick={testPrint}>Test Print</Button> */}
+
+      <HeaderValue header={"ent_seq"} value={ent_seq} />
+
+      <div key={ent_seq}>
+        {ent_seq ? (
+          <Section
+            title="Entry details"
+            ent_seq={ent_seq}
+            fetchFn={fetch(`${api_url}/TrackedEntry/id?ent_seq=${ent_seq}`)}
+          />
+        ) : (
+          <p>Click "Show details"</p>
+        )}
+      </div>
+    </>
+  );
+});
+
+interface SectionProps<T extends Response> {
+  title: string;
+  ent_seq: string;
+  fetchFn: Promise<T>;
+}
+
+function Section<T extends Response>({
+  title,
+  ent_seq,
+  fetchFn,
+}: SectionProps<T>) {
   const [data, setData] = useState<TrackedEntry | null>(null);
   const [status, setStatus] = useState<string>("undefined");
+  const [open, setOpen] = useState<boolean>(false);
 
-  async function fetchData() {
+  const { refetch, isError, error } = useQuery({
+    queryKey: ["trackedEntry", ent_seq],
+    queryFn: async () => {
+      let result = await fetchFn;
+      if (!result.ok) throw new Error("Network response was not ok");
+      return result.json();
+    },
+    enabled: false,
+  });
+
+  async function loadSection() {
     const freshData = await refetch();
 
     if (isError) {
@@ -38,90 +94,80 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
       if (freshData.data) {
         setData(freshData.data.data);
         setStatus("loaded");
+        setOpen(true);
       }
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    setES: (es: string) => {
-      setEnt_seq(es);
-    },
-  }));
-
-  const { refetch, isError, error } = useQuery({
-    queryKey: ["trackedEntry", ent_seq],
-    queryFn: async () => {
-      let result = await fetch(`${api_url}/TrackedEntry/id?ent_seq=${ent_seq}`);
-      if (!result.ok) throw new Error("Network response was not ok");
-      return result.json();
-    },
-    enabled: false,
-  });
-
-  useEffect(() => {
-    if (ent_seq != null) {
-      fetchData();
-    }
-  }, [ent_seq]);
-
-  // function testPrint() {
-  //   console.log(levelStateToString(data!.levelStateType));
-  // }
-
   return (
     <>
-      {/* <Button onClick={testPrint}>Test Print</Button> */}
-
-      <HeaderValue header={"ent_seq"} value={ent_seq} />
-
-      {status === "loaded" && data ? (
-        <Collapsible className="w-full">
-          <div className="flex w-full mb-4 gap-4 items-center">
-            <h4 className="max-w-1/2 text-md font-bold">Entry details</h4>
+      <Collapsible className="w-full" open={open}>
+        <div className="flex w-full mb-4 gap-4 items-center">
+          <h4 className="max-w-1/2 text-md font-bold">{title}</h4>
+          {status === "loaded" ? (
             <CollapsibleTrigger asChild className="flex-grow">
-              <Button variant="outline" size="sm">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(!open);
+                }}
+                variant="outline"
+                size="sm"
+              >
                 <ChevronsUpDown className="h-full w-full" />
                 <span className="sr-only">Toggle</span>
               </Button>
             </CollapsibleTrigger>
-          </div>
+          ) : (
+            <Button
+              onClick={loadSection}
+              variant="outline"
+              className="flex-grow"
+              size="sm"
+            >
+              <ArrowDownToLine className="h-full w-full" />
+              <span className="sr-only">Fetch</span>
+            </Button>
+          )}
+        </div>
 
-          <CollapsibleContent>
-            <HeaderValue header={"User ID"} value={data.userId} />
-            <HeaderValue
-              header={"Level State"}
-              value={levelStateToString(data.levelStateType)}
-            />
-            <HeaderValue
-              header={"Old Level State"}
-              value={levelStateToString(data.oldLevelStateType)}
-            />
-            <HeaderValue
-              header={"Special Category"}
-              value={specialCategoryToString(data.specialCategory)}
-            />
-            <HeaderValue
-              header={"Last Review Date"}
-              value={data.lastReviewDate?.toString()}
-            />
-            <HeaderValue
-              header={"Next Review Days"}
-              value={data.nextReviewDays?.toString()}
-            />
-            <HeaderValue
-              header={"Next Review Minutes"}
-              value={data.nextReviewMinutes?.toString()}
-            />
-          </CollapsibleContent>
+        <CollapsibleContent>
+          {data && (
+            <>
+              <HeaderValue header={"User ID"} value={data.userId} />
+              <HeaderValue
+                header={"Level State"}
+                value={levelStateToString(data.levelStateType)}
+              />
+              <HeaderValue
+                header={"Old Level State"}
+                value={levelStateToString(data.oldLevelStateType)}
+              />
+              <HeaderValue
+                header={"Special Category"}
+                value={specialCategoryToString(data.specialCategory)}
+              />
+              <HeaderValue
+                header={"Last Review Date"}
+                value={data.lastReviewDate?.toString()}
+              />
+              <HeaderValue
+                header={"Next Review Days"}
+                value={data.nextReviewDays?.toString()}
+              />
+              <HeaderValue
+                header={"Next Review Minutes"}
+                value={data.nextReviewMinutes?.toString()}
+              />
+            </>
+          )}
+        </CollapsibleContent>
 
-          <Separator className="my-4" />
-        </Collapsible>
-      ) : (
-        <p>{status}</p>
-      )}
+        <Separator className="my-4" />
+      </Collapsible>
     </>
   );
-});
+}
 
 interface HeaderValueProps {
   header: string;
