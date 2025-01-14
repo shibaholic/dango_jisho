@@ -37,7 +37,7 @@ interface TabPageProps {
 const TabPageWrapper: React.FC<TabPageProps> = ({ title, children }) => {
   return (
     <TabsContent value={title} className="p-4 h-full">
-      <h2 className="mb-4">{title}</h2>
+      {/* <h2 className="mb-4">{title}</h2> */}
       {children}
     </TabsContent>
   );

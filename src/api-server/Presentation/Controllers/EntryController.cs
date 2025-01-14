@@ -31,7 +31,7 @@ public class EntryController : BaseApiController
     {
         var response = await _mediatr.Send(request);
         
-        return Ok(response);
+        return this.ToActionResult(response);
     }
 
     public record UploadJMdictPayload(

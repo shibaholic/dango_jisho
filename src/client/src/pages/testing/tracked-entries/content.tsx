@@ -1,42 +1,36 @@
 import { useEffect, useRef, useState } from "react";
-import { TrackedEntry, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable, TableRef } from "./data-table";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse, api_url } from "@/Api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Details, DetailsRef } from "./details";
+import { TrackedEntry } from "@/types/TrackedEntry";
 
 const TrackedEntriesContent: React.FC = () => {
   const [data, setData] = useState<TrackedEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const tableRef = useRef<TableRef<TrackedEntry>>(null);
+  const detailsRef = useRef<DetailsRef>(null);
 
-  const [ent_seq, setEnt_seq] = useState<string | null>(null);
-
-  const { refetch, isError } = useQuery({
+  const { refetch, isError, error } = useQuery({
     queryKey: ["weatherforecast"],
     queryFn: async () => {
-      let result = await fetch(`${api_url}/TrackedEntry`);
+      let result = await fetch(`${api_url}/TrackedEntry/all`);
       if (!result.ok) throw new Error("Network response was not ok");
       return result.json();
     },
     enabled: false,
   });
 
-  async function getData(): Promise<ApiResponse<TrackedEntry[]>> {
-    const freshData = await refetch();
-
-    if (isError) throw new Error("Network connection error");
-
-    return freshData.data;
-  }
-
-  const getDetails = () => {
+  const showDetails = () => {
     // first get ent_seq from tableRef
-    if (tableRef.current) {
+    if (tableRef.current && detailsRef.current) {
       const currentRow = tableRef.current.getSelectedRow();
       if (currentRow) {
-        setEnt_seq(currentRow.ent_seq);
+        detailsRef.current.setES(currentRow.ent_seq);
+        // detailsRef.current.fetchData(currentRow.ent_seq);
       }
     }
   };
@@ -44,9 +38,12 @@ const TrackedEntriesContent: React.FC = () => {
   useEffect(() => {
     const asyncEffect = async () => {
       try {
-        const result = await getData();
-        console.log(result);
-        setData(result.data);
+        const freshData = await refetch();
+
+        if (isError) throw new Error(error.message);
+
+        console.log(freshData.data);
+        setData(freshData.data.data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -61,21 +58,25 @@ const TrackedEntriesContent: React.FC = () => {
     <div className="h-full container grid grid-cols-2 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Table</CardTitle>
+          <div className="flex place-content-between">
+            <CardTitle>
+              <h3>Table</h3>
+            </CardTitle>
+            <Button onClick={showDetails}>Show details</Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <Button onClick={getDetails}>Show details</Button>
           <DataTable ref={tableRef} columns={columns} data={data} />
         </CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Details</CardTitle>
+          <CardTitle>
+            <h3>Details</h3>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <p>
-            ent_seq: <span>{ent_seq ? ent_seq : "null"}</span>
-          </p>
+          <Details ref={detailsRef} />
         </CardContent>
       </Card>
     </div>
