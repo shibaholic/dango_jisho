@@ -11,8 +11,7 @@ using Application.Response;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("/tag")]
-public class TagController : ControllerBase
+public class TagController : BaseApiController
 {
     private readonly ICrudService<Tag, TagDto> _crudService;
     private readonly IMediator _mediator;

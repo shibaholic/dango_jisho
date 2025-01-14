@@ -9,8 +9,7 @@ using Presentation.Utilities;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("/entry/review")]
-public class ReviewController : ControllerBase
+public class ReviewController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly ICrudService<EntryEvent, ReviewEventDto> _crudService;

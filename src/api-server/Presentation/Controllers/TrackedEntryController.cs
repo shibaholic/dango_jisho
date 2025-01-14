@@ -8,7 +8,6 @@ using Presentation.Utilities;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("[controller]")]
 public class TrackedEntryController: BaseApiController
 {
     private readonly ICrudService<TrackedEntry, TrackedEntryDto> _crudService;

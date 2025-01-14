@@ -146,7 +146,12 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     }
     public async Task<Entry?> GetBy_ent_seq(string ent_seq)
     {
-        return await _context.Entries.Where(entry => entry.ent_seq == ent_seq).FirstOrDefaultAsync();
+        return await _context.Entries.Where(entry => entry.ent_seq == ent_seq)
+            .Include(entry => entry.KanjiElements)
+            .Include(entry => entry.ReadingElements)
+            .Include(entry => entry.Senses)
+            .ThenInclude(sense => sense.lsource)
+            .FirstOrDefaultAsync();
     }
     public async Task<List<Entry>> Search(string query)
     {

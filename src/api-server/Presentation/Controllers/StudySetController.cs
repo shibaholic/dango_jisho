@@ -6,8 +6,7 @@ using Presentation.Utilities;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("/studyset")]
-public class StudySetController : ControllerBase
+public class StudySetController : BaseApiController
 {
     private readonly IMediator _mediator;
 
