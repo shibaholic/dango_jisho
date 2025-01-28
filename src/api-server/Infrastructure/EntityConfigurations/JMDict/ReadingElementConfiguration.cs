@@ -14,7 +14,7 @@ public class ReadingElementConfiguration : IEntityTypeConfiguration<ReadingEleme
         builder.Property(re => re.re_pri)
             .HasConversion(
                 re_pri => re_pri.ToString(),
-                s => PriorityExtensions.Parse(s)
+                s => EnumExtension.Parse<Priority>(s)
             );
     }
 }

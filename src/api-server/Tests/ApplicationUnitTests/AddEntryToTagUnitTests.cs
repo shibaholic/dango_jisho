@@ -50,15 +50,15 @@ public class AddEntryToTagUnitTests
         // Arrange
         _mockEntryRepo.Setup(service =>
                 service.GetBy_ent_seq(It.IsAny<string>()))
-            .ReturnsAsync(new Entry());
+            .ReturnsAsync(new Entry {});
 
         _mockTagRepo.Setup(service =>
                 service.ReadByIdUserIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
-            .ReturnsAsync(new Tag());
+            .ReturnsAsync(new Tag {});
         
         _mockTrackingRepo.Setup(service =>
             service.ReadTrackedEntryByIdsAsync(It.IsAny<string>(), It.IsAny<Guid>()))
-            .ReturnsAsync(new TrackedEntry());
+            .ReturnsAsync(new TrackedEntry {});
         
         var request = new AddEntryToTagRequest { ent_seq = "1234", TagId = new Guid(), UserId = new Guid() };
         

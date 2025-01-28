@@ -1,4 +1,5 @@
 using Domain.Entities.Tracking;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,5 +26,23 @@ public class TrackedEntryConfiguration : IEntityTypeConfiguration<TrackedEntry>
 
         builder.Property(te => te.LastReviewDate)
             .HasColumnType("timestamp");
+
+        builder.Property(te => te.LevelStateType)
+            .HasConversion(
+                v => v.ToString(),
+                s => EnumExtension.Parse<LevelStateType>(s)
+            );
+        
+        builder.Property(te => te.OldLevelStateType)
+            .HasConversion(
+                v => v.ToString(),
+                s => EnumExtension.Parse<LevelStateType>(s)
+            );
+        
+        builder.Property(te => te.SpecialCategory)
+            .HasConversion(
+                v => v.ToString(),
+                s => EnumExtension.Parse<SpecialCategory>(s)
+            );
     }
 }

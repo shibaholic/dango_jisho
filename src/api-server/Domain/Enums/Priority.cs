@@ -67,21 +67,3 @@ public enum Priority
     nf47,
     nf48 
 }
-
-public static class PriorityExtensions
-{
-    public static Priority Parse(string value)
-    {
-        if (Enum.TryParse<Priority>(value, true, out var result))
-        {
-            return result;
-        }
-        throw new ArgumentException($"Invalid priority: {value}");
-    }
-    
-    public static string ToDatabaseValue(this Priority priority)
-    {
-        // Converts the enum value to its database string representation
-        return priority.ToString().ToLower(); // Converts to lowercase: e.g., Spec1 -> "spec1"
-    }
-}

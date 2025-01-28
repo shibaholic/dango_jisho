@@ -14,7 +14,7 @@ public class KanjiElementConfiguration : IEntityTypeConfiguration<KanjiElement>
         builder.Property(ke => ke.ke_pri)
             .HasConversion(
                 ke_pri => ke_pri.ToString(),
-                s => PriorityExtensions.Parse(s)
+                s => EnumExtension.Parse<Priority>(s)
             );
     }
 }

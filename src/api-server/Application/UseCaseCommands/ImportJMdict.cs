@@ -103,7 +103,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         break;
                                     case "ke_pri":
                                         var value = reader.ReadElementContentAsString();
-                                        k_ele.ke_pri = PriorityExtensions.Parse(value);
+                                        k_ele.ke_pri = EnumExtension.Parse<Priority>(value);
                                         break;
                                         
                                     default:
@@ -139,7 +139,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         break;
                                     case "re_pri":
                                         var value = reader.ReadElementContentAsString();
-                                        r_ele.re_pri = PriorityExtensions.Parse(value);
+                                        r_ele.re_pri = EnumExtension.Parse<Priority>(value);
                                         break;
                                         
                                     default:
