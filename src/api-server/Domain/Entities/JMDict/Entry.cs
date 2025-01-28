@@ -11,14 +11,14 @@ public class Entry : IBaseEntity
     public List<Sense> Senses { get; set; } = new List<Sense>();
     // public List<EntryIsTagged> EntryIsTaggeds { get; set; } = new List<EntryIsTagged>();
     public List<TrackedEntry> TrackedEntries { get; set; } = new List<TrackedEntry>();
-    public Entry()
-    {
-    }
+    // public Entry()
+    // {
+    // }
 
-    public Entry(string entSeq)
-    {
-        ent_seq = entSeq;
-    }
+    // public Entry(string entSeq)
+    // {
+    //     ent_seq = entSeq;
+    // }
 
     public override string ToString()
     {

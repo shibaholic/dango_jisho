@@ -1,7 +1,4 @@
-using Domain.Entities;
-using Domain.Entities.JMDict;
-
-namespace Application.Mappings.EntityDtos;
+namespace Application.Mappings.EntityDtos.JMDict;
 
 public class SenseDto
 {

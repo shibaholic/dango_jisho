@@ -1,4 +1,6 @@
 using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.CardData;
+using Application.Mappings.EntityDtos.JMDict;
 using Application.Mappings.EntityDtos.Tracking;
 using AutoMapper;
 using Domain.Entities;

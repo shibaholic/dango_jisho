@@ -3,6 +3,7 @@ using System.Xml;
 using Application.Response;
 using Domain.Entities;
 using Domain.Entities.JMDict;
+using Domain.Enums;
 using Domain.RepositoryInterfaces;
 using MediatR;
 
@@ -69,7 +70,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
             {
                 if (!(reader.NodeType == XmlNodeType.Element && reader.Name == "entry")) continue;
                 
-                var entry = new Entry();
+                var entry = new Entry {};
 
                 // Read the ent_seq
                 while (reader.Read() && !(reader.NodeType == XmlNodeType.Element && reader.Name == "ent_seq")) ;
@@ -84,7 +85,7 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                     switch (reader.Name)
                     {
                         case "k_ele":
-                            var k_ele = new KanjiElement();
+                            var k_ele = new KanjiElement {};
                             k_ele.ent_seq = entry.ent_seq;
                             k_ele.Id = k_ele_id++;
                             while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement &&
@@ -101,7 +102,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         k_ele.ke_inf.Add(reader.Name);
                                         break;
                                     case "ke_pri":
-                                        k_ele.ke_pri = reader.ReadElementContentAsString();
+                                        var value = reader.ReadElementContentAsString();
+                                        k_ele.ke_pri = PriorityExtensions.Parse(value);
                                         break;
                                         
                                     default:
@@ -136,7 +138,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
                                         r_ele.re_inf.Add(reader.Name);
                                         break;
                                     case "re_pri":
-                                        r_ele.re_pri = reader.ReadElementContentAsString();
+                                        var value = reader.ReadElementContentAsString();
+                                        r_ele.re_pri = PriorityExtensions.Parse(value);
                                         break;
                                         
                                     default:

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using Domain.Entities;
 using Domain.Entities.JMDict;
+using Domain.Enums;
 using Domain.RepositoryInterfaces;
 using Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,7 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
                 writer.Write(k_ele.ent_seq, NpgsqlTypes.NpgsqlDbType.Text);
                 writer.Write(k_ele.keb, NpgsqlTypes.NpgsqlDbType.Text);
                 writer.Write(k_ele.ke_inf, NpgsqlTypes.NpgsqlDbType.Array | NpgsqlTypes.NpgsqlDbType.Text);
-                writer.Write(k_ele.ke_pri, NpgsqlTypes.NpgsqlDbType.Text);
+                writer.Write(k_ele.ke_pri?.ToDatabaseValue(), NpgsqlTypes.NpgsqlDbType.Text);
             }
             
             await writer.CompleteAsync();
@@ -83,7 +84,7 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
                 writer.Write(r_ele.re_nokanji, NpgsqlTypes.NpgsqlDbType.Boolean);
                 writer.Write(r_ele.re_restr, NpgsqlTypes.NpgsqlDbType.Array | NpgsqlTypes.NpgsqlDbType.Text);
                 writer.Write(r_ele.re_inf, NpgsqlTypes.NpgsqlDbType.Array | NpgsqlTypes.NpgsqlDbType.Text);
-                writer.Write(r_ele.re_pri, NpgsqlTypes.NpgsqlDbType.Text);
+                writer.Write(r_ele.re_pri?.ToDatabaseValue(), NpgsqlTypes.NpgsqlDbType.Text);
             }
             
             await writer.CompleteAsync();

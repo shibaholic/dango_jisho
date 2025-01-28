@@ -1,5 +1,6 @@
 using Application.Mappings;
 using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.JMDict;
 using Application.Response;
 using Application.UseCaseQueries;
 using AutoMapper;

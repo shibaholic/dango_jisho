@@ -1,4 +1,6 @@
-namespace Application.Mappings.EntityDtos;
+using Domain.Enums;
+
+namespace Application.Mappings.EntityDtos.JMDict;
 
 public class ReadingElementDto
 {

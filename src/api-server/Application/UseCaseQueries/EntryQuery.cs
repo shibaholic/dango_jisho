@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.JMDict;
 using Application.Response;
 using AutoMapper;
 using Domain.RepositoryInterfaces;

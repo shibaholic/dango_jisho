@@ -104,7 +104,7 @@ public static class ApplicationExtensions
 
                 await SeedJMDictData(serviceScope);
                 await SeedUserData(serviceScope);
-                await SeedTrackingData(serviceScope);
+                await SeedTrackingData(serviceScope); ;
             }
             else
             {

@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Domain.Entities.JMDict;
 
 public class ReadingElement
@@ -8,7 +10,7 @@ public class ReadingElement
     public bool re_nokanji { get; set; }
     public List<string> re_restr { get; set; }
     public List<string> re_inf { get; set; }
-    public string? re_pri { get; set; }
+    public Priority? re_pri { get; set; }
     
     public Entry Entry  { get; set; }   // Nav
 

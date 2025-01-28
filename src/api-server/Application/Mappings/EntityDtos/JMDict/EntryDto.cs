@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Application.Mappings.EntityDtos;
+namespace Application.Mappings.EntityDtos.JMDict;
 
 public record EntryDto
 {

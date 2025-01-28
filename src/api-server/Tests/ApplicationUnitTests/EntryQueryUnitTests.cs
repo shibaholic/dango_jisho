@@ -1,5 +1,6 @@
 using Application.Mappings;
 using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.JMDict;
 using Application.Response;
 using Application.UseCaseQueries;
 using AutoMapper;
@@ -39,7 +40,7 @@ public class EntryQueryUnitTests
     public async Task Search_ValidInput_ReturnsEntryDto()
     {
         // Arrange
-        List<Entry> repoResponse = new List<Entry> { new Entry() { ent_seq = "1234" } };
+        List<Entry> repoResponse = new List<Entry> { new Entry { ent_seq = "1234" } };
         _mockRepo.Setup(repo => repo.Search(It.IsAny<string>()))
             .ReturnsAsync(repoResponse);
 
