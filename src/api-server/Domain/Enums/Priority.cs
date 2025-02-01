@@ -18,6 +18,7 @@ public enum Priority
     gai1,
     gai2,
 
+    // NF priorities
     nf01,
     nf02,
     nf03,

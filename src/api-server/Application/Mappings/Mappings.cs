@@ -14,11 +14,11 @@ public class Mappings : Profile
     public Mappings()
     {
         // JMDict
-        CreateMap<Entry, EntryDto>();
-        CreateMap<KanjiElement, KanjiElementDto>();
-        CreateMap<ReadingElement, ReadingElementDto>();
-        CreateMap<Sense, SenseDto>();
-        CreateMap<LSource, LSourceDto>();
+        CreateMap<Entry, EntryDto>().ReverseMap();
+        CreateMap<KanjiElement, KanjiElementDto>().ReverseMap();
+        CreateMap<ReadingElement, ReadingElementDto>().ReverseMap();
+        CreateMap<Sense, SenseDto>().ReverseMap();
+        CreateMap<LSource, LSourceDto>().ReverseMap();
         
         // Tracking
         CreateMap<Tag, TagDto>();

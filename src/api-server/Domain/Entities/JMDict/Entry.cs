@@ -9,16 +9,7 @@ public class Entry : IBaseEntity
     public List<KanjiElement> KanjiElements { get; set; } = new List<KanjiElement>();
     public List<ReadingElement> ReadingElements { get; set; } = new List<ReadingElement>();
     public List<Sense> Senses { get; set; } = new List<Sense>();
-    // public List<EntryIsTagged> EntryIsTaggeds { get; set; } = new List<EntryIsTagged>();
-    public List<TrackedEntry> TrackedEntries { get; set; } = new List<TrackedEntry>();
-    // public Entry()
-    // {
-    // }
-
-    // public Entry(string entSeq)
-    // {
-    //     ent_seq = entSeq;
-    // }
+    public List<TrackedEntry> TrackedEntries { get; set; } = new List<TrackedEntry>(); // navigation. not included in json
 
     public override string ToString()
     {
@@ -44,28 +35,7 @@ public class Entry : IBaseEntity
 
         foreach (var sense in Senses)
         {
-            output.Append($"  Sense\n");
-            output.Append(PrintList(sense.stagk, "stagk", "    "));
-            output.Append(PrintList(sense.stagr, "stagr", "    "));
-            output.Append(PrintList(sense.pos, "pos", "    "));
-            output.Append(PrintList(sense.xref, "xref", "    "));
-            output.Append(PrintList(sense.ant, "ant", "    "));
-            output.Append(PrintList(sense.field, "field", "    "));
-            output.Append(PrintList(sense.misc, "misc", "    "));
-            output.Append(PrintList(sense.s_inf, "s_inf", "    "));
-            if (sense.lsource.Count != 0)
-            {
-                foreach (var lsource_element in sense.lsource)
-                {
-                    output.Append("    " + $"lsource: {lsource_element.LangValue}\n");
-                    if(lsource_element.ls_part) output.Append("      part: true\n");
-                    if(lsource_element.ls_wasei) output.Append("      wasei: true\n");
-                }
-                output.Remove(output.Length - 2, 2);
-                output.Append("\n");
-            }
-            output.Append(PrintList(sense.dial, "dial", "    "));
-            output.Append(PrintList(sense.gloss, "gloss", "    "));
+            output.AppendLine(sense.ToString());
         }
 
         return output.ToString();

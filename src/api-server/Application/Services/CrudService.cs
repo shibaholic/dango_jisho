@@ -12,8 +12,10 @@ public interface ICrudService<T, TDto>
     Task<Response<TDto>> CreateAsync(T entity);
     Task<T> UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
-    Task<T?> GetByIdAsync(Guid id);
-    Task<Response<IEnumerable<TDto>>> GetAllAsync();
+    Task<Response<T>> GetByIdAsync(object id);
+    Task<Response<TDto>> GetDtoByIdAsync(object id);
+    Task<Response<IEnumerable<TDto>>> GetAllDtoAsync();
+    Task<Response<IEnumerable<T>>> GetAllAsync(int? take = null);
 }
 
 public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
@@ -51,15 +53,31 @@ public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
         await _repo.DeleteAsync(id);
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<Response<TDto>> GetDtoByIdAsync(object id)
     {
-        return await _repo.ReadByIdAsync(id);
+        var entity = await _repo.ReadByIdAsync(id);
+        if (entity == null) return Response<TDto>.NotFound("Entity not found");
+        var dto = _mapper.Map<TDto>(entity);
+        return Response<TDto>.Ok("Entity dto found", dto);
+    }
+    
+    public async Task<Response<T>> GetByIdAsync(object id)
+    {
+        var entity = await _repo.ReadByIdAsync(id);
+        if (entity == null) return Response<T>.NotFound("Entity not found");
+        return Response<T>.Ok("Entity dto found", entity);
     }
 
-    public async Task<Response<IEnumerable<TDto>>> GetAllAsync()
+    public async Task<Response<IEnumerable<TDto>>> GetAllDtoAsync()
     {
         var result = await _repo.ReadAllAsync();
         var dto = _mapper.Map<IEnumerable<TDto>>(result);
-        return Response<IEnumerable<TDto>>.Ok("Entity results", dto);
+        return Response<IEnumerable<TDto>>.Ok("Entity dto results", dto);
+    }
+
+    public async Task<Response<IEnumerable<T>>> GetAllAsync(int? take = null)
+    {
+        var result = await _repo.ReadAllAsync(take);
+        return Response<IEnumerable<T>>.Ok("Entity results", result);
     }
 }

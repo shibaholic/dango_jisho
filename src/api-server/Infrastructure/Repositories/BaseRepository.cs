@@ -18,13 +18,33 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
         _dbSet = context.Set<T>();
     }
 
-    public async Task<T> ReadByIdAsync(Guid id)
+    public async Task<T> ReadByIdAsync(object id)
     {
+        if (id == null) throw new ArgumentNullException(nameof(id));
+
+        var keyProperty = _context.Model.FindEntityType(typeof(T))?.FindPrimaryKey()?.Properties.FirstOrDefault();
+        if (keyProperty == null)
+        {
+            throw new InvalidOperationException($"Entity {typeof(T).Name} does not have a primary key.");
+        }
+
+        var keyType = keyProperty.ClrType;
+
+        if (id.GetType() != keyType)
+        {
+            // Attempt conversion to the expected type
+            id = Convert.ChangeType(id, keyType);
+        }
+        
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<IEnumerable<T>> ReadAllAsync()
+    public async Task<IEnumerable<T>> ReadAllAsync(int? take = null)
     {
+        if (take is not null)
+        {
+            return await _dbSet.Take(take.Value).ToListAsync();
+        }
         return await _dbSet.ToListAsync();
     }
 

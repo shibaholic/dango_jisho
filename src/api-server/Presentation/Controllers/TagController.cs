@@ -24,11 +24,8 @@ public class TagController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetById([FromQuery] Guid id)
     {
-        Tag? result = await _crudService.GetByIdAsync(id);
-        
-        if (result == null) return NotFound();
-        
-        return Ok(Response<Tag>.Ok("Found", result));
+        var response = await _crudService.GetDtoByIdAsync(id);
+        return this.ToActionResult(response);
     }
 
     public record CreateTagRequest

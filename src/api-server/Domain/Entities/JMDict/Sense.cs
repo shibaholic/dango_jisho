@@ -1,4 +1,5 @@
 using System.Text;
+using Domain.Entities.CardData;
 
 namespace Domain.Entities.JMDict;
 
@@ -19,6 +20,7 @@ public class Sense
     public List<string> gloss { get; set; }
 
     public Entry Entry  { get; set; }   // Nav
+    public List<CardSense> CardSenses { get; set; } = new(); // many-to-many external aggregation navigation reference
 
     public Sense()
     {
@@ -33,6 +35,53 @@ public class Sense
         lsource = new List<LSource>();
         dial = new List<string>();
         gloss = new List<string>();
+    }
+
+    public override string ToString()
+    {
+        StringBuilder output = new StringBuilder();
+        
+        output.Append($"  Sense\n");
+        output.Append(PrintList(stagk, "stagk", "    "));
+        output.Append(PrintList(stagr, "stagr", "    "));
+        output.Append(PrintList(pos, "pos", "    "));
+        output.Append(PrintList(xref, "xref", "    "));
+        output.Append(PrintList(ant, "ant", "    "));
+        output.Append(PrintList(field, "field", "    "));
+        output.Append(PrintList(misc, "misc", "    "));
+        output.Append(PrintList(s_inf, "s_inf", "    "));
+        if (lsource.Count != 0)
+        {
+            foreach (var lsource_element in lsource)
+            {
+                output.Append("    " + $"lsource: {lsource_element.LangValue}\n");
+                if(lsource_element.ls_part) output.Append("      part: true\n");
+                if(lsource_element.ls_wasei) output.Append("      wasei: true\n");
+            }
+            output.Remove(output.Length - 2, 2);
+            output.Append("\n");
+        }
+        output.Append(PrintList(dial, "dial", "    "));
+        output.Append(PrintList(gloss, "gloss", "    "));
+
+        return output.ToString();
+    }
+    
+    private string PrintList(List<string> list, string elementName, string indent = "")
+    {
+        StringBuilder output = new StringBuilder();
+        if (list.Count != 0)
+        {
+            output.Append(indent + $"{elementName}: ");
+            foreach (var entity in list)
+            {
+                output.Append($"{entity}, ");
+            }
+            output.Remove(output.Length - 2, 2);
+            output.Append("\n");
+        }
+
+        return output.ToString();
     }
 }
 

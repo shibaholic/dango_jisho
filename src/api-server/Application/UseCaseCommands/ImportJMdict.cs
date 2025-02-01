@@ -15,6 +15,7 @@ using Response = Response<object>;
 public record ImportJMdictRequest : IRequest<Response>
 {
     public byte[] Content { get; init; }
+    public int? Count { get; init; } = null;
 }
 
 public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
@@ -227,6 +228,8 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
         
         stopwatch.Restart();
 
+        if(request.Count is not null) entries = entries.Take(request.Count.Value).ToList();
+        
         await _repository.BulkInsertAsync(entries);
         // await _repository.RangeCreate(entries);
         

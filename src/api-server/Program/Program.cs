@@ -128,11 +128,11 @@ public static class ApplicationExtensions
         }
         var stopwatch = Stopwatch.StartNew();
         using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filePath)));
-        var request = new ImportJMdictRequest { Content = stream.ToArray() };
+        var request = new ImportJMdictRequest { Content = stream.ToArray() }; // , Count = 1000 
         stopwatch.Stop();
         Console.WriteLine($"  Loading JMdict from {filePath} took {stopwatch.ElapsedMilliseconds} ms.");
         stopwatch.Restart();
-        var result = await mediator.Send(request, CancellationToken.None);
+        var result = await mediator!.Send(request, CancellationToken.None);
                 
         if (!result.Successful)
         {

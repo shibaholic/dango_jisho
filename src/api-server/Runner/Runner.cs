@@ -1,21 +1,24 @@
-﻿using Application.UseCaseCommands;
-using Domain.RepositoryInterfaces;
-using Moq;
+﻿
+using Infrastructure.DbContext;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Tests.ApplicationUnitTests;
-using Xunit.Abstractions;
 using Xunit.Sdk;
-using AddEntryToTag = Application.UseCaseCommands.AddEntryToTag;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Runner;
 
 class Runner
 {
     // Used for plain running things, so I can see the Console print, which doesn't show up when running tests.
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Console.WriteLine("Runner start");
 
-        ApplicationUnitTestRunners.StartStudySet_LastStartDateSame_ReturnsOkNotRestarted();
+        // ApplicationUnitTestRunners.EntryToCard_ComplexInput_ComplexOutput();
+        await InfrastructureRunners.EntryRepository_BulkReadAllAsync(args);
     }
 }
 
@@ -48,6 +51,63 @@ file class ApplicationUnitTestRunners
         {
             Tests.StartStudySet_LastStartDates_ReturnsOk((DateTime)testCase[0], (string)testCase[1]);
         }
+    }
+
+    public static void EntryToCard_ComplexInput_ComplexOutput()
+    {
+        var _output = new TestOutputHelper();
+        var tests = new EntryToCardUnitTests(_output);
         
+        var testData = EntryToCardUnitTests.GetTestCases().ToList();
+        
+        // foreach (var testCase in testData)
+        // {
+        //     tests.EntryToCard_ComplexInput_ComplexOutput((EntryToCardInputOutput)testCase[0]);
+        // }
+        tests.EntryToCard_ComplexInput_ComplexOutput((EntryToCardInputOutput)testData[1][0]);
+    }
+}
+
+file class InfrastructureRunners
+{
+    public static async Task EntryRepository_BulkReadAllAsync(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        Console.WriteLine(Directory.GetCurrentDirectory());
+        
+        builder.Configuration
+            .SetBasePath(Directory.GetCurrentDirectory()) // Ensures it looks in Runner's directory
+            .AddJsonFile("appsettings.Runner.json", optional: false, reloadOnChange: true);
+        
+        var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
+        
+        Console.WriteLine($"connectionString: {connectionString}");
+        if (connectionString is null or "")
+        {
+            Console.WriteLine("No connection string");
+            System.Environment.Exit(1);
+        }
+        
+        var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+        
+        var dbContext = new MyDbContext(optionsBuilder.Options);
+        
+        var repo = new EntryRepository(dbContext);
+
+        var entries = await repo.BulkReadAllAsync();
+
+        var findEntry = entries.Where(e => e.ent_seq == "1014020").FirstOrDefault();
+        
+        Console.WriteLine(findEntry);
+
+        Console.WriteLine();
+
+        var findEntryJson = JsonSerializer.Serialize(findEntry);
+        
+        Console.WriteLine(findEntryJson);
+
+        // Console.WriteLine(entries[1]);
     }
 }

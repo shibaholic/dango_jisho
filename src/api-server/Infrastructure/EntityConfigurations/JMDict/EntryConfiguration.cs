@@ -24,5 +24,14 @@ public class EntryConfiguration: IEntityTypeConfiguration<Entry>
             .WithOne(k => k.Entry)
             .HasForeignKey(k => k.ent_seq)
             .IsRequired();
+        
+        builder.Navigation(e => e.KanjiElements)
+            .AutoInclude();
+        
+        builder.Navigation(e => e.ReadingElements)
+            .AutoInclude();
+        
+        builder.Navigation(e => e.Senses)
+            .AutoInclude();
     }
 }

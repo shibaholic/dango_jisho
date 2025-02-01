@@ -24,7 +24,7 @@ public class TrackedEntryController: BaseApiController
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
-        var response = await _crudService.GetAllAsync();
+        var response = await _crudService.GetAllDtoAsync();
 
         return this.ToActionResult(response);
     }

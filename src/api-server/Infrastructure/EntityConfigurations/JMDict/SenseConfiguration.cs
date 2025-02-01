@@ -14,6 +14,9 @@ public class SenseConfiguration : IEntityTypeConfiguration<Sense>
             .WithOne(l => l.Sense)
             .HasForeignKey(l => l.SenseId)
             .IsRequired();
+        
+        builder.Navigation(s => s.lsource)
+            .AutoInclude();
     }
 }
 
