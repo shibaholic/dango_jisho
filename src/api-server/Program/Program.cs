@@ -1,13 +1,19 @@
 using System.Diagnostics;
 using Application;
 using Application.Mappings.EntityDtos;
+using Application.Mappings.EntityDtos.CardData;
+using Application.Mappings.EntityDtos.JMDict;
 using Application.Mappings.EntityDtos.Tracking;
 using Application.Response;
 using Application.Services;
 using Application.UseCaseCommands;
+using Application.Utilities;
+using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.CardData;
 using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
+using Domain.RepositoryInterfaces;
 using Infrastructure;
 using Infrastructure.DbContext;
 using MediatR;
@@ -104,7 +110,8 @@ public static class ApplicationExtensions
 
                 await SeedJMDictData(serviceScope);
                 await SeedUserData(serviceScope);
-                await SeedTrackingData(serviceScope); ;
+                await SeedTrackingData(serviceScope);
+                await GenerateDefaultCardData(serviceScope);
             }
             else
             {
@@ -358,5 +365,61 @@ public static class ApplicationExtensions
         }
         
         Console.WriteLine("Successfully seeded tracking data.\n");
+    }
+
+    private static async Task GenerateDefaultCardData(IServiceScope serviceScope)
+    {
+        Console.WriteLine("Generating default Card data...");
+        
+        // var cardCrud = serviceScope.ServiceProvider.GetService<ICrudService<Card,CardDto>>();
+        var cardRepo = serviceScope.ServiceProvider.GetService<ICardRepository>();
+        var entryRepo = serviceScope.ServiceProvider.GetService<IEntryRepository>();
+        var mapper = serviceScope.ServiceProvider.GetService<IMapper>();
+        
+        if (cardRepo == null || entryRepo == null || mapper == null)
+        {
+            Console.WriteLine("  Error while getting CrudService<,>(s)");
+            System.Environment.Exit(1);
+        }
+        
+        var stopwatch = Stopwatch.StartNew();
+        
+        var entries = await entryRepo.BulkReadAllAsync();
+        
+        stopwatch.Stop();
+        Console.WriteLine($"  Reading {entries.Count} entries took {stopwatch.ElapsedMilliseconds} ms.");
+        
+        if (entries.Count == 0)
+        {
+            Console.WriteLine("  Error while getting entries. Zero entries.");
+            System.Environment.Exit(1);
+        }
+        
+        stopwatch.Restart();
+        
+        var entryCounter = 0;
+        var cards = new List<Card>();
+        foreach (var entry in entries)
+        {
+            var card = EntryToCard.Convert(entry);
+
+            card.Id = entryCounter++;
+            
+            cards.Add(card);
+        }
+
+        stopwatch.Stop();
+        Console.WriteLine($"  Converting entries to cards took {stopwatch.ElapsedMilliseconds} ms.");
+        stopwatch.Restart();
+        
+        await cardRepo.BulkInsertAsync(cards);
+
+        var cardSenses = entries.SelectMany((e, index) => e.Senses.Select(s => new CardSense { SenseId = s.Id, CardId = index })).ToList();
+        await cardRepo.BulkInsertCardSenseAsync(cardSenses);
+        
+        stopwatch.Stop();
+        Console.WriteLine($"  Bulk inserting cards took {stopwatch.ElapsedMilliseconds} ms.");
+        
+        Console.WriteLine("Successfully generated default Card data.\n");
     }
 }

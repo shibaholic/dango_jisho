@@ -37,7 +37,7 @@ public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
     public async Task<Response> Handle(AddEntryToTagRequest request, CancellationToken cancellationToken)
     {
         // first, query entry and tag to see if they exist
-        var entry = await _entryRepo.GetBy_ent_seq(request.ent_seq);
+        var entry = await _entryRepo.ReadByEntSeq(request.ent_seq);
         if (entry == null) throw new ProblemException("Entry not found", $"Entry with ent_seq: {request.ent_seq} does not exist.");
         
         var tag = await _tagRepo.ReadByIdUserIdAsync(request.TagId, request.UserId);

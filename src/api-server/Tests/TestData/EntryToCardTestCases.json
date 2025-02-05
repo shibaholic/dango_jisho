@@ -1,0 +1,308 @@
+[
+  { "inputEntry":  
+    {
+      "ent_seq": "1006960",
+      "kanjiElements": [
+        {
+          "ent_seq": "1006960",
+          "keb": "そよ風",
+          "ke_inf": [],
+          "ke_pri": "ichi1"
+        },
+        {
+          "ent_seq": "1006960",
+          "keb": "微風",
+          "ke_inf": [],
+          "ke_pri": "nf37"
+        }
+      ],
+      "readingElements": [
+        {
+          "reb": "そよかぜ",
+          "re_nokanji": false,
+          "re_restr": [],
+          "re_inf": [],
+          "re_pri": "nf37"
+        },
+        {
+          "reb": "びふう",
+          "re_nokanji": false,
+          "re_restr": [
+            "微風"
+          ],
+          "re_inf": [],
+          "re_pri": null
+        }
+      ],
+      "senses": [
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": [
+            "n"
+          ],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "gentle breeze",
+            "soft wind",
+            "breath of air",
+            "zephyr"
+          ]
+        }
+      ]
+    }, 
+    "outputCard":  {
+      "id": 0,
+      "ent_seq": "1006960",
+      "userId": null,
+      "kanjiId": 0,
+      "kanjiElement": {
+        "ent_seq": "1006960",
+        "keb": "そよ風",
+        "ke_inf": [],
+        "ke_pri": "ichi1"
+      },
+      "readingId": 0,
+      "readingElement": {
+        "reb": "そよかぜ",
+        "re_nokanji": false,
+        "re_restr": [],
+        "re_inf": [],
+        "re_pri": "nf37"
+      },
+      "senses": [
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": [
+            "n"
+          ],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "gentle breeze",
+            "soft wind",
+            "breath of air",
+            "zephyr"
+          ]
+        }
+      ]
+    }
+  },
+  
+  
+  { "inputEntry":
+    {
+      "ent_seq": "1013190",
+      "kanjiElements": [],
+      "readingElements": [
+        {
+          "reb": "より",
+          "re_nokanji": false,
+          "re_restr": [],
+          "re_inf": [],
+          "re_pri": "ichi1"
+        },
+        {
+          "reb": "ゟ",
+          "re_nokanji": false,
+          "re_restr": [],
+          "re_inf": ["sk"],
+          "re_pri": null
+        }
+      ],
+      "senses": [
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": ["than"]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "rather than",
+            "instead of",
+            "over",
+            "above"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "from",
+            "out of",
+            "since",
+            "at",
+            "on (and after)"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": ["with neg. sentence; as よりほかに...ない, よりしかたがない, etc."],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "except",
+            "but",
+            "other than"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["adv"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": ["more"]
+        }
+      ]
+    },
+    "outputCard": {
+      "id": 0,
+      "ent_seq": "1013190",
+      "userId": null,
+      "kanjiElement": null,
+      "readingElement": {
+        "reb": "より",
+        "re_nokanji": false,
+        "re_restr": [],
+        "re_inf": [],
+        "re_pri": "ichi1"
+      },
+      "senses": [
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "than"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "rather than",
+            "instead of",
+            "over",
+            "above"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "from",
+            "out of",
+            "since",
+            "at",
+            "on (and after)"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["prt"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [
+            "with neg. sentence; as よりほかに...ない, よりしかたがない, etc."
+          ],
+          "lsource": [],
+          "dial": [],
+          "gloss": [
+            "except",
+            "but",
+            "other than"
+          ]
+        },
+        {
+          "stagk": [],
+          "stagr": [],
+          "pos": ["adv"],
+          "xref": [],
+          "ant": [],
+          "field": [],
+          "misc": [],
+          "s_inf": [],
+          "lsource": [],
+          "dial": [],
+          "gloss": ["more"]
+        }
+      ]
+    }
+  }
+]

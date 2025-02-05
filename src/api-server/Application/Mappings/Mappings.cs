@@ -4,6 +4,7 @@ using Application.Mappings.EntityDtos.JMDict;
 using Application.Mappings.EntityDtos.Tracking;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.CardData;
 using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
 
@@ -25,6 +26,9 @@ public class Mappings : Profile
         CreateMap<EntryEvent, ReviewEventDto>();
         CreateMap<StudySet, StudySetDto>();
         CreateMap<TrackedEntry, TrackedEntryDto>();
+        
+        // Card
+        CreateMap<Card, CardDto>();
         
         // Other
         CreateMap<User, UserDto>();

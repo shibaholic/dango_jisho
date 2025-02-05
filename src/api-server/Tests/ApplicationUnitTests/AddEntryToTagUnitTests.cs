@@ -49,7 +49,7 @@ public class AddEntryToTagUnitTests
     {
         // Arrange
         _mockEntryRepo.Setup(service =>
-                service.GetBy_ent_seq(It.IsAny<string>()))
+                service.ReadByEntSeq(It.IsAny<string>()))
             .ReturnsAsync(new Entry {});
 
         _mockTagRepo.Setup(service =>
@@ -80,7 +80,7 @@ public class AddEntryToTagUnitTests
     {
         // Arrange
         _mockEntryRepo.Setup(service =>
-                service.GetBy_ent_seq(It.IsAny<string>()))
+                service.ReadByEntSeq(It.IsAny<string>()))
             .ReturnsAsync(new Entry());
 
         _mockTagRepo.Setup(service =>
@@ -111,7 +111,7 @@ public class AddEntryToTagUnitTests
     {
         // Arrange
         _mockEntryRepo.Setup(service =>
-                service.GetBy_ent_seq(It.IsAny<string>()))
+                service.ReadByEntSeq(It.IsAny<string>()))
             .ReturnsAsync((Entry?)null);
         
         var request = new AddEntryToTagRequest { ent_seq = "1234", TagId = new Guid(), UserId = new Guid() };

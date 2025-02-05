@@ -42,8 +42,6 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
                           """LEFT JOIN "Senses" s ON e.ent_seq = s.ent_seq """ +
                           """LEFT JOIN "LSource" l ON s."Id" = l."SenseId" """ +
                           ") TO STDOUT (FORMAT BINARY)";
-        
-        Console.WriteLine(queryString);
 
         var entryDict = new Dictionary<string, Entry>();
         var kanjiDict = new Dictionary<int, KanjiElement>();
