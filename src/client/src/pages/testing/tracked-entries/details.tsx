@@ -1,7 +1,9 @@
 import { api_url } from "@/Api";
 import { useQuery } from "@tanstack/react-query";
 import {
+  createContext,
   forwardRef,
+  useContext,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -23,6 +25,7 @@ import {
   levelStateToString,
   specialCategoryToString,
 } from "@/types/TrackedEntry";
+// import CardBackSmall from "../card-back/card-back";
 
 export interface DetailsRef {
   // fetchData: (es: string) => void;
@@ -42,15 +45,55 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
     <>
       {/* <Button onClick={testPrint}>Test Print</Button> */}
 
-      <HeaderValue header={"ent_seq"} value={ent_seq} />
+      {/* <HeaderValue header={"ent_seq"} field={ent_seq} /> */}
 
       <div key={ent_seq}>
         {ent_seq ? (
-          <Section
-            title="Entry details"
-            ent_seq={ent_seq}
-            fetchFn={fetch(`${api_url}/TrackedEntry/id?ent_seq=${ent_seq}`)}
-          />
+          <>
+            <Section
+              title="TrackedEntry details"
+              queryKeyName="trackedEntry"
+              ent_seq={ent_seq}
+              fetchFn={fetch(`${api_url}/TrackedEntry/id?ent_seq=${ent_seq}`)}
+            >
+              <HeaderValue header="ent_seq" field="ent_seq" />
+              <HeaderValue header="User ID" field="userId" />
+              <HeaderValue
+                header="Level State"
+                field="levelStateType"
+                modifier={levelStateToString}
+              />
+              <HeaderValue
+                header="Old Level State"
+                field="oldLevelStateType"
+                modifier={levelStateToString}
+              />
+              <HeaderValue
+                header="Special Category"
+                field="specialCategory"
+                modifier={specialCategoryToString}
+              />
+              <HeaderValue header="Last Review Date" field="lastReviewDate" />
+              <HeaderValue header="Next Review Days" field="nextReviewDays" />
+              <HeaderValue
+                header="Next Review Minutes"
+                field="nextReviewMinutes"
+              />
+            </Section>
+            <Section
+              title="Entry details"
+              queryKeyName="entry"
+              ent_seq={ent_seq}
+              fetchFn={fetch(`${api_url}/entry?ent_seq=${ent_seq}`)}
+            >
+              {/**
+               * If any entry.kanjiElements, then start new <div> with padding-left for indentation, with <p header> Kanjis </p>
+               * For every kanjiElement, <HeaderValue> kanjiElement properties, and comma-separated for string[], margin-down for spacing
+               * Basically, repeat for reading, sense and lsource inside sense.
+               *  */}
+              <p>TODO Fill with entry</p>
+            </Section>
+          </>
         ) : (
           <p>Click "Show details"</p>
         )}
@@ -59,23 +102,46 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
   );
 });
 
+interface SectionContextProps<T> {
+  data: T;
+  // setData: React.Dispatch<React.SetStateAction<T>>;
+}
+
+const SectionContext = createContext<SectionContextProps<any> | undefined>(
+  undefined
+);
+
+const useSectionContext = <T,>() => {
+  const context = useContext<SectionContextProps<T> | undefined>(
+    SectionContext
+  );
+  if (!context) {
+    throw new Error("useSectionContext must be used within a SectionProvider");
+  }
+  return context;
+};
+
 interface SectionProps<T extends Response> {
   title: string;
   ent_seq: string;
+  queryKeyName: string;
   fetchFn: Promise<T>;
+  children?: React.ReactNode;
 }
 
 function Section<T extends Response>({
   title,
   ent_seq,
+  queryKeyName,
   fetchFn,
-}: SectionProps<T>) {
-  const [data, setData] = useState<TrackedEntry | null>(null);
+  children,
+}: SectionProps<T>): React.JSX.Element {
+  const [data, setData] = useState<T | null>(null);
   const [status, setStatus] = useState<string>("undefined");
   const [open, setOpen] = useState<boolean>(false);
 
   const { refetch, isError, error } = useQuery({
-    queryKey: ["trackedEntry", ent_seq],
+    queryKey: [queryKeyName, ent_seq],
     queryFn: async () => {
       let result = await fetchFn;
       if (!result.ok) throw new Error("Network response was not ok");
@@ -133,33 +199,9 @@ function Section<T extends Response>({
 
         <CollapsibleContent>
           {data && (
-            <>
-              <HeaderValue header={"User ID"} value={data.userId} />
-              <HeaderValue
-                header={"Level State"}
-                value={levelStateToString(data.levelStateType)}
-              />
-              <HeaderValue
-                header={"Old Level State"}
-                value={levelStateToString(data.oldLevelStateType)}
-              />
-              <HeaderValue
-                header={"Special Category"}
-                value={specialCategoryToString(data.specialCategory)}
-              />
-              <HeaderValue
-                header={"Last Review Date"}
-                value={data.lastReviewDate?.toString()}
-              />
-              <HeaderValue
-                header={"Next Review Days"}
-                value={data.nextReviewDays?.toString()}
-              />
-              <HeaderValue
-                header={"Next Review Minutes"}
-                value={data.nextReviewMinutes?.toString()}
-              />
-            </>
+            <SectionContext.Provider value={{ data }}>
+              {children}
+            </SectionContext.Provider>
           )}
         </CollapsibleContent>
 
@@ -169,17 +211,27 @@ function Section<T extends Response>({
   );
 }
 
-interface HeaderValueProps {
+interface HeaderValueProps<T> {
   header: string;
-  value: string | null | undefined;
+  // field: string | null | undefined;
+  field: keyof T;
+  modifier?: (arg0: any) => string;
 }
 
-const HeaderValue = ({ header: key, value }: HeaderValueProps) => {
+const HeaderValue = <T,>({ header, field, modifier }: HeaderValueProps<T>) => {
+  const { data } = useSectionContext<T>();
+
   return (
     <>
       <p className="mb-4 font-medium">
-        {key}:{" "}
-        <span className="font-normal font-mono">{value ? value : "null"}</span>
+        {header}:{" "}
+        <span className="font-normal font-mono">
+          {data[field]
+            ? modifier
+              ? modifier(data[field])
+              : data[field] + ""
+            : "null"}
+        </span>
       </p>
     </>
   );
