@@ -1,14 +1,6 @@
-import { api_url } from "@/Api";
+import { ApiResponse, api_url } from "@/Api";
 import { useQuery } from "@tanstack/react-query";
-import {
-  createContext,
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 import {
   Collapsible,
@@ -19,12 +11,9 @@ import {
 import { ChevronsUpDown, ArrowDownToLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  LevelState,
-  TrackedEntry,
-  levelStateToString,
-  specialCategoryToString,
-} from "@/types/TrackedEntry";
+import { TrackedEntry, TrackedEntrySchema } from "@/types/TrackedEntry";
+import ObjectDisplay from "./objectDisplay";
+import { Entry, EntrySchema } from "@/types/JMDict";
 // import CardBackSmall from "../card-back/card-back";
 
 export interface DetailsRef {
@@ -43,10 +32,6 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
 
   return (
     <>
-      {/* <Button onClick={testPrint}>Test Print</Button> */}
-
-      {/* <HeaderValue header={"ent_seq"} field={ent_seq} /> */}
-
       <div key={ent_seq}>
         {ent_seq ? (
           <>
@@ -54,45 +39,39 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
               title="TrackedEntry details"
               queryKeyName="trackedEntry"
               ent_seq={ent_seq}
-              fetchFn={fetch(`${api_url}/TrackedEntry/id?ent_seq=${ent_seq}`)}
-            >
-              <HeaderValue header="ent_seq" field="ent_seq" />
-              <HeaderValue header="User ID" field="userId" />
-              <HeaderValue
-                header="Level State"
-                field="levelStateType"
-                modifier={levelStateToString}
-              />
-              <HeaderValue
-                header="Old Level State"
-                field="oldLevelStateType"
-                modifier={levelStateToString}
-              />
-              <HeaderValue
-                header="Special Category"
-                field="specialCategory"
-                modifier={specialCategoryToString}
-              />
-              <HeaderValue header="Last Review Date" field="lastReviewDate" />
-              <HeaderValue header="Next Review Days" field="nextReviewDays" />
-              <HeaderValue
-                header="Next Review Minutes"
-                field="nextReviewMinutes"
-              />
-            </Section>
+              queryFn={async (): Promise<TrackedEntry> => {
+                const response = await fetch(
+                  `${api_url}/TrackedEntry?ent_seq=${ent_seq}`
+                );
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const data =
+                  (await response.json()) as ApiResponse<TrackedEntry>;
+                const parsed = TrackedEntrySchema.safeParse(data.data);
+                if (!parsed.success) {
+                  console.error(parsed.error.format);
+                  throw new Error("Failed to parse TrackedEntry");
+                }
+                return parsed.data;
+              }}
+            />
             <Section
               title="Entry details"
               queryKeyName="entry"
               ent_seq={ent_seq}
-              fetchFn={fetch(`${api_url}/entry?ent_seq=${ent_seq}`)}
-            >
-              {/**
-               * If any entry.kanjiElements, then start new <div> with padding-left for indentation, with <p header> Kanjis </p>
-               * For every kanjiElement, <HeaderValue> kanjiElement properties, and comma-separated for string[], margin-down for spacing
-               * Basically, repeat for reading, sense and lsource inside sense.
-               *  */}
-              <p>TODO Fill with entry</p>
-            </Section>
+              queryFn={async (): Promise<Entry> => {
+                const response = await fetch(
+                  `${api_url}/Entry?ent_seq=${ent_seq}`
+                );
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const data = (await response.json()) as ApiResponse<Entry>;
+                const parsed = EntrySchema.safeParse(data.data);
+                if (!parsed.success) {
+                  console.error(parsed.error.format);
+                  throw new Error("Failed to parse Entry");
+                }
+                return parsed.data;
+              }}
+            />
           </>
         ) : (
           <p>Click "Show details"</p>
@@ -102,51 +81,26 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
   );
 });
 
-interface SectionContextProps<T> {
-  data: T;
-  // setData: React.Dispatch<React.SetStateAction<T>>;
-}
-
-const SectionContext = createContext<SectionContextProps<any> | undefined>(
-  undefined
-);
-
-const useSectionContext = <T,>() => {
-  const context = useContext<SectionContextProps<T> | undefined>(
-    SectionContext
-  );
-  if (!context) {
-    throw new Error("useSectionContext must be used within a SectionProvider");
-  }
-  return context;
-};
-
-interface SectionProps<T extends Response> {
+interface SectionProps<T> {
   title: string;
   ent_seq: string;
   queryKeyName: string;
-  fetchFn: Promise<T>;
-  children?: React.ReactNode;
+  queryFn: () => Promise<T>;
 }
 
-function Section<T extends Response>({
+const Section = <T,>({
   title,
   ent_seq,
   queryKeyName,
-  fetchFn,
-  children,
-}: SectionProps<T>): React.JSX.Element {
+  queryFn,
+}: SectionProps<T>) => {
   const [data, setData] = useState<T | null>(null);
   const [status, setStatus] = useState<string>("undefined");
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   const { refetch, isError, error } = useQuery({
     queryKey: [queryKeyName, ent_seq],
-    queryFn: async () => {
-      let result = await fetchFn;
-      if (!result.ok) throw new Error("Network response was not ok");
-      return result.json();
-    },
+    queryFn: queryFn,
     enabled: false,
   });
 
@@ -154,16 +108,20 @@ function Section<T extends Response>({
     const freshData = await refetch();
 
     if (isError) {
-      setStatus("data error");
-      console.error(error);
+      setStatus("load data error");
+      console.error(error.message);
     } else {
       if (freshData.data) {
-        setData(freshData.data.data);
+        setData(freshData.data);
         setStatus("loaded");
-        setOpen(true);
+        // setOpen(true);
       }
     }
   }
+
+  useEffect(() => {
+    loadSection();
+  }, []);
 
   return (
     <>
@@ -197,42 +155,38 @@ function Section<T extends Response>({
           )}
         </div>
 
-        <CollapsibleContent>
-          {data && (
-            <SectionContext.Provider value={{ data }}>
-              {children}
-            </SectionContext.Provider>
-          )}
+        <CollapsibleContent className="font-mono">
+          {data && <ObjectDisplay label={queryKeyName} data={data} />}
         </CollapsibleContent>
 
         <Separator className="my-4" />
       </Collapsible>
     </>
   );
-}
-
-interface HeaderValueProps<T> {
-  header: string;
-  // field: string | null | undefined;
-  field: keyof T;
-  modifier?: (arg0: any) => string;
-}
-
-const HeaderValue = <T,>({ header, field, modifier }: HeaderValueProps<T>) => {
-  const { data } = useSectionContext<T>();
-
-  return (
-    <>
-      <p className="mb-4 font-medium">
-        {header}:{" "}
-        <span className="font-normal font-mono">
-          {data[field]
-            ? modifier
-              ? modifier(data[field])
-              : data[field] + ""
-            : "null"}
-        </span>
-      </p>
-    </>
-  );
 };
+
+// interface HeaderValueProps<T> {
+//   header: string;
+//   // field: string | null | undefined;
+//   field: keyof T;
+//   modifier?: (arg0: any) => string;
+// }
+
+// const HeaderValue = <T,>({ header, field, modifier }: HeaderValueProps<T>) => {
+//   const { data } = useSectionContext<T>();
+
+//   return (
+//     <>
+//       <p className="mb-4 font-medium">
+//         {header}:{" "}
+//         <span className="font-normal font-mono">
+//           {data[field]
+//             ? modifier
+//               ? modifier(data[field])
+//               : data[field] + ""
+//             : "null"}
+//         </span>
+//       </p>
+//     </>
+//   );
+// };

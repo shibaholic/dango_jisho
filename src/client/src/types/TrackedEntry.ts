@@ -1,42 +1,50 @@
-export type TrackedEntry = {
-  ent_seq: string;
-  userId: string; // Guid
-  levelStateType: LevelState;
-  oldLevelStateType: LevelState | null;
-  specialCategory: SpecialCategory | null;
-  score: number;
-  lastReviewDate: Date;
-  nextReviewDays: number | null;
-  nextReviewMinutes: number | null;
-};
+import { z } from "zod";
 
-export const LevelStateMap = {
-  0: "New",
-  1: "Learning",
-  2: "Reviewing",
-  3: "Known",
-} as const;
+export const LevelState = ["New", "Learning", "Reviewing", "Known"] as const;
 
-export type LevelState = keyof typeof LevelStateMap;
+export const SpecialCategory = [
+  "NeverForget",
+  "Blacklist",
+  "Cram",
+  "Failed",
+] as const;
 
-export function levelStateToString(levelState: LevelState | null): string {
-  if (levelState) return LevelStateMap[levelState] || "Unknown LevelState";
-  return "null";
-}
+export const TrackedEntrySchema = z.object({
+  ent_seq: z.string(),
+  userId: z.string(), // Guid
+  levelStateType: z.enum(LevelState),
+  oldLevelStateType: z.enum(LevelState).nullable(),
+  specialCategory: z.enum(SpecialCategory).nullable(),
+  score: z.number(),
+  lastReviewDate: z.string().datetime({ local: true }).nullable(),
+  nextReviewDays: z.number().nullable(),
+  nextReviewMinutes: z.number().nullable(),
+});
 
-export const SpecialCategoryMap = {
-  0: "NeverForget",
-  1: "Blacklist",
-  2: "Cram",
-  3: "Failed",
-} as const;
+export type TrackedEntry = z.infer<typeof TrackedEntrySchema>;
 
-export type SpecialCategory = keyof typeof SpecialCategoryMap;
+// export type TrackedEntry = {
+//   ent_seq: string;
+//   userId: string; // Guid
+//   levelStateType: typeof LevelState;
+//   oldLevelStateType: typeof LevelState | null;
+//   specialCategory: typeof SpecialCategory | null;
+//   score: number;
+//   lastReviewDate: Date;
+//   nextReviewDays: number | null;
+//   nextReviewMinutes: number | null;
+// };
 
-export function specialCategoryToString(
-  specialCategory: SpecialCategory | null
-): string {
-  if (specialCategory)
-    return SpecialCategoryMap[specialCategory] || "Unknown SpecialCategory";
-  return "null";
-}
+// export const LevelState = {
+//   0: "New",
+//   1: "Learning",
+//   2: "Reviewing",
+//   3: "Known",
+// } as const;
+
+// export const SpecialCategory = {
+//   0: "NeverForget",
+//   1: "Blacklist",
+//   2: "Cram",
+//   3: "Failed",
+// } as const;

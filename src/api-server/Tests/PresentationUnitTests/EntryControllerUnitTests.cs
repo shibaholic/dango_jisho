@@ -39,10 +39,8 @@ public class EntryControllerUnitTests {
         _mockMediator.Setup(m => m.Send(It.IsAny<EntryEntSeqGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
         
-        var request = new EntryEntSeqGetRequest {ent_seq = "1234"};
-        
         // Act
-        var result = await _controller.GetById(request);
+        var result = await _controller.GetByEnt_Seq(ent_seq:"1234");
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -58,10 +56,8 @@ public class EntryControllerUnitTests {
         _mockMediator.Setup(m => m.Send(It.IsAny<EntryEntSeqGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
         
-        EntryEntSeqGetRequest? request = new EntryEntSeqGetRequest {ent_seq = "1234"};
-        
         // Act
-        var result = await _controller.GetById(request);
+        var result = await _controller.GetByEnt_Seq(ent_seq: "1234");
         
         // Assert
         

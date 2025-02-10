@@ -13,3 +13,5 @@ Then follow this guide for setting up Shadcn for Vite: https://ui.shadcn.com/doc
 `yarn add -D @tanstack/eslint-plugin-query`
 
 `yarn add -D prettier prettier-plugin-tailwindcss`
+
+`yarn add zod`

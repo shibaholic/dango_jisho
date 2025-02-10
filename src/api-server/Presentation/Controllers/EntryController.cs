@@ -19,8 +19,10 @@ public class EntryController : BaseApiController
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetById([FromQuery] EntryEntSeqGetRequest request)
+    public async Task<IActionResult> GetByEnt_Seq([FromQuery] string ent_seq)
     {
+        var request = new EntryEntSeqGetRequest { ent_seq = ent_seq };
+        
         var response = await _mediatr.Send(request);
         
         return this.ToActionResult(response);

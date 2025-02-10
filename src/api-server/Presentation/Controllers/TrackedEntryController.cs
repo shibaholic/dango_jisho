@@ -28,15 +28,14 @@ public class TrackedEntryController: BaseApiController
 
         return this.ToActionResult(response);
     }
-
-    [HttpGet("id")]
-    public async Task<IActionResult> GetById([FromQuery] string ent_seq, CancellationToken cancellationToken)
+    
+    [HttpGet]
+    public async Task<IActionResult> GetByEnt_Seq([FromQuery] string ent_seq, CancellationToken cancellationToken)
     {
-        // user id thing
         var request = new TrackedEntryIdGetRequest
         {
             ent_seq = ent_seq,
-            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099")
+            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099") // TODO: implement user authentication
         };
         
         var response = await _mediator.Send(request, cancellationToken);

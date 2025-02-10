@@ -20,6 +20,7 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  showDetails: (row: any) => void;
 }
 
 export interface TableRef<TData> {
@@ -29,7 +30,7 @@ export interface TableRef<TData> {
 
 export const DataTable = forwardRef<TableRef<any>, DataTableProps<any, any>>(
   <TData, TValue>(
-    { columns, data }: DataTableProps<TData, TValue>,
+    { columns, data, showDetails: selectRow }: DataTableProps<TData, TValue>,
     ref: React.Ref<TableRef<TData>>
   ) => {
     const [selectedRow, setSelectedRow] = useState<TData | null>(null);
@@ -82,6 +83,8 @@ export const DataTable = forwardRef<TableRef<any>, DataTableProps<any, any>>(
                       ? e.preventDefault()
                       : (setSelectedRow(row.original),
                         setSelectedRowId(row.id));
+
+                    selectRow(row.original);
                   }}
                   style={{
                     backgroundColor:

@@ -24,14 +24,9 @@ const TrackedEntriesContent: React.FC = () => {
     enabled: false,
   });
 
-  const showDetails = () => {
-    // first get ent_seq from tableRef
-    if (tableRef.current && detailsRef.current) {
-      const currentRow = tableRef.current.getSelectedRow();
-      if (currentRow) {
-        detailsRef.current.setES(currentRow.ent_seq);
-        // detailsRef.current.fetchData(currentRow.ent_seq);
-      }
+  const rowIsSelected = (row: any) => {
+    if (detailsRef.current) {
+      detailsRef.current.setES(row.ent_seq);
     }
   };
 
@@ -62,11 +57,16 @@ const TrackedEntriesContent: React.FC = () => {
             <CardTitle>
               <h3>Table</h3>
             </CardTitle>
-            <Button onClick={showDetails}>Show details</Button>
+            {/* <Button onClick={showDetails}>Show details</Button> */}
           </div>
         </CardHeader>
         <CardContent>
-          <DataTable ref={tableRef} columns={columns} data={data} />
+          <DataTable
+            ref={tableRef}
+            columns={columns}
+            data={data}
+            showDetails={rowIsSelected}
+          />
         </CardContent>
       </Card>
       <Card>
