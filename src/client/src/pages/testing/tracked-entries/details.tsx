@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { TrackedEntry, TrackedEntrySchema } from "@/types/TrackedEntry";
 import ObjectDisplay from "./objectDisplay";
 import { Entry, EntrySchema } from "@/types/JMDict";
+import { Card, CardSchema } from "@/types/Card";
 // import CardBackSmall from "../card-back/card-back";
 
 export interface DetailsRef {
@@ -43,7 +44,8 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
                 const response = await fetch(
                   `${api_url}/TrackedEntry?ent_seq=${ent_seq}`
                 );
-                if (!response.ok) throw new Error("Failed to fetch data");
+                if (!response.ok)
+                  throw new Error("Failed to fetch TrackedEntry data");
                 const data =
                   (await response.json()) as ApiResponse<TrackedEntry>;
                 const parsed = TrackedEntrySchema.safeParse(data.data);
@@ -62,12 +64,30 @@ export const Details = forwardRef((props, ref: React.Ref<DetailsRef>) => {
                 const response = await fetch(
                   `${api_url}/Entry?ent_seq=${ent_seq}`
                 );
-                if (!response.ok) throw new Error("Failed to fetch data");
+                if (!response.ok) throw new Error("Failed to fetch Entry data");
                 const data = (await response.json()) as ApiResponse<Entry>;
                 const parsed = EntrySchema.safeParse(data.data);
                 if (!parsed.success) {
                   console.error(parsed.error.format);
                   throw new Error("Failed to parse Entry");
+                }
+                return parsed.data;
+              }}
+            />
+            <Section
+              title="Card details"
+              queryKeyName="card"
+              ent_seq={ent_seq}
+              queryFn={async (): Promise<Card> => {
+                const response = await fetch(
+                  `${api_url}/Card?ent_seq=${ent_seq}`
+                );
+                if (!response.ok) throw new Error("Failed to fetch Card data");
+                const data = (await response.json()) as ApiResponse<Entry>;
+                const parsed = CardSchema.safeParse(data.data);
+                if (!parsed.success) {
+                  console.error(parsed.error.format);
+                  throw new Error("Failed to parse Card");
                 }
                 return parsed.data;
               }}
