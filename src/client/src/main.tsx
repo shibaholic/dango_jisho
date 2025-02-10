@@ -4,7 +4,7 @@ import "./index.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Testing from "./pages/testing/Testing.tsx";
-import Landing from "./pages/Landing.tsx";
+import Landing from "./pages/landing/Landing.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
