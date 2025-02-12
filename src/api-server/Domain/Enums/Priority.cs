@@ -2,22 +2,6 @@ namespace Domain.Enums;
 
 public enum Priority
 {
-    // Spec priorities
-    spec1,
-    spec2,
-
-    // Ichi priorities
-    ichi1,
-    ichi2,
-
-    // News priorities
-    news1,
-    news2,
-
-    // Gai priorities
-    gai1,
-    gai2,
-
     // NF priorities
     nf01,
     nf02,
@@ -66,5 +50,21 @@ public enum Priority
     nf45,
     nf46,
     nf47,
-    nf48 
+    nf48,
+    
+    // Ichi priorities
+    ichi1,
+    ichi2,
+
+    // News priorities
+    news1,
+    news2,
+
+    // Spec priorities
+    spec1,
+    spec2,
+    
+    // Gai priorities
+    gai1,
+    gai2,
 }

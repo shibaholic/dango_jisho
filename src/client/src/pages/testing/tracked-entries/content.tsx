@@ -15,7 +15,7 @@ const TrackedEntriesContent: React.FC = () => {
   const detailsRef = useRef<DetailsRef>(null);
 
   const { refetch, isError, error } = useQuery({
-    queryKey: ["weatherforecast"],
+    queryKey: ["trackedEntries"],
     queryFn: async () => {
       let result = await fetch(`${api_url}/TrackedEntry/all`);
       if (!result.ok) throw new Error("Network response was not ok");

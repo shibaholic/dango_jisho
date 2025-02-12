@@ -39,6 +39,9 @@ export const ReadingElementSchema = z.object({
 
 export const EntrySchema = z.object({
   ent_seq: z.string(),
+  selectedKanjiIndex: z.number().nullable(),
+  selectedReadingIndex: z.number(),
+  priorityScore: z.number().nullable(),
   kanjiElements: z.array(KanjiElementSchema),
   readingElements: z.array(ReadingElementSchema),
   senses: z.array(SenseSchema),

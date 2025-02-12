@@ -27,4 +27,14 @@ public class CardController : BaseApiController
         var response = await _mediator.Send(new CardEntSeqGetRequest { ent_seq = ent_seq }, cancellationToken);
         return this.ToActionResult(response); 
     }
+    
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string query)
+    {
+        var request = new CardQueryRequest { query = query };
+        
+        var response = await _mediator.Send(request);
+        
+        return this.ToActionResult(response);
+    }
 }

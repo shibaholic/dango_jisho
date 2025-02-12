@@ -1,5 +1,8 @@
 using System.Data;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using Domain.Entities.CardData;
+using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
 using Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -72,5 +75,52 @@ public class CardRepository : BaseRepository<Card>, ICardRepository
             .Include(c => c.Senses)
             .ThenInclude(sense => sense.lsource)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<Card>> Search(string query)
+    {
+        throw new NotImplementedException();
+
+        // var pageSize = 10;  // Number of entries per page
+        // var pageNumber = 1; // Current page (1-based index)
+        //
+        // Expression<Func<Entry, bool>> whereExpr;
+        // Func<Entry, bool> exactMatchExpr;
+        // if (Regex.IsMatch(query, @"[\u4E00-\u9FAF]"))
+        // {
+        //     Console.WriteLine("Searching kanji");
+        //     whereExpr = q => q.KanjiElements.Any(k => k.keb.Contains(query));
+        //     exactMatchExpr = e => e.KanjiElements.Any(k => k.keb == query);
+        // }
+        // else if (Regex.IsMatch(query, @"[\u3040-\u309F\u30A0-\u30FF]"))
+        // {
+        //     Console.WriteLine("Searching kana");
+        //     whereExpr = q => q.ReadingElements.Any(r => r.reb.Contains(query));
+        //     exactMatchExpr = e => e.ReadingElements.Any(r => r.reb == query);
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Searching gloss");
+        //     whereExpr = q => q.Senses.Any(s => s.gloss.Any(g => g.Contains(query)));
+        //     exactMatchExpr = e => e.Senses.Any(s => s.gloss.Any(g => g == query));
+        // }
+        //
+        // var queryable = _context.Entries
+        //     .Where(whereExpr)
+        //     .Join(_context.Cards,
+        //         e => e.ent_seq,
+        //         c => c.ent_seq,
+        //         (e, c) => c )
+        //     .Include(c => c.KanjiElement)
+        //     .Include(c => c.ReadingElement)
+        //     .Include(c => c.Senses)
+        //     .ThenInclude(s => s.lsource);
+        //
+        // var list = await queryable.ToListAsync();
+        //
+        // var orderedList = list.OrderByDescending(exactMatchExpr)
+        //     .Skip((pageNumber - 1) * pageSize)
+        //     .Take(pageSize)
+        //     .ToList();
     }
 }

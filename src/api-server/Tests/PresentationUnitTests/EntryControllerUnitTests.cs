@@ -77,8 +77,8 @@ public class EntryControllerUnitTests {
             .ReturnsAsync(response);
         
         // Act
-        var request = new EntryQueryRequest { query = "Test search query" };
-        var result = await _controller.Search(request);
+        var query = "Test search query" ;
+        var result = await _controller.Search(query);
 
         // Assert
         result.Should().BeOfType<OkObjectResult>();

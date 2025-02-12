@@ -29,8 +29,10 @@ public class EntryController : BaseApiController
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] EntryQueryRequest request)
+    public async Task<IActionResult> Search([FromQuery] string query)
     {
+        var request = new EntryQueryRequest { query = query };
+        
         var response = await _mediatr.Send(request);
         
         return this.ToActionResult(response);

@@ -225,10 +225,26 @@ public class ImportJMdict : IRequestHandler<ImportJMdictRequest, Response>
 
         stopwatch.Stop();
         Console.WriteLine($"  Parsing JMdict took {stopwatch.ElapsedMilliseconds} ms.");
-        
         stopwatch.Restart();
 
         if(request.Count is not null) entries = entries.Take(request.Count.Value).ToList();
+
+        // Console.WriteLine(entries[0]);
+        // entries[0].SetDefaultSelectedIndexes();
+        // Console.WriteLine(entries[0]);
+        //
+        // for(int i = 0; i < entries.Count; i++)
+        // {
+        //     entries[i].SetDefaultSelectedIndexes();
+        //     if (entries[i].SelectedReadingIndex == -1)
+        //     {
+        //         Console.WriteLine($"loop ent_seq: {entries[i].ent_seq}");
+        //         Console.WriteLine("No reading index selected");
+        //     }
+        // }
+        
+        entries.ForEach(entry => entry.SetDefaultSelectedIndexes());
+        entries.ForEach(entry => entry.SetPriorityScore());
         
         await _repository.BulkInsertAsync(entries);
         // await _repository.RangeCreate(entries);

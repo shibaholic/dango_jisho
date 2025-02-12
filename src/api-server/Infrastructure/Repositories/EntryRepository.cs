@@ -205,13 +205,19 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
             await connection.OpenAsync();
         }
         // import the parent entity Entry
-        using (var writer = connection.BeginBinaryImport("COPY \"Entries\" (\"ent_seq\") FROM STDIN (FORMAT BINARY)"))
+        using (var writer = connection.BeginBinaryImport("""
+                                                         COPY "Entries" ("ent_seq", "SelectedKanjiIndex", "SelectedReadingIndex", 
+                                                         "PriorityScore") FROM STDIN (FORMAT BINARY)
+                                                         """))
         {
             foreach (var entry in entries)
             {
                 writer.StartRow();
                 
                 writer.Write(entry.ent_seq, NpgsqlTypes.NpgsqlDbType.Text);
+                writer.Write(entry.SelectedKanjiIndex, NpgsqlTypes.NpgsqlDbType.Integer);
+                writer.Write(entry.SelectedReadingIndex, NpgsqlTypes.NpgsqlDbType.Integer);
+                writer.Write(entry.PriorityScore, NpgsqlTypes.NpgsqlDbType.Integer);
             }
             
             await writer.CompleteAsync();
@@ -356,7 +362,7 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
         else
         {
             Console.WriteLine("Searching gloss");
-            whereExpr = q => q.Senses.Any(s => s.gloss.Any(g => g.Contains(query)));
+            whereExpr = q => q.Senses.Any(s => s.gloss.Any(g => (" " + g.ToLower() + " ").Contains(" " + query.ToLower() + " ")));
             exactMatchExpr = e => e.Senses.Any(s => s.gloss.Any(g => g == query));
         }
         
@@ -368,19 +374,13 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
             .Include(q => q.Senses)
             .ThenInclude(s => s.lsource);
         
-        // Apply ordering logic
-        var orderedQueryable = queryable
-            .OrderBy(e => e.KanjiElements.Any() ? e.KanjiElements.Min(k => k.keb.Length) : int.MaxValue)
-            .ThenBy(e => e.ReadingElements.Any() ? e.ReadingElements.Min(r => r.reb.Length) : int.MaxValue);
-        
-        // Apply pagination
-        var list = await orderedQueryable
-            // .Skip((pageNumber - 1) * pageSize)
-            // .Take(pageSize)
+        var list = await queryable
             .ToListAsync();
         
         // find exact matches and put them first in the order
-        var orderedList = list.OrderByDescending(exactMatchExpr)
+        var orderedList = list
+            // .OrderByDescending(exactMatchExpr)
+            .OrderBy(e => e.PriorityScore)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();

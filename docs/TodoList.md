@@ -18,6 +18,6 @@
 5. ✅ Switch to PostgreSQL copy for JMdict repository instead of AddRange
 6. Review Score algorithm
 
-## Jan 2 2025
+## Feb 11 2025
 
-1. AddToTag
+1. Create a key to sort Entries by relevance, then you don't need to Order By in the search query which prevents issues with pagination and taking... Or maybe not... 

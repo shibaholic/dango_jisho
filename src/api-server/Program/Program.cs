@@ -124,28 +124,40 @@ public static class ApplicationExtensions
 
     private static async Task SeedJMDictData(IServiceScope serviceScope)
     {
+        Console.WriteLine("Seeding with JMDict data...");
+        
         var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
         
-        Console.WriteLine("Seeding with JMDict data...");
+        if (mediator == null)
+        {
+            Console.WriteLine("  Error while getting Mediator");
+            System.Environment.Exit(1);
+        }
+        
         string filePath = Path.Combine(AppContext.BaseDirectory, "SeedData", "JMdict_e.xml");
         if (!File.Exists(filePath))
         {
             Console.WriteLine("  Could not find seed data.");
             System.Environment.Exit(1);
         }
+        
         var stopwatch = Stopwatch.StartNew();
+        
         using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filePath)));
         var request = new ImportJMdictRequest { Content = stream.ToArray() }; // , Count = 1000 
+        
         stopwatch.Stop();
         Console.WriteLine($"  Loading JMdict from {filePath} took {stopwatch.ElapsedMilliseconds} ms.");
         stopwatch.Restart();
-        var result = await mediator!.Send(request, CancellationToken.None);
+        
+        var result = await mediator.Send(request, CancellationToken.None);
                 
         if (!result.Successful)
         {
             Console.WriteLine("  Error while importing JMdict_e.xml.");
             System.Environment.Exit(1);
         }
+        
         stopwatch.Stop();
         Console.WriteLine($"JMDict seeding took {stopwatch.ElapsedMilliseconds} ms.\n");
     }
@@ -388,14 +400,13 @@ public static class ApplicationExtensions
         
         stopwatch.Stop();
         Console.WriteLine($"  Reading {entries.Count} entries took {stopwatch.ElapsedMilliseconds} ms.");
+        stopwatch.Restart();
         
         if (entries.Count == 0)
         {
             Console.WriteLine("  Error while getting entries. Zero entries.");
             System.Environment.Exit(1);
         }
-        
-        stopwatch.Restart();
         
         var entryCounter = 0;
         var cards = new List<Card>();

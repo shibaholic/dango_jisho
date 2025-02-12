@@ -5,6 +5,9 @@ namespace Application.Mappings.EntityDtos.JMDict;
 public record EntryDto
 {
     public string ent_seq { get; set; }
+    public int? SelectedKanjiIndex { get; set; } = null;
+    public int SelectedReadingIndex { get; set; }
+    public int? PriorityScore { get; set; } = null;
     public List<KanjiElementDto> KanjiElements { get; set; }
     public List<ReadingElementDto> ReadingElements { get; set; }
     public List<SenseDto> Senses { get; set; }
