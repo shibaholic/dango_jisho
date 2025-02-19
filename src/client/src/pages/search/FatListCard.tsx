@@ -49,7 +49,7 @@ const FatListCard = ({ entry }: FatListCardProps) => {
     );
   }
 
-  function createPosSpans(pos: string[]): JSX.Element {
+  function createPosSpans(pos: string[]): JSX.Element[] {
     const poses = currentPos.map((pos_str, index) => {
       let punctuation = ", ";
       if (index === pos.length - 1) punctuation = "";
@@ -60,7 +60,7 @@ const FatListCard = ({ entry }: FatListCardProps) => {
         </span>
       );
     });
-    return <p className="mt-1">{poses}</p>;
+    return poses;
   }
 
   let glossesSection: JSX.Element[] = [];
@@ -70,32 +70,36 @@ const FatListCard = ({ entry }: FatListCardProps) => {
     if (!areStringArraysEqual(currentPos, sense.pos)) {
       currentPos = sense.pos;
       glossesSection.push(
-        <div key={"pos" + index}>{createPosSpans(currentPos)}</div>
+        <p key={"pos" + index} className="mt-1">
+          {createPosSpans(currentPos)}
+        </p>
       );
     }
 
     glossesSection.push(
-      <div key={"gloss" + index} className="flex lg:flex-row flex-col">
-        <p className="flex-shrink-0">
-          <span className="font-light text-xl">{index + 1}. </span>
+      <p
+        key={"gloss" + index}
+        className="`w-full flex flex-wrap whitespace-pre-wrap"
+      >
+        <span className="font-light text-xl">{index + 1}. </span>
+        {sense.gloss.map((gloss, index, array) => {
+          let punctuation = "; ";
+          if (index === array.length - 1) punctuation = "";
+          return (
+            <span key={index} className="font-normal text-xl">
+              {gloss}
+              {punctuation}
+            </span>
+          );
+        })}
 
-          {sense.gloss.map((gloss, index, array) => {
-            let punctuation = ", ";
-            if (index === array.length - 1) punctuation = "";
-            return (
-              <span key={index} className="font-medium text-xl">
-                {gloss}
-                {punctuation}
-              </span>
-            );
-          })}
-        </p>
-        <p className="flex-shrink-1 ml-4">
-          <span className="font-light text-sm text-zinc-600">
-            {sense.s_inf}{" "}
+        {sense.s_inf && (
+          <span className="font-light text-sm text-zinc-600 self-center">
+            {" "}
+            {sense.s_inf}
           </span>
-        </p>
-      </div>
+        )}
+      </p>
     );
   });
 
@@ -104,9 +108,7 @@ const FatListCard = ({ entry }: FatListCardProps) => {
       <CardHeader className="flex flex-row justify-start mt-2">
         <CardTitle>{faceTermElement}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div>{glossesSection}</div>
-      </CardContent>
+      <CardContent>{glossesSection}</CardContent>
     </Card>
   );
 };
