@@ -1,6 +1,6 @@
 # Chuui
 
-In progress Japanese vocabulary flashcard web app.
+In progress vocabulary flashcard web app.
 
 [Requirements](/docs/Requirements.md)
 
