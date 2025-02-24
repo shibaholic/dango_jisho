@@ -32,9 +32,9 @@ public class UserRepository : BaseRepository<User>, IUserRepository
             .FirstOrDefaultAsync(x => x.RefreshToken == refreshToken, cancellationToken: cancellationToken);
     }
 
-    public Task<bool> UpdateRefreshCodeToNull(Guid userId, CancellationToken cancellationToken)
+    public Task<bool> UpdateRefreshCodeToNull(Guid userId, Guid refreshToken, CancellationToken cancellationToken)
     {
-        var user = _context.Users.Find(userId);
+        var user = _context.Users.FirstOrDefault(user => user.Id == userId && user.RefreshToken == refreshToken);
 
         if (user == null) return Task.FromResult(false);
         

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import NavBar from "../NavBar";
+import NavBar from "../../components/header/NavBar";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardSchema } from "@/types/Card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { ApiResponse, api_url } from "@/Api";
+import { ApiResponse, api_url } from "@/utils/api";
 import { z } from "zod";
 import { Entry, EntrySchema } from "@/types/JMDict";
-import FatListCard from "./FatListCard";
+import FatListCard from "../../components/vocab/FatListCard";
+import { Helmet } from "react-helmet-async";
 
 function SearchResults() {
   let [searchParams] = useSearchParams();
@@ -64,7 +65,7 @@ function SearchResults() {
           <p>Zero results found.</p>
         ) : (
           data.map((entry, index) => {
-            return <FatListCard key={index} entry={entry} />;
+            return <FatListCard key={index} entry={entry} linkToVocab />;
           })
         )}
       </>
@@ -72,14 +73,19 @@ function SearchResults() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">
-        <NavBar />
-        <Separator />
-        <h2>Search Results</h2>
-        <div>{contents}</div>
+    <>
+      <Helmet>
+        <title>{query} - Chuui Search</title>
+      </Helmet>
+      <div className="w-full flex flex-col items-center">
+        <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">
+          <NavBar />
+          <Separator />
+          <h2>Search Results</h2>
+          <div className="flex flex-col gap-1">{contents}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

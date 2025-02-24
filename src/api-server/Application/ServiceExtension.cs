@@ -20,5 +20,6 @@ public static class ServiceExtension
         
         // other
         services.AddTransient(typeof(ITimeService), typeof(TimeService));
+        services.AddScoped<IPasswordService, PasswordService>();
     }
 }

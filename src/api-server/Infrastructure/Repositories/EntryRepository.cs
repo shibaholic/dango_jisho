@@ -338,6 +338,8 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     }
     public async Task<List<Entry>> Search(string query)
     {
+        // TODO: implement exact match as top result
+        
         var pageSize = 10;  // Number of entries per page
         var pageNumber = 1; // Current page (1-based index)
         

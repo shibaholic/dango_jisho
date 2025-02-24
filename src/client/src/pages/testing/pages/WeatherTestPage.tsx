@@ -1,4 +1,4 @@
-import { api_url } from "@/Api";
+import { api_url } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -14,7 +14,7 @@ class WeatherForecast {
   }
 }
 
-const WeatherForecastContent = () => {
+const WeatherTestPage = () => {
   const [weatherForecastData, setWeatherForecastData] = useState<string>("");
 
   // Access the client
@@ -60,4 +60,4 @@ const WeatherForecastContent = () => {
   );
 };
 
-export default WeatherForecastContent;
+export default WeatherTestPage;

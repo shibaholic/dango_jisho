@@ -32,5 +32,7 @@ public class Mappings : Profile
         
         // Other
         CreateMap<User, UserDto>();
+        CreateMap<User, UserAuthDto>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src));
     }
 }

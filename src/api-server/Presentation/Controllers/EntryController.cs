@@ -3,6 +3,7 @@ using Application.Response;
 using Application.UseCaseCommands;
 using Application.UseCaseQueries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Utilities;
@@ -43,6 +44,7 @@ public class EntryController : BaseApiController
     );
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UploadJMdict([FromForm] UploadJMdictPayload payload, CancellationToken cancellationToken)
     {
         using var memoryStream = new MemoryStream();

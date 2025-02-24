@@ -65,7 +65,7 @@ public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
     {
         var entity = await _repo.ReadByIdAsync(id);
         if (entity == null) return Response<T>.NotFound("Entity not found");
-        return Response<T>.Ok("Entity dto found", entity);
+        return Response<T>.Ok("Entity found", entity);
     }
 
     public async Task<Response<IEnumerable<TDto>>> GetAllDtoAsync()

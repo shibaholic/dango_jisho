@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import NavBar from "../NavBar";
+import NavBar from "../../components/header/NavBar";
 import { Separator } from "@radix-ui/react-separator";
-import { ApiResponse, api_url } from "@/Api";
+import { ApiResponse, api_url } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { Entry, EntrySchema } from "@/types/JMDict";
-import FatListCard from "../search/FatListCard";
+import FatListCard from "../../components/vocab/FatListCard";
+import { Helmet } from "react-helmet-async";
 
 const Vocab = () => {
   let { ent_seq } = useParams();
@@ -68,14 +69,26 @@ const Vocab = () => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">
-        <NavBar />
-        <Separator />
+    <>
+      <Helmet>
+        {data && (
+          <title>
+            {data.selectedKanjiIndex
+              ? data.kanjiElements[data.selectedKanjiIndex].keb
+              : data.readingElements[data.selectedReadingIndex].reb}{" "}
+            - Chuui
+          </title>
+        )}
+      </Helmet>
+      <div className="w-full flex flex-col items-center">
+        <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">
+          <NavBar />
+          <Separator />
 
-        <div>{contents}</div>
+          <div>{contents}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

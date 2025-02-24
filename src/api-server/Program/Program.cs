@@ -1,8 +1,5 @@
 using System.Diagnostics;
 using Application;
-using Application.Mappings.EntityDtos;
-using Application.Mappings.EntityDtos.CardData;
-using Application.Mappings.EntityDtos.JMDict;
 using Application.Mappings.EntityDtos.Tracking;
 using Application.Response;
 using Application.Services;
@@ -11,13 +8,11 @@ using Application.Utilities;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.CardData;
-using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
 using Domain.RepositoryInterfaces;
 using Infrastructure;
 using Infrastructure.DbContext;
 using MediatR;
-using Microsoft.AspNetCore.Http.Features;
 using Presentation;
 using Presentation.ExceptionHandler;
 
@@ -48,25 +43,15 @@ public class Program
             };
         });
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(builder => builder
-                .WithOrigins(["http://192.168.86.100:5173", "http://localhost:5173"])
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()
-            );
-        });
-
         builder.Services.AddExceptionHandler<ProblemExceptionHandler>();
         
         // APP
         var app = builder.Build();
-    
-        app.UseCors();
         
         app.RunPresentationServices();
         app.CheckIfDatabaseCreated();
+        
+        // TODO: make CheckEnsureCreated run in background
         await app.CheckEnsureCreated();
 
         app.UseExceptionHandler();
@@ -111,7 +96,7 @@ public static class ApplicationExtensions
                 await SeedJMDictData(serviceScope);
                 await SeedUserData(serviceScope);
                 await SeedTrackingData(serviceScope);
-                await GenerateDefaultCardData(serviceScope);
+                // await GenerateDefaultCardData(serviceScope);
             }
             else
             {

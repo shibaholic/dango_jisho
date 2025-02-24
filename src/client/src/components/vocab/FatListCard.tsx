@@ -1,16 +1,29 @@
 import { Entry } from "@/types/JMDict";
 import React from "react";
-import ObjectDisplay from "../testing/tracked-entries/objectDisplay";
+import ObjectDisplay from "../../pages/testing/components/ObjectDisplay";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { areStringArraysEqual } from "@/utils/stringUtils";
 import { posMapping } from "@/types/enums/Pos";
 import { FuriganaSegment, annotateFurigana } from "@/utils/furigana";
+import { useNavigate } from "react-router-dom";
 
 interface FatListCardProps {
   entry: Entry;
+  linkToVocab?: boolean | undefined;
 }
 
-const FatListCard = ({ entry }: FatListCardProps) => {
+const FatListCard = ({ entry, linkToVocab = false }: FatListCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+      // If text is selected, don't trigger the onClick event
+      return;
+    }
+    linkToVocab && navigate(`/vocab/${entry.ent_seq}`);
+  };
+
   let faceTermElement = <p>ERROR</p>;
 
   if (entry.selectedKanjiIndex !== null) {
@@ -22,30 +35,32 @@ const FatListCard = ({ entry }: FatListCardProps) => {
     );
 
     faceTermElement = (
-      <>
-        <h3>
-          {annotatedSegments.map((segment, index) =>
-            segment.furigana ? (
-              <ruby key={index} className="mx-0.5 text-3xl font-medium">
-                {segment.base}
-                <rt className="text-sm font-light">{segment.furigana}</rt>
-              </ruby>
-            ) : (
-              <span key={index} className="text-3xl font-medium">
-                {segment.base}
-              </span>
-            )
-          )}
-        </h3>
-      </>
+      <h3
+        className={`${linkToVocab && "hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer"} rounded-lg p-1 relative -top-1 -left-1`}
+        onMouseUp={handleClick}
+      >
+        {annotatedSegments.map((segment, index) =>
+          segment.furigana ? (
+            <ruby key={index} className="mx-0.5 text-3xl font-medium">
+              <span>{segment.base}</span>
+              <rt className="text-sm font-light">{segment.furigana}</rt>
+            </ruby>
+          ) : (
+            <span key={index} className="text-3xl font-medium">
+              {segment.base}
+            </span>
+          )
+        )}
+      </h3>
     );
   } else {
     faceTermElement = (
-      <>
-        <h3 className="text-3xl font-medium">
-          {entry.readingElements[entry.selectedReadingIndex].reb}
-        </h3>
-      </>
+      <h3
+        className={`${linkToVocab && "hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer"} rounded-lg p-1 relative -top-1 -left-1 text-3xl font-medium`}
+        onMouseUp={handleClick}
+      >
+        {entry.readingElements[entry.selectedReadingIndex].reb}
+      </h3>
     );
   }
 

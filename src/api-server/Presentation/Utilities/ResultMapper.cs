@@ -14,6 +14,7 @@ public static class ResultMapper
             Status.Ok => controller.Ok(response),
             Status.NoContent => controller.NoContent(),
             Status.BadRequest => controller.BadRequest(response.Message),
+            Status.Unauthorized => controller.Unauthorized(response.Message),
             Status.NotFound => controller.NotFound(response.Message),
             Status.ServerError => controller.StatusCode(500, response.Message),
             _ => controller.StatusCode(500) // Default fallback

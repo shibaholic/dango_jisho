@@ -1,26 +1,39 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import WeatherForecastContent from "./WeatherForecast";
-import { ReactNode } from "react";
-import TrackedEntriesContent from "./tracked-entries/content";
+import WeatherTestPage from "./pages/WeatherTestPage";
+import { ReactNode, useEffect, useState } from "react";
+import { TrackedEntriesTestPage } from "./pages/TrackedEntriesTestPage";
+import RHKTestPage from "./pages/RHKTestPage";
+import AuthTestPage from "./pages/AuthTestPage";
+import { Helmet } from "react-helmet-async";
 
 function Testing() {
   return (
     <div className="m-4 h-full">
       <h1>Testing page</h1>
       {/* <Button>Click me</Button> */}
-      <Tabs defaultValue="Weather Forecast" className="mt-4">
+      <Tabs defaultValue="Auth" className="mt-4">
         <TabsList>
           <TabsTrigger value="Weather Forecast">Weather Forecast</TabsTrigger>
           <TabsTrigger value="Tracked Entries">Tracked Entries</TabsTrigger>
+          <TabsTrigger value="RHK">React Hook Form Testing</TabsTrigger>
+          <TabsTrigger value="Auth">Auth</TabsTrigger>
         </TabsList>
 
         <TabPageWrapper title="Weather Forecast">
-          <WeatherForecastContent />
+          <WeatherTestPage />
         </TabPageWrapper>
 
         <TabPageWrapper title="Tracked Entries">
-          <TrackedEntriesContent />
+          <TrackedEntriesTestPage />
+        </TabPageWrapper>
+
+        <TabPageWrapper title="RHK">
+          <RHKTestPage />
+        </TabPageWrapper>
+
+        <TabPageWrapper title="Auth">
+          <AuthTestPage />
         </TabPageWrapper>
       </Tabs>
     </div>
@@ -36,9 +49,14 @@ interface TabPageProps {
 
 const TabPageWrapper: React.FC<TabPageProps> = ({ title, children }) => {
   return (
-    <TabsContent value={title} className="p-4 h-full">
-      {/* <h2 className="mb-4">{title}</h2> */}
-      {children}
-    </TabsContent>
+    <>
+      <TabsContent value={title} className="p-4 h-full">
+        <Helmet>
+          <title>{title} - Testing</title>
+        </Helmet>
+        <h2 className="mb-4">{title}</h2>
+        {children}
+      </TabsContent>
+    </>
   );
 };

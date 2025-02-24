@@ -10,6 +10,12 @@ using Application.Response;
 
 namespace Presentation.Controllers;
 
+public record CreateTagRequest
+{
+    public string Name { get; init; }
+    public Guid UserId { get; init; }
+}
+
 [ApiController]
 public class TagController : BaseApiController
 {
@@ -26,12 +32,6 @@ public class TagController : BaseApiController
     {
         var response = await _crudService.GetDtoByIdAsync(id);
         return this.ToActionResult(response);
-    }
-
-    public record CreateTagRequest
-    {
-        public string Name { get; init; }
-        public Guid UserId { get; init; }
     }
     
     [HttpPost]
