@@ -23,7 +23,7 @@ const Vocab = () => {
         console.error(parsed.error);
         throw new Error("Failed to parse Entry");
       }
-      console.log(parsed.data);
+      // console.log(parsed.data);
       return parsed.data;
     },
     enabled: false,
@@ -76,7 +76,7 @@ const Vocab = () => {
             {data.selectedKanjiIndex
               ? data.kanjiElements[data.selectedKanjiIndex].keb
               : data.readingElements[data.selectedReadingIndex].reb}{" "}
-            - Chuui
+            - Dango Jisho
           </title>
         )}
       </Helmet>

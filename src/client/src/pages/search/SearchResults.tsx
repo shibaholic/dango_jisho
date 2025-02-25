@@ -28,7 +28,7 @@ function SearchResults() {
         console.error(parsed.error);
         throw new Error("Failed to parse Entry[]");
       }
-      console.log(parsed.data);
+      // console.log(parsed.data);
       return parsed.data;
     },
     enabled: false,
@@ -75,7 +75,7 @@ function SearchResults() {
   return (
     <>
       <Helmet>
-        <title>{query} - Chuui Search</title>
+        <title>{query} - Dango Search </title>
       </Helmet>
       <div className="w-full flex flex-col items-center">
         <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">

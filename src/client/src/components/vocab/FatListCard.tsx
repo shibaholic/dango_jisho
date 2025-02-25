@@ -36,6 +36,7 @@ const FatListCard = ({ entry, linkToVocab = false }: FatListCardProps) => {
 
     faceTermElement = (
       <h3
+        lang="ja"
         className={`${linkToVocab && "hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer"} rounded-lg p-1 relative -top-1 -left-1`}
         onMouseUp={handleClick}
       >
@@ -56,6 +57,7 @@ const FatListCard = ({ entry, linkToVocab = false }: FatListCardProps) => {
   } else {
     faceTermElement = (
       <h3
+        lang="ja"
         className={`${linkToVocab && "hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer"} rounded-lg p-1 relative -top-1 -left-1 text-3xl font-medium`}
         onMouseUp={handleClick}
       >

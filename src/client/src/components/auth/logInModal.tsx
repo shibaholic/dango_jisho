@@ -83,7 +83,7 @@ const LogInModal = forwardRef((props, ref) => {
     },
     onSuccess: (data) => {
       console.log("Login success");
-      console.log(data);
+      // console.log(data);
 
       setUser(data);
 
@@ -158,7 +158,7 @@ const LogInModal = forwardRef((props, ref) => {
     <>
       <div
         className={`w-screen h-screen fixed top-0 left-0 right-0 bottom-0
-          bg-[rgba(0,0,0,0.7)] transition-opacity duration-300
+          bg-[rgba(0,0,0,0.7)] transition-opacity duration-300 z-10
           ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
         onClick={() => setIsOpen(false)}
       >
