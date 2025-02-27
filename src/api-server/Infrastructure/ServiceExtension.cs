@@ -1,9 +1,6 @@
-using Domain.Entities;
 using Domain.RepositoryInterfaces;
 using Infrastructure.Repositories;
 using Infrastructure.DbContext;
-using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +14,8 @@ public static class ServiceExtensions
         var connectionString = configuration.GetConnectionString("PostgreSQL");
         IServiceCollection serviceCollection = services.AddDbContext<MyDbContext>(options =>
             {
-                options.UseNpgsql(connectionString //, 
-                    // x => x.MigrationsAssembly("Project.Infrastructure")
+                options.UseNpgsql(connectionString, 
+                    x => x.MigrationsAssembly("Infrastructure")
                 );
             }
         );

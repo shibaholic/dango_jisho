@@ -38,6 +38,10 @@ const featureRows: row[] = [
     status: "🗓️ Planned",
   },
   {
+    desc: "Search optimization",
+    status: "🗓️ Planned",
+  },
+  {
     desc: "Quizzes",
     status: "🗓️ Planned",
   },

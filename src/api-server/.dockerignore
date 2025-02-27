@@ -23,3 +23,6 @@
 **/values.dev.yaml
 LICENSE
 README.md
+dj-api.tar
+./SeedData/JMdict_e.xml
+./Tests/TestData/*

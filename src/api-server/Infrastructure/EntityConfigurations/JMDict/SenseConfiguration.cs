@@ -17,6 +17,9 @@ public class SenseConfiguration : IEntityTypeConfiguration<Sense>
         
         builder.Navigation(s => s.lsource)
             .AutoInclude();
+        
+        builder.HasIndex(s => s.gloss)
+            .HasDatabaseName("IX_Sense_Gloss");
     }
 }
 

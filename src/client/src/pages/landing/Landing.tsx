@@ -19,12 +19,12 @@ function Landing() {
             <p>
               This project is an attempt to create a spaced-repetition flashcard
               app designed for memorizing vocabulary. Currently,
-              English-to-Japanese implemented with English-to-other languages
-              also planned. It is inspired by jpdb.io.
+              English-to-Japanese is implemented with English-to-other languages
+              possibly also becoming available. It is inspired by jpdb.io.
             </p>
             <p>
-              This project is currently in development. There are many features
-              planned features which can be seen in the table below.
+              This project is currently in development. There are many planned
+              features which can be seen in the table below.
             </p>
             <FeatureTable />
             <p>
