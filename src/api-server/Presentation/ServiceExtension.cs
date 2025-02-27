@@ -67,7 +67,7 @@ public static class ServiceExtension
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder => builder
-                .WithOrigins(["http://localhost:5010", "http://localhost:5173", "http://localhost:4173"])
+                .WithOrigins("http://localhost:5010", "http://localhost:5173", "http://localhost:4173", "https://shibaholic.dev")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
@@ -83,11 +83,18 @@ public static class ServiceExtension
     {
         app.UseCors();
         
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        // if (app.Environment.IsDevelopment())
+        // {
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "api/swagger/{documentName}/swagger.json"; // Sets the route for Swagger JSON
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = "api/swagger";
+            });
+        // }
 
         app.UseHttpsRedirection();
 

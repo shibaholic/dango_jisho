@@ -1,7 +1,7 @@
 import { User } from "@/types/User";
 import axios, { AxiosError } from "axios";
 
-export const api_url = "http://localhost:5010/api";
+export const api_url = import.meta.env.VITE_API_URL;
 
 export type ApiResponse<T> = {
   message: string;

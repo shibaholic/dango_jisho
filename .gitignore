@@ -2,3 +2,7 @@
 **.dtmp
 docs/private/
 /src/api-server/Runner/appsettings.Runner.json
+src/docker-compose.yml
+src/deploy/*
+src/api-server/dj-api.tar
+src/client/dj-client.tar

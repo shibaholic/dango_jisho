@@ -23,8 +23,8 @@ function Landing() {
               also planned. It is inspired by jpdb.io.
             </p>
             <p>
-              This project is currently in development. There are many features
-              planned features which can be seen in the table below.
+              This project is currently in development. There are many planned
+              features which can be seen in the table below.
             </p>
             <FeatureTable />
             <p>

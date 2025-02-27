@@ -13,6 +13,8 @@ using Domain.RepositoryInterfaces;
 using Infrastructure;
 using Infrastructure.DbContext;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Presentation;
 using Presentation.ExceptionHandler;
 
@@ -75,6 +77,8 @@ public static class ApplicationExtensions
         else
         {
             Console.Error.WriteLine("Could not connect to database.");
+            // Console.WriteLine("PostgreSQL: " + app.Configuration.GetConnectionString("PostgreSQL"));
+            // Console.WriteLine("PrivateKey: " + app.Configuration.GetSection("Secrets:JwtPrivateKey").Value);
             System.Environment.Exit(1);
         }
     }
@@ -83,6 +87,12 @@ public static class ApplicationExtensions
     {
         var serviceScope = app.Services.CreateScope();
         var dataContext = serviceScope.ServiceProvider.GetService<MyDbContext>();
+
+        if (!dataContext.CheckConnection())
+        {
+            Console.WriteLine("Could not connect to database...");
+            // Console.WriteLine("ConnectionString" + app.Configuration.GetConnectionString("PostgreSQL"));
+        }
         
         if (app.Environment.IsDevelopment())
         {
@@ -103,7 +113,6 @@ public static class ApplicationExtensions
                 Console.WriteLine("Database ensuring created...");
                 dataContext.Database.EnsureCreated();
             }
-            
         }
     }
 

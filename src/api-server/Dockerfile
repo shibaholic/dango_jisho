@@ -7,15 +7,14 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Program/Program.csproj", "Program/"]
-RUN dotnet restore "Program/Program.csproj"
 COPY . .
-WORKDIR "/src/Program"
-RUN dotnet build "Program.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "Program/Program.csproj"
+WORKDIR "/src/"
+RUN dotnet build "Program/Program.csproj" -c $BUILD_CONFIGURATION -o /app/build --verbosity quiet
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Program.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Program/Program.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
