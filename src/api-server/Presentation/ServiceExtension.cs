@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -73,6 +74,20 @@ public static class ServiceExtension
                 .AllowCredentials()
             );
         });
+
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("fixed", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromSeconds(10),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 2
+                    }));
+        });
         
         // JWT configuration
         builder.AddMySecretConfiguration();
@@ -85,21 +100,24 @@ public static class ServiceExtension
         
         // if (app.Environment.IsDevelopment())
         // {
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "api/swagger/{documentName}/swagger.json"; // Sets the route for Swagger JSON
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = "api/swagger";
-            });
+        app.UseSwagger(c =>
+        {
+            c.RouteTemplate = "api/swagger/{documentName}/swagger.json"; // Sets the route for Swagger JSON
+        });
+        
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "My API V1");
+            c.RoutePrefix = "api/swagger";
+        });
         // }
 
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseRateLimiter();
 
         app.MapControllers();
     }

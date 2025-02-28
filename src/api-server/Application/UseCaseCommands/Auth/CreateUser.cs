@@ -10,10 +10,12 @@ namespace Application.UseCaseCommands.Auth;
 
 using Response = Response<UserDto>;
 
-public record CreateUserRequest(
-    string Username,
-    string Password
-) : IRequest<Response>;
+public record CreateUserRequest : IRequest<Response>
+{
+    public string Username { get; init; }
+    public string Password { get; init; }
+    public Guid? UserId { get; init; }
+}
 
 public class CreateUser : IRequestHandler<CreateUserRequest, Response>
 {
@@ -47,8 +49,8 @@ public class CreateUser : IRequestHandler<CreateUserRequest, Response>
 
             // TODO: server-side password policy
             
-            // Generate User object 
-            User user = new User { Username=request.Username, Password=_password.HashPassword(request.Password) };
+            // Generate User object
+            var user = new User { Id = request.UserId ?? Guid.NewGuid(), Username=request.Username, Password=_password.HashPassword(request.Password) };
 
             // Save user in database
             await _userRepository.CreateAsync(user);

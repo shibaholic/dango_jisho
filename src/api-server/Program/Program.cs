@@ -4,6 +4,7 @@ using Application.Mappings.EntityDtos.Tracking;
 using Application.Response;
 using Application.Services;
 using Application.UseCaseCommands;
+using Application.UseCaseCommands.Auth;
 using Application.Utilities;
 using AutoMapper;
 using Domain.Entities;
@@ -160,21 +161,24 @@ public static class ApplicationExtensions
     {
         Console.WriteLine("Seeding with User data...");
         
-        var userCrud = serviceScope.ServiceProvider.GetService<ICrudService<User,User>>();
+        // var userCrud = serviceScope.ServiceProvider.GetService<ICrudService<User,User>>();
+        var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
 
-        if (userCrud == null)
+        if (mediator == null)
         {
-            Console.WriteLine("  Error while getting CrudService<User,User>");
+            Console.WriteLine("  Error while getting mediator.");
             System.Environment.Exit(1);
         }
 
-        var user = new User
+        var createUserRequest = new CreateUserRequest
         {
-            Id = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"), Username = "myuser", Password = "password",
-            Email = "myuser@mail.com", IsAdmin = false
+            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
+            Username = "qwe",
+            Password = "asd"
         };
-
-        var result = await userCrud.CreateAsync(user);
+        
+        var result = await mediator.Send(createUserRequest, CancellationToken.None);
+        
         if (!result.Successful)
         {
             Console.WriteLine("  Error while seeding user.");
