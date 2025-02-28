@@ -1,3 +1,5 @@
 # Dango Jisho
 
-In progress vocabulary flashcard web app.
+In development vocabulary flashcard web app.
+
+Available to try at [shibaholic.dev](https://shibaholic.dev).
