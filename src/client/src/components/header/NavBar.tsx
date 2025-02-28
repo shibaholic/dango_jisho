@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { EntrySearchInput } from "@/components/ui/input";
 import { forwardRef, useState, useImperativeHandle, useRef } from "react";
 import { Link, useNavigate } from "react-router";
-import LogInModal, { AuthModalHandle } from "../auth/logInModal";
+import LoginModal, { AuthModalHandle } from "../auth/LoginModal";
 import { useAuth } from "@/utils/auth";
 import { User } from "lucide-react";
 import { UserBadge } from "./UserBadge";
+import SignupModal from "../auth/SignupModal";
 
 export interface NavBarProps {
   noSearchBar?: boolean | undefined;
@@ -20,7 +21,8 @@ export const NavBar = (props: NavBarProps) => {
 
   let navigate = useNavigate();
 
-  const authModalRef = useRef<AuthModalHandle>(null);
+  const loginModalRef = useRef<AuthModalHandle>(null);
+  const signupModalRef = useRef<AuthModalHandle>(null);
 
   function searchEnter() {
     navigate(`/search?q=${query}`);
@@ -35,13 +37,22 @@ export const NavBar = (props: NavBarProps) => {
         {user ? (
           <UserBadge user={user} />
         ) : (
-          <Button
-            variant={"outline"}
-            className="text-xl py-6"
-            onClick={(e) => authModalRef.current?.open()}
-          >
-            Log in
-          </Button>
+          <div className="flex flex-row gap-2">
+            <Button
+              variant={"outline"}
+              className="text-xl py-6"
+              onClick={(e) => loginModalRef.current?.open()}
+            >
+              Log in
+            </Button>
+            <Button
+              variant={"outline"}
+              className="text-xl py-6"
+              onClick={(e) => signupModalRef.current?.open()}
+            >
+              Signup
+            </Button>
+          </div>
         )}
       </div>
       {(props.noSearchBar === undefined || props.noSearchBar === false) && (
@@ -58,7 +69,8 @@ export const NavBar = (props: NavBarProps) => {
           />
         </div>
       )}
-      <LogInModal ref={authModalRef} />
+      <LoginModal ref={loginModalRef} />
+      <SignupModal ref={signupModalRef} />
     </div>
   );
 };

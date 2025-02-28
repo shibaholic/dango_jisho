@@ -49,7 +49,7 @@ type StateType = {
   [key: string]: string;
 };
 
-const LogInModal = forwardRef((props, ref) => {
+const LoginModal = forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [errorMsgs, setErrorMsgs] = useState<StateType>({});
 
@@ -229,4 +229,4 @@ const LogInModal = forwardRef((props, ref) => {
   );
 });
 
-export default LogInModal;
+export default LoginModal;

@@ -1,4 +1,4 @@
-import LogInModal, { AuthModalHandle } from "@/components/auth/logInModal";
+import LoginModal, { AuthModalHandle } from "@/components/auth/LoginModal";
 import { Button } from "@/components/ui/button";
 import { fetchLogout, fetchUserAuth } from "@/utils/api";
 import { useAuth } from "@/utils/auth";
@@ -53,7 +53,7 @@ export default function AuthTestPage() {
           User auth endpoint
         </Button>
       </div>
-      <LogInModal ref={authModalRef} />
+      <LoginModal ref={authModalRef} />
     </>
   );
 }
