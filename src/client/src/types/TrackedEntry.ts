@@ -2,6 +2,7 @@ import { z } from "zod";
 import { EntrySchema } from "./JMDict";
 
 export const LevelState = ["New", "Learning", "Reviewing", "Known"] as const;
+export type LevelStateType = (typeof LevelState)[number];
 
 export const SpecialCategory = [
   "NeverForget",
@@ -24,6 +25,13 @@ export const TrackedEntrySchema = z.object({
 });
 
 export type TrackedEntry = z.infer<typeof TrackedEntrySchema>;
+
+export const levelStateColors: Record<LevelStateType, string> = {
+  New: "blue-500",
+  Learning: "orange-500",
+  Reviewing: "yellow-500",
+  Known: "green-500",
+};
 
 // export type TrackedEntry = {
 //   ent_seq: string;

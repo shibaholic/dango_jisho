@@ -39,9 +39,7 @@ const Tags = () => {
     contents = (
       <div>
         {data?.map((tag, index) => {
-          if (index === 0) {
-            return <TagShowcase key={index} tag={tag} />;
-          }
+          return <TagShowcase key={index} tag={tag} />;
         })}
       </div>
     );
@@ -62,7 +60,7 @@ const Tags = () => {
             non-mutally exclusive. These tags are later added to StudySets where
             you actually review the words.
           </p>
-          <div className="flex flex-col gap-1">{contents}</div>
+          <div className="flex flex-col w-full gap-1">{contents}</div>
         </div>
       </div>
     </>
