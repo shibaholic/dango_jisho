@@ -45,6 +45,4 @@ public class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<EntryEvent> EntryEvents { get; set; }  
     public DbSet<StudySet> StudySets { get; set; }
     public DbSet<TagInStudySet> TagInStudySets { get; set; } 
-    public DbSet<Card> Cards { get; set; }
-    public DbSet<CardSense> CardSenses { get; set; }
 }

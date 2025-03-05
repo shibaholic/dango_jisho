@@ -13,4 +13,10 @@ public class EntryIsTagged : IBaseEntity
     // public Entry Entry { get; set; } // parent nav
     public TrackedEntry TrackedEntry { get; set; }
     public Tag Tag { get; set; }     // parent nav
+
+    public EntryIsTagged()
+    {
+    }
+    
+    public EntryIsTagged(Tag tag, Entry entry) {}
 }

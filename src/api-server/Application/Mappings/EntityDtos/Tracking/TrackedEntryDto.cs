@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Application.Mappings.EntityDtos.JMDict;
 using Domain.Entities.Tracking;
 
 namespace Application.Mappings.EntityDtos.Tracking;
@@ -14,4 +15,5 @@ public class TrackedEntryDto
     public DateTime? LastReviewDate { get; set; } = null;
     public int? NextReviewDays { get; set; } = null;
     public int? NextReviewMinutes { get; set; } = null;
+    public EntryDto? Entry { get; set; }
 }

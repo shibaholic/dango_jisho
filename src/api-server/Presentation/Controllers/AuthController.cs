@@ -80,6 +80,7 @@ public class AuthController: BaseApiController
         if(!parseSuccess) return BadRequest();
         
         var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
         
         var response = await _mediator.Send(new LogoutUserRequest(userId, refreshTokenGuid), cancellationToken);
         

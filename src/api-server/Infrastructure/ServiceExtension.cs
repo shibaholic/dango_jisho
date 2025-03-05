@@ -27,6 +27,5 @@ public static class ServiceExtensions
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<ITrackingRepository, TrackingRepository>();
         services.AddScoped<IStudySetRepository, StudySetRepository>();
-        services.AddScoped<ICardRepository, CardRepository>();
     }
 }

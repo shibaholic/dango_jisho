@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Utilities;
 using Application.Response;
+using Application.UseCaseQueries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers;
 
@@ -33,6 +35,20 @@ public class TagController : BaseApiController
         var response = await _crudService.GetDtoByIdAsync(id);
         return this.ToActionResult(response);
     }
+
+    [HttpGet("/api/Tags")]
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> GetAllByUser(CancellationToken cancellationToken)
+    {
+        var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
+        
+        var request = new TagsByUserIdRequest { UserId = userId };
+
+        var response = await _mediator.Send(request, cancellationToken);
+
+        return this.ToActionResult(response);
+    }
     
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
@@ -40,13 +56,13 @@ public class TagController : BaseApiController
         if (request.Name is null) return BadRequest();
 
         // replace with getting userId from Identity
-        // var userId = new Guid(User.FindFirst("Id")!.Value);
+        var userId = new Guid(User.FindFirst("Id")!.Value);
         
         var tag = new Tag
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            UserId = request.UserId
+            UserId = userId
         };
         
         var response = await _crudService.CreateAsync(tag);

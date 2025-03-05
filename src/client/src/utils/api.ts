@@ -1,3 +1,5 @@
+import { Tag } from "@/types/Tag";
+import { TrackedEntry } from "@/types/TrackedEntry";
 import { User } from "@/types/User";
 import axios, { AxiosError } from "axios";
 
@@ -7,6 +9,10 @@ export type ApiResponse<T> = {
   message: string;
   status: number;
   data: T;
+  pageIndex: number | null;
+  pageSize: number | null;
+  resultCount: number | null;
+  totalElements: number | null;
 };
 
 // making a api object that automatically tries to refresh token, if access token expired.
@@ -104,9 +110,25 @@ export async function fetchLogout() {
 }
 
 export async function fetchUserAuth() {
-  const response = await api.get(`/auth/user`, {
-    withCredentials: true,
-  });
+  const response = await api.get(`/auth/user`);
+
+  return response.data;
+}
+
+export async function fetchTags(): Promise<ApiResponse<Tag[]>> {
+  const response = await api.get(`/tags`);
+
+  return response.data;
+}
+
+export async function fetchTagTrackedEntries(
+  tagId: string,
+  pageIndex: number,
+  pageSize: number
+): Promise<ApiResponse<TrackedEntry[]>> {
+  const response = await api.get(
+    `/trackedentry/tag/${tagId}?pageIndex=${pageIndex}&pageSize=${pageSize}`
+  );
 
   return response.data;
 }

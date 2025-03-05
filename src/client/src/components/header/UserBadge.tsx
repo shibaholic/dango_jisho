@@ -23,10 +23,10 @@ export const UserBadge = ({ user }: UserBadgeProps) => {
   return (
     <div className="relative">
       <div
-        className="rounded-xl border py-2 pl-2 pr-4 cursor-pointer hover:bg-gray-100"
+        className="rounded-xl border py-[10px] pl-2 pr-4 cursor-pointer hover:bg-gray-100"
         onClick={() => dropdownRef.current?.openDropdown()}
       >
-        <span className="flex flex-row gap-2 font-medium">
+        <span className="flex flex-row gap-2 font-medium text-xl ">
           <UserIcon />
           {user!.username}
         </span>

@@ -20,4 +20,23 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
 
         return await query.FirstOrDefaultAsync();
     }
+
+    public async Task<List<Tag>> ReadAllByUserIdAsync(Guid userId)
+    {
+        var query = _context.Tags.Where(t => t.UserId == userId)
+            .Include(t => t.EntryIsTaggeds)
+            .ThenInclude(eit => eit.TrackedEntry)
+            .ThenInclude(te => te.Entry)
+            .ThenInclude(entry => entry.KanjiElements)
+            .Include(t => t.EntryIsTaggeds)
+            .ThenInclude(eit => eit.TrackedEntry)
+            .ThenInclude(te => te.Entry)
+            .ThenInclude(entry => entry.ReadingElements)
+            .Include(t => t.EntryIsTaggeds)
+            .ThenInclude(eit => eit.TrackedEntry)
+            .ThenInclude(te => te.Entry)
+            .ThenInclude(e => e.Senses);
+        
+        return await query.ToListAsync();
+    }
 }

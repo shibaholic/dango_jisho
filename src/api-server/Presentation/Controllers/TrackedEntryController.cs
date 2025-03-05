@@ -21,7 +21,7 @@ public class TrackedEntryController: BaseApiController
         _mediator = mediator;
     }
 
-    [HttpGet("all")]
+    [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var response = await _crudService.GetAllDtoAsync();
@@ -29,14 +29,27 @@ public class TrackedEntryController: BaseApiController
         return this.ToActionResult(response);
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetByEnt_Seq([FromQuery] string ent_seq, CancellationToken cancellationToken)
+    [HttpGet("{ent_seq}")]
+    public async Task<IActionResult> GetByEnt_Seq(string ent_seq, CancellationToken cancellationToken)
     {
         var request = new TrackedEntryIdGetRequest
         {
             ent_seq = ent_seq,
             UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099") // TODO: implement user authentication
         };
+        
+        var response = await _mediator.Send(request, cancellationToken);
+        
+        return this.ToActionResult(response);
+    }
+    
+    [HttpGet("tag/{tagId}")]
+    public async Task<IActionResult> GetByTagId(Guid tagId, int pageIndex, int pageSize, CancellationToken cancellationToken)
+    {
+        var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
+        
+        var request = new TrackedEntriesByTagIdRequest {TagId = tagId, UserId = userId, PageIndex = pageIndex, PageSize = pageSize};
         
         var response = await _mediator.Send(request, cancellationToken);
         

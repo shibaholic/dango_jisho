@@ -28,32 +28,49 @@ export const NavBar = (props: NavBarProps) => {
     navigate(`/search?q=${query}`);
   }
 
+  let contents = <p>default navbar</p>;
+  if (!user) {
+    contents = (
+      <div className="flex flex-row gap-2">
+        <Button
+          variant={"outline"}
+          className="text-xl py-6"
+          onClick={(e) => loginModalRef.current?.open()}
+        >
+          Log in
+        </Button>
+        <Button
+          variant={"outline"}
+          className="text-xl py-6"
+          onClick={(e) => signupModalRef.current?.open()}
+        >
+          Signup
+        </Button>
+      </div>
+    );
+  } else {
+    contents = (
+      <div className="flex flex-row gap-2">
+        <Button
+          variant={"outline"}
+          className="text-xl py-6"
+          onClick={() => navigate("/tags")}
+        >
+          Tags
+        </Button>
+        <UserBadge user={user} />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="py-4 flex flex-row place-content-between items-center">
         <Link className="hover:bg-gray-100 px-3 py-1 pb-2 rounded-lg" to="/">
-          <h1 className="text-black text-[40px]">🍡 Dango Jisho</h1>
+          <h1 className="text-black text-[40px]">My Vocab App</h1>
+          {/*🍡 Dango Jisho*/}
         </Link>
-        {user ? (
-          <UserBadge user={user} />
-        ) : (
-          <div className="flex flex-row gap-2">
-            <Button
-              variant={"outline"}
-              className="text-xl py-6"
-              onClick={(e) => loginModalRef.current?.open()}
-            >
-              Log in
-            </Button>
-            <Button
-              variant={"outline"}
-              className="text-xl py-6"
-              onClick={(e) => signupModalRef.current?.open()}
-            >
-              Signup
-            </Button>
-          </div>
-        )}
+        {contents}
       </div>
       {(props.noSearchBar === undefined || props.noSearchBar === false) && (
         <div className="w-full">

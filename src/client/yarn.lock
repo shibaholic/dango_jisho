@@ -537,6 +537,14 @@
   dependencies:
     "@radix-ui/react-slot" "1.1.2"
 
+"@radix-ui/react-progress@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-progress/-/react-progress-1.1.2.tgz#3584c346d47f2a6f86076ce5af56ab00c66ded2b"
+  integrity sha512-u1IgJFQ4zNAUTjGdDL5dcl/U8ntOR6jsnhxKb5RKp5Ozwl88xKR9EqRZOe/Mk8tnx0x5tNUe2F+MzsyjqMg0MA==
+  dependencies:
+    "@radix-ui/react-context" "1.1.1"
+    "@radix-ui/react-primitive" "2.0.2"
+
 "@radix-ui/react-roving-focus@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.1.tgz#3b3abb1e03646937f28d9ab25e96343667ca6520"
@@ -1709,6 +1717,11 @@ keyv@^4.5.4:
   integrity sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==
   dependencies:
     json-buffer "3.0.1"
+
+ldrs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ldrs/-/ldrs-1.0.2.tgz#75e8ff51ff32c3e12523617bb30f742a50f4951c"
+  integrity sha512-sYJmivdkIiHrUEqTrEWccBoLdaENpzbzkABI5rk8rRxTXrg9i2xVuDvUUuhOhJY3RmQyaoxs046pM1DCRdcIpg==
 
 levn@^0.4.1:
   version "0.4.1"

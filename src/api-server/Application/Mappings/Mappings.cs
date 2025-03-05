@@ -26,6 +26,9 @@ public class Mappings : Profile
         CreateMap<EntryEvent, ReviewEventDto>();
         CreateMap<StudySet, StudySetDto>();
         CreateMap<TrackedEntry, TrackedEntryDto>();
+        CreateMap<EntryIsTagged, EntryIsTaggedDto>();
+        
+        // Tracking custom
         
         // Card
         CreateMap<Card, CardDto>();

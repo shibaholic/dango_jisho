@@ -34,20 +34,32 @@ public enum Status
 public class Response<T> : ResponseBase
 {
     public T? Data { get; set; }
+    public int? PageIndex { get; set; } = null;
+    public int? PageSize { get; set; } = null;
+    public int? ResultCount { get; set; } = null;
+    public int? TotalElements { get; set; } = null;
 
     [JsonConstructor]
-    private Response(string message, Status status, bool successful, T? data=default): base(message, status, successful)
+    protected Response(string message, Status status, bool successful, 
+        T? data=default, int? pageIndex=default, int? pageSize=default, int? resultCount=default, int? totalElements=default
+        ) : base(message, status, successful)
     {
         Data = data;
+        PageIndex = pageIndex;
+        PageSize = pageSize;
+        ResultCount = resultCount;
+        TotalElements = totalElements;
     }
 
-    public Response(string message, Status status, bool successful) : base(message, status, successful)
+    private Response(string message, Status status, bool successful) : base(message, status, successful)
     {
         
     }
 
     public static Response<T> Ok(string message, T data) => 
         new Response<T>(message, Status.Ok, true, data);
+    public static Response<T> OkPaginated(string message, T data, int pageIndex, int pageSize, int elementsFound, int totalElements) => 
+        new Response<T>(message, Status.Ok, true, data, pageIndex, pageSize, elementsFound, totalElements);
     public static Response<T> NoContent() => 
         new Response<T>("", Status.NoContent, true);
     public static Response<T> BadRequest(string message) =>

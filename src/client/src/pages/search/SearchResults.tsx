@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import NavBar from "../../components/header/NavBar";
 import { Separator } from "@/components/ui/separator";
-import { Card, CardSchema } from "@/types/Card";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse, api_url } from "@/utils/api";
 import { z } from "zod";

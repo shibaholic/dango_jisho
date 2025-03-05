@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { EntrySchema } from "./JMDict";
 
 export const LevelState = ["New", "Learning", "Reviewing", "Known"] as const;
 
@@ -19,6 +20,7 @@ export const TrackedEntrySchema = z.object({
   lastReviewDate: z.string().datetime({ local: true }).nullable(),
   nextReviewDays: z.number().nullable(),
   nextReviewMinutes: z.number().nullable(),
+  entry: EntrySchema,
 });
 
 export type TrackedEntry = z.infer<typeof TrackedEntrySchema>;

@@ -210,13 +210,20 @@ public static class ApplicationExtensions
         {
             Id = new Guid("f57c7dff-1d29-4e50-b18c-f0471694262d"), 
             UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
-            Name = "MyTag"
+            Name = "MyTag",
+            TotalEntries = 21,
+            TotalNew = 3,  // Placeholder. TODO: Use domain objects instead of directly creating data. 
+            TotalKnown = 3,
+            TotalLearning = 3,
+            TotalReviewing = 3
         };
         var tag2 = new Tag
         {
             Id = new Guid("f57c7dff-1d29-4e50-b18c-f0471694262e"),
             UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099"),
-            Name = "MyTag2"
+            Name = "MyTag2",
+            TotalEntries = 7,
+            TotalNew = 4
         };
         
         var tagResult = await tagCrud.CreateAsync(tag);

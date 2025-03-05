@@ -10,6 +10,7 @@ import SearchResults from "./pages/search/SearchResults.tsx";
 import Vocab from "./pages/vocab/Vocab.tsx";
 import { AuthProvider } from "./utils/auth.tsx";
 import { HelmetProvider } from "react-helmet-async";
+import Tags from "./pages/tags/Tags.tsx";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/" element={<Landing />} />
               <Route path="/search" element={<SearchResults />} />
               <Route path="/vocab/:ent_seq" element={<Vocab />} />
+              <Route path="/tags" element={<Tags />} />
               <Route path="/testing" element={<Testing />} />
             </Routes>
           </BrowserRouter>

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Entities.JMDict;
 
 namespace Domain.Entities.Tracking;
 
@@ -11,6 +12,10 @@ public class Tag : IBaseEntity
     public string Name { get; set; }
     public DateTime Created { get; set; }
     public int TotalEntries { get; set; } = 0;
+    public int TotalKnown { get; set; } = 0;
+    public int TotalReviewing { get; set; } = 0;
+    public int TotalLearning { get; set; } = 0;
+    public int TotalNew { get; set; } = 0;
     
     public User User { get; set; } // nav
     public List<EntryIsTagged> EntryIsTaggeds { get; set; } =  new List<EntryIsTagged>();
