@@ -28,7 +28,7 @@ import { FuriganaSegment, annotateFurigana } from "@/utils/furigana";
 import { useNavigate } from "react-router-dom";
 import SmallListCard from "@/components/vocab/SmallListCard";
 import { Separator } from "@/components/ui/separator";
-ring.register();
+import { Grip, PanelTopClose, PanelTopOpen } from "lucide-react";
 
 export interface TagShowcaseProps {
   tag: Tag;
@@ -47,6 +47,7 @@ const TagShowcase = ({ tag }: TagShowcaseProps) => {
         <CardTitle>
           <h3>{tag.name}</h3>
         </CardTitle>
+        <Grip className="cursor-grab" />
       </CardHeader>
       <CardContent>
         <div>
@@ -75,7 +76,7 @@ interface TagWordsProps {
 const defaultColumns: ColumnDef<TrackedEntry>[] = [];
 
 const TagWords = ({ tag }: TagWordsProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -119,20 +120,20 @@ const TagWords = ({ tag }: TagWordsProps) => {
   let tableElement = (
     <>
       <div
-        className={`relative flex flex-col w-full ${isExpanded ? "max-h-full" : "max-h-32 overflow-hidden cursor-pointer"}`}
+        className={`transition-all duration-300 translate relative flex flex-col w-full ${isExpanded ? "max-h-[986px]" : "max-h-32 overflow-hidden cursor-pointer"}`}
       >
         {!isExpanded && (
           <>
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-white flex justify-center z-20">
-              <span className="self-end">Click to expand</span>
+              <div className="self-end text-gray-600">Click to expand</div>
             </div>
           </>
         )}
 
         {isExpanded && (
           <>
-            <div className="flex items-center justify-between space-x-2 py-2 px-2">
-              <div>
+            <div className="flex flex-row py-2 px-2">
+              <div className=" flex-grow-[1] basis-0 content-center">
                 Words {pagination.pageIndex * pagination.pageSize + 1} -{" "}
                 {(pagination.pageIndex + 1) * pagination.pageSize >
                 tableData.length
@@ -148,7 +149,7 @@ const TagWords = ({ tag }: TagWordsProps) => {
                   tableData.length
                 }
               />
-              <div>
+              <div className="flex-grow-[1] basis-0 text-right content-center">
                 Page {pagination.pageIndex + 1}/{""}
                 {Math.ceil(tableData.length / pagination.pageSize)}
               </div>
@@ -158,29 +159,8 @@ const TagWords = ({ tag }: TagWordsProps) => {
         )}
 
         <Table className="flex flex-col w-full overflow-hidden">
-          <TableBody className="flex flex-col w-full">
-            {table.getRowModel().rows.map((row, index, array) => {
-              if (
-                array.length - 1 === index &&
-                pagination.pageSize !== array.length
-              ) {
-                const ghostRowCount = array.length;
-
-                const ghostRows: JSX.Element[] = [
-                  <SmallListCard key={row.id} trackedEntry={row.original} />,
-                ];
-
-                for (let i = array.length; i < pagination.pageSize; i++) {
-                  ghostRows[i] = (
-                    <TableRow
-                      key={i}
-                      className="flex w-full h-[98.9333px] pointer-events-none"
-                    ></TableRow>
-                  );
-                }
-                return ghostRows;
-              }
-
+          <TableBody className="flex flex-col w-full ">
+            {table.getRowModel().rows.map((row) => {
               return <SmallListCard key={row.id} trackedEntry={row.original} />;
             })}
           </TableBody>
@@ -189,40 +169,32 @@ const TagWords = ({ tag }: TagWordsProps) => {
         <Separator />
 
         {isExpanded && (
-          <div className="flex items-center justify-between space-x-2 py-2 px-2">
-            <div>
-              Words {pagination.pageIndex * pagination.pageSize + 1} -{" "}
-              {(pagination.pageIndex + 1) * pagination.pageSize >
-              tableData.length
-                ? tableData.length
-                : (pagination.pageIndex + 1) * 10}
-            </div>
-            <PaginationButtons
-              previousPage={() => table.previousPage()}
-              previousDisabled={pagination.pageIndex === 0}
-              nextPage={() => table.nextPage()}
-              nextDisabled={
-                (pagination.pageIndex + 1) * pagination.pageSize >=
-                tableData.length
-              }
-            />
-            <div>
-              Page {pagination.pageIndex + 1}/{""}
-              {Math.ceil(tableData.length / pagination.pageSize)}
-            </div>
+          <div
+            onClick={() => closeTable()}
+            className="py-1 flex flex-row justify-center hover:bg-gray-100 cursor-pointer"
+          >
+            <PanelTopClose className="text-gray-600" />
           </div>
         )}
       </div>
     </>
   );
 
+  function closeTable() {
+    if (isExpanded === true) setIsExpanded(false);
+  }
+
+  function openTable() {
+    if (isExpanded === false) setIsExpanded(true);
+  }
+
   return (
     // Click handler to expand the table. You might want to disable click events inside the table once expanded.
     <div
-      onClick={() => setIsExpanded(true)}
-      className={`transition-all duration-300 border rounded-md mt-4 py-2`}
+      onClick={() => openTable()}
+      className={`transition-all duration-300 border rounded-md mt-4 pt-2`}
     >
-      <h4 className="ml-3 font-medium text-lg">Word list</h4>
+      <h4 className="pl-2 font-medium text-lg">Word list</h4>
       {tableElement}
     </div>
   );
@@ -242,7 +214,7 @@ export const PaginationButtons = ({
   nextDisabled,
 }: PaginationButtonsProps) => {
   return (
-    <div className="flex">
+    <div className="">
       <Button
         variant="outline"
         size="sm"

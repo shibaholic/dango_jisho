@@ -6,6 +6,7 @@ import { TrackedEntriesTestPage } from "./pages/TrackedEntriesTestPage";
 import RHKTestPage from "./pages/RHKTestPage";
 import AuthTestPage from "./pages/AuthTestPage";
 import { Helmet } from "react-helmet-async";
+import TextTestPage from "./pages/Text";
 
 function Testing() {
   return (
@@ -18,6 +19,7 @@ function Testing() {
           <TabsTrigger value="Tracked Entries">Tracked Entries</TabsTrigger>
           <TabsTrigger value="RHK">React Hook Form Testing</TabsTrigger>
           <TabsTrigger value="Auth">Auth</TabsTrigger>
+          <TabsTrigger value="Text">TextTest</TabsTrigger>
         </TabsList>
 
         <TabPageWrapper title="Weather Forecast">
@@ -34,6 +36,10 @@ function Testing() {
 
         <TabPageWrapper title="Auth">
           <AuthTestPage />
+        </TabPageWrapper>
+
+        <TabPageWrapper title="Text">
+          <TextTestPage />
         </TabPageWrapper>
       </Tabs>
     </div>

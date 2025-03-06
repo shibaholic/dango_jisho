@@ -41,7 +41,7 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     faceTermElement = (
       <h5
         lang="ja"
-        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg p-1 relative -top-1 -left-1`}
+        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg`}
         onMouseUp={handleClick}
       >
         {annotatedSegments.map((segment, index) =>
@@ -62,7 +62,7 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     faceTermElement = (
       <h5
         lang="ja"
-        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg p-1 relative -top-1 -left-1 text-2xl font-medium`}
+        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg text-2xl font-medium`}
         onMouseUp={handleClick}
       >
         {entry.readingElements[entry.selectedReadingIndex].reb}
@@ -93,19 +93,22 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     <TableRow className="flex flex-col w-full">
       {/* {flexRender(cell.column.columnDef.cell, cell.getContext())} */}
       <TableCell className="w-full flex flex-col">
-        <div className="w-full flex flex-row justify-between">
+        <div className="w-full h-[45.6px] flex flex-row justify-between">
           {faceTermElement}
-          <div className="flex flex-row">
-            <div
-              className={`text-${levelStateColors[trackedEntry.levelStateType]} p-2 font-semibold`}
-            >
-              {trackedEntry.levelStateType}
+          <div className="flex flex-col">
+            <div className="flex flex-row">
+              <div
+                className={`text-${levelStateColors[trackedEntry.levelStateType]} leading-none p-1 font-semibold self-center`}
+              >
+                {trackedEntry.levelStateType}
+              </div>
+              <Button variant="outline" className="w-1">
+                <Menu />
+              </Button>
             </div>
-            <Button variant="outline" className="w-1">
-              <Menu />
-            </Button>
           </div>
         </div>
+
         {glossElement}
       </TableCell>
     </TableRow>

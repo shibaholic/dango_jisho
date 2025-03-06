@@ -37,11 +37,11 @@ const Tags = () => {
   else if (error) contents = <p>Error: {error.message}</p>;
   else if (data) {
     contents = (
-      <div>
+      <>
         {data?.map((tag, index) => {
           return <TagShowcase key={index} tag={tag} />;
         })}
-      </div>
+      </>
     );
   }
 
@@ -60,7 +60,7 @@ const Tags = () => {
             non-mutally exclusive. These tags are later added to StudySets where
             you actually review the words.
           </p>
-          <div className="flex flex-col w-full gap-1">{contents}</div>
+          <div className="flex flex-col w-full gap-2">{contents}</div>
         </div>
       </div>
     </>
