@@ -18,9 +18,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.Property(t => t.Name)
             .IsRequired();
         
-        builder.Property(t => t.Created)
-            .HasColumnType("timestamp")
-            .HasDefaultValueSql("NOW()");
+        // builder.Property(t => t.DateCreated)
+        //     .HasColumnType("timestamptz")
+        //     .HasDefaultValueSql("NOW()");
         
         builder.Property(t => t.TotalEntries)
             .HasDefaultValue(0);

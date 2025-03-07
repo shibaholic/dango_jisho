@@ -5,7 +5,7 @@ namespace Domain.Entities.JMDict;
 
 public class Entry : IBaseEntity
 {
-    public string ent_seq { get; set; }
+    public string ent_seq { get; set; } // TODO: to value object
     public int? SelectedKanjiIndex { get; set; } = null;
     public int SelectedReadingIndex { get; set; }
     public int? PriorityScore { get; set; } = null;

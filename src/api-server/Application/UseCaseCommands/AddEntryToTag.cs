@@ -54,7 +54,7 @@ public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
         var trackedEntry = await _trackingRepo.ReadTrackedEntryByIdsAsync(entry.ent_seq, request.UserId);
         if (trackedEntry == null)
         {
-            trackedEntry = new TrackedEntry()
+            trackedEntry = new TrackedEntry
             {
                 ent_seq = entry.ent_seq, UserId = request.UserId, NextReviewDays = null, NextReviewMinutes = null, 
                 Score = 0, LevelStateType = LevelStateType.New

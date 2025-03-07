@@ -25,8 +25,8 @@ public class EntryIsTaggedConfiguration : IEntityTypeConfiguration<EntryIsTagged
             .HasForeignKey(eit => new {eit.ent_seq, eit.UserId})
             .IsRequired();
 
-        builder.Property(eit => eit.AddedToTagDate)
-            .HasColumnType("timestamp")
-            .HasDefaultValueSql("NOW()");
+        // builder.Property(eit => eit.AddedToTagDate)
+        //     .HasColumnType("timestamptz")
+        //     .HasDefaultValueSql("NOW()");
     }
 }

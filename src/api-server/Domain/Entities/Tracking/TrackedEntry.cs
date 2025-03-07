@@ -16,11 +16,11 @@ public class TrackedEntry : IBaseEntity
     public DateTime? LastReviewDate { get; set; } = null;
     public int? NextReviewDays { get; set; } = null;
     public int? NextReviewMinutes { get; set; } = null;
-    public List<EntryEvent> EntryEvents { get; set; } = new List<EntryEvent>(); // child nav
     
+    public List<EntryEvent> EntryEvents { get; set; } = []; // child nav
     public Entry Entry { get; set; } // parent
     public User User { get; set; } // parent
-    public List<EntryIsTagged> EntryIsTaggeds { get; set; } = new List<EntryIsTagged>();
+    public List<EntryIsTagged> EntryIsTaggeds { get; set; } = [];
 
     public void SetLevelState(ILevelState levelState)
     {
@@ -36,7 +36,22 @@ public class TrackedEntry : IBaseEntity
         
         EntryEvents.Add(entryEvent);
     }
+
+    public TrackedEntry() {}
+    
+    public TrackedEntry(Entry entry, User user, LevelStateType? levelStateType = null)
+    {
+        Entry = entry;
+        User = user;
+        ent_seq = entry.ent_seq;
+        UserId = user.Id;
+        LevelStateType = levelStateType ?? LevelStateType.New;
+        LevelState = levelStateType != null ? LevelStateFactory.Create((LevelStateType) levelStateType) : new LevelStateNew();
+        LevelState.SetContext(this);
+    }
 }
+
+
 
 public enum LevelStateType
 {
