@@ -3,6 +3,7 @@ using Application.Mappings.EntityDtos.JMDict;
 using Application.Response;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.JMDict;
 using Domain.RepositoryInterfaces;
 using MediatR;
 
@@ -13,6 +14,7 @@ using Response = Response<Entry_TEDto>;
 
 public record EntryEntSeqGetRequest : IRequest<Response>
 {
+    public Guid? UserId { get; init; }
     public string ent_seq { get; init; }
 }
 
@@ -29,7 +31,16 @@ public class EntryEntSeqGet : IRequestHandler<EntryEntSeqGetRequest, Response>
     
     public async Task<Response> Handle(EntryEntSeqGetRequest request, CancellationToken cancellationToken)
     {
-        var result = await _entryRepo.ReadByEntSeq(request.ent_seq);
+        Entry? result;
+        if (request.UserId is null)
+        {
+            result = await _entryRepo.ReadByEntSeq(request.ent_seq);
+        }
+        else
+        {
+            result = await _entryRepo.ReadByEntSeqIncludeTracked(request.ent_seq, (Guid)request.UserId);
+        }
+        
         if (result == null) return Response.NotFound("Entry not found");
         
         var dto = _mapper.Map<Entry_TEDto>(result);

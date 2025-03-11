@@ -20,10 +20,16 @@ public class EntryController : BaseApiController
         _mediatr = mediatr;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetByEnt_Seq([FromQuery] string ent_seq)
+    [HttpGet("{ent_seq}")]
+    public async Task<IActionResult> GetByEnt_Seq(string ent_seq)
     {
-        var request = new EntryEntSeqGetRequest { ent_seq = ent_seq };
+        Guid? userId = null;
+        if (Guid.TryParse(User.FindFirst("Id")?.Value, out var parsedUserId))
+        {
+            userId = parsedUserId;
+        }
+        
+        var request = new EntryEntSeqGetRequest { ent_seq = ent_seq, UserId = userId.GetValueOrDefault()};
         
         var response = await _mediatr.Send(request);
         

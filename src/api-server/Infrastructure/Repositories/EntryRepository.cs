@@ -339,7 +339,13 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     public async Task<Entry?> ReadByEntSeqIncludeTracked(string ent_seq, Guid userId)
     {
         return await _context.Entries.Where(entry => entry.ent_seq == ent_seq)
+            .Include(e => e.KanjiElements)
+            .Include(e => e.ReadingElements)
+            .Include(e => e.Senses)
+            .ThenInclude(sense => sense.lsource)
             .Include(e => e.TrackedEntries.Where(te => te.UserId == userId))
+            .ThenInclude(te => te.EntryIsTaggeds)
+            .ThenInclude(eit => eit.Tag)
             .FirstOrDefaultAsync();
     }
     public async Task<List<Entry>> Search(string query, Guid? userId)

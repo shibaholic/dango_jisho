@@ -116,6 +116,12 @@ export async function fetchUserAuth() {
   return response.data;
 }
 
+export async function fetchEntry(ent_seq: string): Promise<ApiResponse<Entry>> {
+  const response = await api.get(`/entry/${ent_seq}`);
+
+  return response.data;
+}
+
 export async function fetchTag_EITs(): Promise<ApiResponse<TrackedEntry[]>> {
   const response = await api.get(`/tags/entryIsTagged`);
 
