@@ -3,66 +3,49 @@ import { useSearchParams } from "react-router";
 import NavBar from "../../components/header/NavBar";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { ApiResponse, api_url } from "@/utils/api";
+import { ApiResponse, api_url, fetchSearch } from "@/utils/api";
 import { z } from "zod";
 import { Entry, EntrySchema } from "@/types/JMDict";
-import FatListCard from "../../components/vocab/FatListCard";
+import { FatListCard } from "../../components/vocab/FatListCard";
 import { Helmet } from "react-helmet-async";
+import { useAuth } from "@/utils/auth";
 
 function SearchResults() {
   let [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const { isPending, isLoading, error, data, refetch } = useQuery({
-    queryKey: ["wordSearch", query],
-    queryFn: async () => {
-      let response = await fetch(`${api_url}/Entry/search?query=${query}`);
-      if (!response.ok) throw new Error("Word search query not OK.");
-      const responseData = (await response.json()) as ApiResponse<Entry[]>;
-      const entryArraySchema = z.array(EntrySchema);
-      const parsed = entryArraySchema.safeParse(responseData.data);
-      if (!parsed.success) {
-        console.error(parsed.error);
-        throw new Error("Failed to parse Entry[]");
-      }
-      // console.log(parsed.data);
-      return parsed.data;
-    },
-    enabled: false,
-  });
+  const { tried } = useAuth();
 
-  useEffect(() => {
-    if (query) {
-      refetch();
-    } else {
-      setErrorMsg("No search parameter provided.");
-    }
-  }, [query]);
+  const searchQuery = useQuery({
+    queryKey: ["wordSearch", query],
+    queryFn: async () => await fetchSearch(query),
+    enabled: tried,
+  });
 
   let contents = <p>data is null or undefined</p>;
 
   if (errorMsg) {
     contents = <p>{errorMsg}</p>;
-  } else if (isPending) {
+  } else if (searchQuery.isPending) {
     contents = (
       <>
         <p>PENDING...</p>
       </>
     );
-  } else if (isLoading) {
+  } else if (searchQuery.isLoading) {
     contents = (
       <>
         <p>loading...</p>
       </>
     );
-  } else if (data) {
+  } else if (searchQuery.data) {
     contents = (
       <>
-        {data.length == 0 ? (
+        {searchQuery.data.data.length == 0 ? (
           <p>Zero results found.</p>
         ) : (
-          data.map((entry, index) => {
+          searchQuery.data.data.map((entry, index) => {
             return <FatListCard key={index} entry={entry} linkToVocab />;
           })
         )}
@@ -80,7 +63,7 @@ function SearchResults() {
           <NavBar />
           <Separator />
           <h2>Search Results</h2>
-          <div className="flex flex-col gap-1">{contents}</div>
+          <div className="flex flex-col gap-2">{contents}</div>
         </div>
       </div>
     </>

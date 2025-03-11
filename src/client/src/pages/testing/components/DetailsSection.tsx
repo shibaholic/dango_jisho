@@ -11,11 +11,9 @@ import {
 import { ChevronsUpDown, ArrowDownToLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { TrackedEntry, TrackedEntrySchema } from "@/types/TrackedEntry";
+import { TrackedEntrySchema } from "@/types/TrackedEntry";
 import ObjectDisplay from "./ObjectDisplay";
 import { Entry, EntrySchema } from "@/types/JMDict";
-import { Card, CardSchema } from "@/types/Card";
-// import CardBackSmall from "../card-back/card-back";
 
 export interface SectionProps<T> {
   title: string;

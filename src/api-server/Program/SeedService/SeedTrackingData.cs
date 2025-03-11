@@ -3,6 +3,7 @@ using Application.Services;
 using Domain.Entities;
 using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
+using Tag = Domain.Entities.Tracking.Tag;
 
 namespace Program.SeedService;
 
@@ -14,7 +15,7 @@ public static class SeedTrackingData
 
         var userCrud = serviceScope.ServiceProvider.GetService<ICrudService<User, User>>();
         var entryCrud = serviceScope.ServiceProvider.GetService<ICrudService<Entry, Entry>>();
-        var tagCrud = serviceScope.ServiceProvider.GetService<ICrudService<Tag, TagDto>>();
+        var tagCrud = serviceScope.ServiceProvider.GetService<ICrudService<Tag, Tag_EITDto>>();
         var eitCrud = serviceScope.ServiceProvider.GetService<ICrudService<EntryIsTagged, EntryIsTagged>>();
         var trackedCrud = serviceScope.ServiceProvider.GetService<ICrudService<TrackedEntry, TrackedEntry>>();
         var tissCrud = serviceScope.ServiceProvider.GetService<ICrudService<TagInStudySet, TagInStudySet>>();
@@ -34,8 +35,8 @@ public static class SeedTrackingData
 
         // Tag
 
-        var tag1 = new Tag(user, "Mining");
-        var tag2 = new Tag(user, "Not new words");
+        var tag1 = new Tag(user, "Mining", Guid.Parse(       "5eb7cdc6-5149-4218-9467-111111111111"));
+        var tag2 = new Tag(user, "Not new words", Guid.Parse("5eb7cdc6-5149-4218-9467-222222222222"));
 
         // list of ent_seq
 

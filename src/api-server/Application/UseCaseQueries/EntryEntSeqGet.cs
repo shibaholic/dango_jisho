@@ -9,7 +9,7 @@ using MediatR;
 namespace Application.UseCaseQueries;
 
 // "using" Alias Directive, change the generic type to suit the Handler return type.
-using Response = Response<EntryDto>;
+using Response = Response<Entry_TEDto>;
 
 public record EntryEntSeqGetRequest : IRequest<Response>
 {
@@ -32,7 +32,7 @@ public class EntryEntSeqGet : IRequestHandler<EntryEntSeqGetRequest, Response>
         var result = await _entryRepo.ReadByEntSeq(request.ent_seq);
         if (result == null) return Response.NotFound("Entry not found");
         
-        var dto = _mapper.Map<EntryDto>(result);
+        var dto = _mapper.Map<Entry_TEDto>(result);
         return Response.Ok("Entry found", dto);
     }
 }

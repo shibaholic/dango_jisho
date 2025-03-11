@@ -12,10 +12,10 @@ namespace Presentation.Controllers;
 [ApiController]
 public class TrackedEntryController: BaseApiController
 {
-    private readonly ICrudService<TrackedEntry, TrackedEntryDto> _crudService;
+    private readonly ICrudService<TrackedEntry, TE_EntryDto> _crudService;
     private readonly IMediator _mediator;
 
-    public TrackedEntryController(ICrudService<TrackedEntry, TrackedEntryDto> crudService, IMediator mediator)
+    public TrackedEntryController(ICrudService<TrackedEntry, TE_EntryDto> crudService, IMediator mediator)
     {
         _crudService = crudService;
         _mediator = mediator;

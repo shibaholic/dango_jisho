@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TrackedEntrySchema } from "./TrackedEntry";
 
 export const LSourceSchema = z.object({
   langValue: z.string(),
@@ -37,15 +38,18 @@ export const ReadingElementSchema = z.object({
   re_pri: z.string().nullable(),
 });
 
-export const EntrySchema = z.object({
-  ent_seq: z.string(),
-  selectedKanjiIndex: z.number().nullable(),
-  selectedReadingIndex: z.number(),
-  priorityScore: z.number().nullable(),
-  kanjiElements: z.array(KanjiElementSchema),
-  readingElements: z.array(ReadingElementSchema),
-  senses: z.array(SenseSchema),
-});
+export const EntrySchema = z.lazy(() =>
+  z.object({
+    ent_seq: z.string(),
+    selectedKanjiIndex: z.number().nullable(),
+    selectedReadingIndex: z.number(),
+    priorityScore: z.number().nullable(),
+    kanjiElements: z.array(KanjiElementSchema),
+    readingElements: z.array(ReadingElementSchema),
+    senses: z.array(SenseSchema),
+    trackedEntry: TrackedEntrySchema.optional(),
+  })
+);
 
 export type Entry = z.infer<typeof EntrySchema>;
 export type KanjiElement = z.infer<typeof KanjiElementSchema>;

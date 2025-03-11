@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using Application;
 using Application.Response;
 using Application.UseCaseCommands;
@@ -32,7 +33,13 @@ public class EntryController : BaseApiController
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string query)
     {
-        var request = new EntryQueryRequest { query = query };
+        Guid? userId = null;
+        if (Guid.TryParse(User.FindFirst("Id")?.Value, out var parsedUserId))
+        {
+            userId = parsedUserId;
+        }
+
+        var request = new EntryQueryRequest { query = query, UserId = userId };
         
         var response = await _mediatr.Send(request);
         
@@ -58,6 +65,30 @@ public class EntryController : BaseApiController
         
         var response = await _mediatr.Send(command, cancellationToken);
         
+        return this.ToActionResult(response);
+    }
+
+    public class BatchTagEntryEndpointRequest
+    {
+        public Dictionary<Guid, bool> TagValues { get; set; } = null!;
+    }
+    
+    [HttpPost("{ent_seq}/tags")]
+    [Authorize(Roles="User")]
+    public async Task<IActionResult> BatchTagEntry(string ent_seq, [FromBody] BatchTagEntryEndpointRequest request, CancellationToken cancellationToken)
+    {
+        var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
+
+        var handlerRequest = new TagBatchEntriesRequest
+        {
+            ent_seq = ent_seq,
+            TagValues = request.TagValues,
+            UserId = userId
+        };
+
+        var response = await _mediatr.Send(handlerRequest, cancellationToken);
+
         return this.ToActionResult(response);
     }
 }

@@ -7,7 +7,7 @@ using MediatR;
 namespace Application.UseCaseQueries;
 
 // "using" Alias Directive, change the generic type to suit the Handler return type.
-using Response = Response<TrackedEntryDto>;
+using Response = Response<TE_EntryDto>;
 
 public record TrackedEntryIdGetRequest : IRequest<Response>
 {
@@ -31,7 +31,7 @@ public class TrackedEntryIdGet : IRequestHandler<TrackedEntryIdGetRequest, Respo
         var result = await _trackingRepo.ReadTrackedEntryByIdsAsync(request.ent_seq, request.UserId);
         if (result == null) return Response.NotFound("Entry not found");
         
-        var dto = _mapper.Map<TrackedEntryDto>(result);
+        var dto = _mapper.Map<TE_EntryDto>(result);
         return Response.Ok("Tracked Entry found", dto);
     }
 }

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.UseCaseQueries;
 
-using Response = Response<List<TrackedEntryDto>>;
+using Response = Response<List<TE_Entry_EITDto>>;
 
 public record TrackedEntriesByTagIdRequest : IRequest<Response>
 {
@@ -31,7 +31,7 @@ public class TrackedEntriesByTagId : IRequestHandler<TrackedEntriesByTagIdReques
     {
         var pagedResult = await _trackingRepo.ReadTrackedEntryByTagIdAsync(request.TagId, request.UserId, request.PageIndex, request.PageSize);
 
-        var trackedEntriesDto = _mapper.Map<List<TrackedEntryDto>>(pagedResult.Data);
+        var trackedEntriesDto = _mapper.Map<List<TE_Entry_EITDto>>(pagedResult.Data);
 
         if (trackedEntriesDto.Count != 0)
             return Response.OkPaginated($"Found {trackedEntriesDto.Count} entries.", trackedEntriesDto, request.PageIndex, request.PageSize, trackedEntriesDto.Count, pagedResult.TotalElements);

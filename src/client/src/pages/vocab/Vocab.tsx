@@ -5,7 +5,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { ApiResponse, api_url } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { Entry, EntrySchema } from "@/types/JMDict";
-import FatListCard from "../../components/vocab/FatListCard";
+import { FatListCard } from "../../components/vocab/FatListCard";
 import { Helmet } from "react-helmet-async";
 
 const Vocab = () => {

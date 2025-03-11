@@ -1,19 +1,47 @@
 import { Entry } from "@/types/JMDict";
-import React from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import ObjectDisplay from "../../pages/testing/components/ObjectDisplay";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { areStringArraysEqual } from "@/utils/stringUtils";
 import { posMapping } from "@/types/enums/Pos";
 import { FuriganaSegment, annotateFurigana } from "@/utils/furigana";
 import { useNavigate } from "react-router-dom";
+import { levelStateColors } from "@/types/TrackedEntry";
+import { Button } from "../ui/button";
+import { LogOut, Menu, Settings, Tag, UserPen } from "lucide-react";
+import { useAuth } from "@/utils/auth";
+import { fetchLogout } from "@/utils/api";
+import { Separator } from "@radix-ui/react-separator";
+import { DropdownRow } from "../dropdown/Dropdown";
+import TagsModal, { TagsModalHandle } from "./TagsModal";
+import { VocabDropdown } from "./VocabDropdown";
 
 interface FatListCardProps {
   entry: Entry;
   linkToVocab?: boolean | undefined;
 }
 
-const FatListCard = ({ entry, linkToVocab = false }: FatListCardProps) => {
+export const FatListCard = ({
+  entry,
+  linkToVocab = false,
+}: FatListCardProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [isTagModalReady, setIsTagModalReady] = useState(false);
+  const tagsModalRef = useRef<TagsModalHandle>(null);
+
+  useEffect(() => {
+    if (tagsModalRef.current) {
+      setIsTagModalReady(true);
+    }
+  }, []);
 
   const handleClick = () => {
     const selection = window.getSelection();
@@ -121,13 +149,31 @@ const FatListCard = ({ entry, linkToVocab = false }: FatListCardProps) => {
   });
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row justify-start mt-2">
-        <CardTitle>{faceTermElement}</CardTitle>
-      </CardHeader>
-      <CardContent>{glossesSection}</CardContent>
-    </Card>
+    <div className="relative">
+      <Card className="flex flex-col">
+        <CardHeader className="flex flex-row justify-between p-6">
+          <CardTitle>{faceTermElement}</CardTitle>
+
+          {user && (
+            <div className="flex flex-col">
+              <div className="flex flex-row">
+                {entry.trackedEntry && (
+                  <div
+                    className={`text-${levelStateColors[entry.trackedEntry.levelStateType]} leading-none p-1 mr-1 font-semibold self-center`}
+                  >
+                    {entry.trackedEntry.levelStateType}
+                  </div>
+                )}
+                {isTagModalReady && (
+                  <VocabDropdown openTagsModal={tagsModalRef.current!.open} />
+                )}
+              </div>
+              <TagsModal ref={tagsModalRef} entry={entry} />
+            </div>
+          )}
+        </CardHeader>
+        <CardContent>{glossesSection}</CardContent>
+      </Card>
+    </div>
   );
 };
-
-export default FatListCard;

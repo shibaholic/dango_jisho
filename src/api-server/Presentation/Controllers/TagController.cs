@@ -9,26 +9,21 @@ using Presentation.Utilities;
 using Application.Response;
 using Application.UseCaseQueries;
 using Microsoft.AspNetCore.Authorization;
+using Tag = Domain.Entities.Tracking.Tag;
 
 namespace Presentation.Controllers;
-
-public record CreateTagRequest
-{
-    public string Name { get; init; }
-    public Guid UserId { get; init; }
-}
 
 [ApiController]
 public class TagController : BaseApiController
 {
-    private readonly ICrudService<Tag, TagDto> _crudService;
+    private readonly ICrudService<Tag, Tag_EITDto> _crudService;
     private readonly IMediator _mediator;
-    public TagController(ICrudService<Tag, TagDto> crudService, IMediator mediator)
+    public TagController(IMediator mediator)
     {
-        _crudService = crudService;
         _mediator = mediator;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetById([FromQuery] Guid id)
     {
@@ -36,48 +31,76 @@ public class TagController : BaseApiController
         return this.ToActionResult(response);
     }
 
-    [HttpGet("/api/Tags")]
+    [HttpGet("/api/tags/entryIsTagged")]
     [Authorize(Roles = "User")]
-    public async Task<IActionResult> GetAllByUser(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllTag_EITByUser(CancellationToken cancellationToken)
     {
         var userId = new Guid(User.FindFirst("Id")!.Value);
         if(userId.Equals(Guid.Empty)) return BadRequest();
         
-        var request = new TagsByUserIdRequest { UserId = userId };
+        var request = new TagsByUserIdRequest<Tag_EITDto>(userId);
 
         var response = await _mediator.Send(request, cancellationToken);
 
         return this.ToActionResult(response);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
+    [HttpGet("/api/tags")]
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> GetAllTagsByUser(CancellationToken cancellationToken)
     {
-        if (request.Name is null) return BadRequest();
-
-        // replace with getting userId from Identity
         var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
         
-        var tag = new Tag
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            UserId = userId
-        };
-        
-        var response = await _crudService.CreateAsync(tag);
-
-        return this.ToActionResult(response);
-    }
-
-    [HttpPost("add-entry")]
-    public async Task<IActionResult> AddEntry([FromBody] AddEntryToTagRequest request, CancellationToken cancellationToken)
-    {
-        // replace with getting userId from Identity
-        // var userId = new Guid(User.FindFirst("Id")!.Value);
+        var request = new TagsByUserIdRequest<TagDto>(userId);
 
         var response = await _mediator.Send(request, cancellationToken);
 
         return this.ToActionResult(response);
     }
+    
+    // public record CreateTagRequest
+    // {
+    //     public string Name { get; init; }
+    //     public Guid UserId { get; init; }
+    // }
+    //
+    // [HttpPost]
+    // public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
+    // {
+    //     if (request.Name is null) return BadRequest();
+    //
+    //     // replace with getting userId from Identity
+    //     var userId = new Guid(User.FindFirst("Id")!.Value);
+    //     
+    //     var tag = new Tag
+    //     {
+    //         Id = Guid.NewGuid(),
+    //         Name = request.Name,
+    //         UserId = userId
+    //     };
+    //     
+    //     var response = await _crudService.CreateAsync(tag);
+    //
+    //     return this.ToActionResult(response);
+    // }
+
+    // [HttpPost("{tagId}/entry/{ent_seq}")]
+    // [Authorize(Roles="User")]
+    // public async Task<IActionResult> TagOneEntry(Guid tagId, string ent_seq, CancellationToken cancellationToken)
+    // {
+    //     var userId = new Guid(User.FindFirst("Id")!.Value);
+    //     if(userId.Equals(Guid.Empty)) return BadRequest();
+    //
+    //     var request = new AddEntryToTagRequest
+    //     {
+    //         ent_seq = ent_seq,
+    //         TagId = tagId,
+    //         UserId = userId
+    //     };
+    //
+    //     var response = await _mediator.Send(request, cancellationToken);
+    //
+    //     return this.ToActionResult(response);
+    // }
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Presentation.Extensions;
+using Presentation.Middleware;
 
 namespace Presentation;
 
@@ -82,11 +83,25 @@ public static class ServiceExtension
                     partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 5,
+                        PermitLimit = 10,
                         Window = TimeSpan.FromSeconds(10),
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 2
                     }));
+        });
+        
+        builder.Services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+                
+                // var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+                string? traceId = System.Diagnostics.Activity.Current?.TraceId.ToString();
+                context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
+            };
         });
         
         // JWT configuration
@@ -119,6 +134,8 @@ public static class ServiceExtension
 
         app.UseRateLimiter();
 
+        app.UseMiddleware<TokenValidationMiddleware>();
+        
         app.MapControllers();
     }
 }

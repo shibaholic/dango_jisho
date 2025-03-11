@@ -51,7 +51,7 @@ public class EntryQueryUnitTests
 
         // Assert
         response.Status.Should().Be(Status.Ok);
-        var expectedResponseData = new List<EntryDto> { new EntryDto() { ent_seq = "1234" } };
+        var expectedResponseData = new List<Entry_TEDto> { new Entry_TEDto() { ent_seq = "1234" } };
         response.Data.Should().BeEquivalentTo(expectedResponseData);
     }
 }

@@ -1,34 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Entry, Sense } from "@/types/JMDict";
+import { Table, TableBody } from "@/components/ui/table";
+import { Entry } from "@/types/JMDict";
 import { Tag } from "@/types/Tag";
-import { TrackedEntry } from "@/types/TrackedEntry";
-import { ApiResponse, fetchTagTrackedEntries } from "@/utils/api";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
-import { ring } from "ldrs";
-import { FuriganaSegment, annotateFurigana } from "@/utils/furigana";
-import { useNavigate } from "react-router-dom";
 import SmallListCard from "@/components/vocab/SmallListCard";
 import { Separator } from "@/components/ui/separator";
 import { Grip, PanelTopClose, PanelTopOpen } from "lucide-react";
+import { fetchTagTrackedEntries } from "@/utils/api";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export interface TagShowcaseProps {
   tag: Tag;
@@ -73,7 +61,7 @@ interface TagWordsProps {
   tag: Tag;
 }
 
-const defaultColumns: ColumnDef<TrackedEntry>[] = [];
+const defaultColumns: ColumnDef<Entry>[] = [];
 
 const TagWords = ({ tag }: TagWordsProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -83,41 +71,35 @@ const TagWords = ({ tag }: TagWordsProps) => {
     pageSize: 10,
   });
 
-  const [tableData, setTableData] = useState<TrackedEntry[]>([]);
-
-  useEffect(() => {
-    setTableData(
-      tag.entryIsTaggeds
-        .map((eit) => eit.trackedEntry)
-        .filter((entry): entry is TrackedEntry => entry !== null)
-    );
-  }, []);
-
-  // const { data, isLoading, isFetching, isError, error, isPlaceholderData } =
-  //   useQuery({
-  //     queryKey: ["tag-words", tag.id, pagination.pageIndex],
-  //     queryFn: async () =>
-  //       await fetchTagTrackedEntries(
-  //         tag.id,
-  //         pagination.pageIndex,
-  //         pagination.pageSize
-  //       ),
-  //     placeholderData: keepPreviousData,
-  //   });
+  const { data, isLoading, isFetching, isError, error, isPlaceholderData } =
+    useQuery({
+      queryKey: ["tag-words", tag.id, pagination.pageIndex],
+      queryFn: async () =>
+        await fetchTagTrackedEntries(
+          tag.id,
+          pagination.pageIndex,
+          pagination.pageSize
+        ),
+      placeholderData: keepPreviousData,
+    });
 
   // Create the table instance using TanStack Table's hook
   const table = useReactTable({
-    data: tableData,
+    data: data ? data.data : [],
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    // manualPagination: true,
+    manualPagination: true,
     state: { pagination },
-    // rowCount: pagination.pageSize, // data?.totalElements || 10,
+    rowCount: pagination.pageSize, // data?.totalElements || 10,
   });
 
-  let tableElement = (
+  let tableElement = isLoading ? (
+    <p>loading</p>
+  ) : isError ? (
+    <p>Error: {error.message}</p>
+  ) : (
     <>
       <div
         className={`transition-all duration-300 translate relative flex flex-col w-full ${isExpanded ? "max-h-[986px]" : "max-h-32 overflow-hidden cursor-pointer"}`}
@@ -136,8 +118,8 @@ const TagWords = ({ tag }: TagWordsProps) => {
               <div className=" flex-grow-[1] basis-0 content-center">
                 Words {pagination.pageIndex * pagination.pageSize + 1} -{" "}
                 {(pagination.pageIndex + 1) * pagination.pageSize >
-                tableData.length
-                  ? tableData.length
+                data!.totalElements!
+                  ? data!.totalElements!
                   : (pagination.pageIndex + 1) * 10}
               </div>
               <PaginationButtons
@@ -146,20 +128,20 @@ const TagWords = ({ tag }: TagWordsProps) => {
                 nextPage={() => table.nextPage()}
                 nextDisabled={
                   (pagination.pageIndex + 1) * pagination.pageSize >=
-                  tableData.length
+                  data!.totalElements!
                 }
               />
               <div className="flex-grow-[1] basis-0 text-right content-center">
                 Page {pagination.pageIndex + 1}/{""}
-                {Math.ceil(tableData.length / pagination.pageSize)}
+                {Math.ceil(data!.totalElements! / pagination.pageSize)}
               </div>
             </div>
             <Separator />
           </>
         )}
 
-        <Table className="flex flex-col w-full overflow-hidden">
-          <TableBody className="flex flex-col w-full ">
+        <Table className="flex flex-col w-full relative">
+          <TableBody className="flex flex-col w-full relative">
             {table.getRowModel().rows.map((row) => {
               return <SmallListCard key={row.id} trackedEntry={row.original} />;
             })}
@@ -195,7 +177,11 @@ const TagWords = ({ tag }: TagWordsProps) => {
       className={`transition-all duration-300 border rounded-md mt-4 pt-2`}
     >
       <h4 className="pl-2 font-medium text-lg">Word list</h4>
-      {tableElement}
+      {data && data.data.length == 0 ? (
+        <p className="text-center py-2 text-gray-600">Zero words in this tag</p>
+      ) : (
+        tableElement
+      )}
     </div>
   );
 };

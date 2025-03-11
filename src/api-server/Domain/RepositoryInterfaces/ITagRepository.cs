@@ -6,4 +6,5 @@ public interface ITagRepository : IBaseRepository<Tag>
 {
     Task<Tag?> ReadByIdUserIdAsync(Guid id, Guid userId);
     Task<List<Tag>> ReadAllByUserIdAsync(Guid userId);
+    Task<List<Tag>> ReadMultipleTagIdAsync(IEnumerable<Guid> tagIds, Guid userId);
 }

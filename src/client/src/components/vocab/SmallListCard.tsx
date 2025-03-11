@@ -1,17 +1,29 @@
-import { levelStateColors, TrackedEntry } from "@/types/TrackedEntry";
+import {
+  convertTrackedEntryToEntry,
+  levelStateColors,
+  TrackedEntry,
+  TrackedEntrySchema,
+} from "@/types/TrackedEntry";
 import { FuriganaSegment, annotateFurigana } from "@/utils/furigana";
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { TableCell, TableRow } from "../ui/table";
 import { Menu } from "lucide-react";
 import { Button } from "../ui/button";
+import TagsModal, { TagsModalHandle } from "./TagsModal";
+import { VocabDropdown } from "./VocabDropdown";
+import { Entry } from "@/types/JMDict";
+import { createPortal } from "react-dom";
 
 interface SmallListCardProps {
   trackedEntry: TrackedEntry;
 }
 
 const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
+  const entry = convertTrackedEntryToEntry(trackedEntry);
+
   const navigate = useNavigate();
+  const tagsModalRef = useRef<TagsModalHandle>(null);
 
   const handleClick = () => {
     const selection = window.getSelection();
@@ -21,8 +33,6 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     }
     navigate(`/vocab/${entry.ent_seq}`);
   };
-
-  const entry = trackedEntry.entry;
   const selectedKanjiIndex = entry.selectedKanjiIndex;
 
   let faceTermElement = <div>ERROR</div>;
@@ -62,7 +72,7 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     faceTermElement = (
       <h5
         lang="ja"
-        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg text-2xl font-medium`}
+        className={`hover:text-[#535bf2] hover:bg-gray-100 cursor-pointer rounded-lg text-2xl font-medium place-self-center`}
         onMouseUp={handleClick}
       >
         {entry.readingElements[entry.selectedReadingIndex].reb}
@@ -96,20 +106,23 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
         <div className="w-full h-[45.6px] flex flex-row justify-between">
           {faceTermElement}
           <div className="flex flex-col">
-            <div className="flex flex-row">
-              <div
-                className={`text-${levelStateColors[trackedEntry.levelStateType]} leading-none p-1 font-semibold self-center`}
-              >
-                {trackedEntry.levelStateType}
-              </div>
-              <Button variant="outline" className="w-1">
-                <Menu />
-              </Button>
+            <div className="flex flex-row pr-2">
+              {entry.trackedEntry && (
+                <div
+                  className={`text-${levelStateColors[entry.trackedEntry.levelStateType]} leading-none p-1 font-semibold self-center`}
+                >
+                  {entry.trackedEntry.levelStateType}
+                </div>
+              )}
+              {tagsModalRef.current && (
+                <VocabDropdown openTagsModal={tagsModalRef.current.open} />
+              )}
             </div>
           </div>
         </div>
 
         {glossElement}
+        <TagsModal ref={tagsModalRef} entry={entry} />
       </TableCell>
     </TableRow>
   );

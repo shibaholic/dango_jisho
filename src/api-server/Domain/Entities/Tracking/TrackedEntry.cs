@@ -49,9 +49,18 @@ public class TrackedEntry : IBaseEntity
         LevelState = levelStateType != null ? LevelStateFactory.Create((LevelStateType) levelStateType) : new LevelStateNew();
         LevelState.SetContext(this);
     }
+    
+    public TrackedEntry(Entry entry, Guid userId, LevelStateType? levelStateType = null)
+    {
+        Entry = entry;
+        // User = user;
+        ent_seq = entry.ent_seq;
+        UserId = userId;
+        LevelStateType = levelStateType ?? LevelStateType.New;
+        LevelState = levelStateType != null ? LevelStateFactory.Create((LevelStateType) levelStateType) : new LevelStateNew();
+        LevelState.SetContext(this);
+    }
 }
-
-
 
 public enum LevelStateType
 {

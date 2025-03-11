@@ -15,18 +15,25 @@ public class Mappings : Profile
     public Mappings()
     {
         // JMDict
-        CreateMap<Entry, EntryDto>().ReverseMap();
+        CreateMap<Entry, EntryDto>();
+        CreateMap<Entry, Entry_TEDto>()
+            .ForMember(dest => dest.TrackedEntry, opt => opt.MapFrom(src => src.TrackedEntries.FirstOrDefault()))
+            .ReverseMap();
         CreateMap<KanjiElement, KanjiElementDto>().ReverseMap();
         CreateMap<ReadingElement, ReadingElementDto>().ReverseMap();
         CreateMap<Sense, SenseDto>().ReverseMap();
         CreateMap<LSource, LSourceDto>().ReverseMap();
         
         // Tracking
+        CreateMap<Tag, Tag_EITDto>();
         CreateMap<Tag, TagDto>();
         CreateMap<EntryEvent, ReviewEventDto>();
         CreateMap<StudySet, StudySetDto>();
-        CreateMap<TrackedEntry, TrackedEntryDto>();
-        CreateMap<EntryIsTagged, EntryIsTaggedDto>();
+        CreateMap<TrackedEntry, TE_EntryDto>();
+        CreateMap<TrackedEntry, TE_EITDto>();
+        CreateMap<TrackedEntry, TE_Entry_EITDto>();
+        CreateMap<EntryIsTagged, EIT_TEDto>();
+        CreateMap<EntryIsTagged, EIT_TagDto>();
         
         // Tracking custom
         

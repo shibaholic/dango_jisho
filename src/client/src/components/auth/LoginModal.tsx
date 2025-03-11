@@ -49,7 +49,7 @@ type StateType = {
   [key: string]: string;
 };
 
-const LoginModal = forwardRef((props, ref) => {
+const LoginModal = forwardRef((_, ref) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [errorMsgs, setErrorMsgs] = useState<StateType>({});
 

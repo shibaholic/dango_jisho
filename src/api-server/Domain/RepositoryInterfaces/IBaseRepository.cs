@@ -9,5 +9,6 @@ public interface IBaseRepository<T> where T : IBaseEntity
     Task<T> CreateAsync(T entity);
     Task<IEnumerable<T>> CreateRangeAsync(IEnumerable<T> entities);
     Task<T> UpdateAsync(T entity);
-    Task DeleteAsync(Guid id);
+    Task DeleteAsync(T entity);
+    void DetectChangesAsync();
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Entities.Tracking;
 using Domain.RepositoryInterfaces;
 using Domain.RepositoryInterfaces.ReturnTypes;
@@ -21,14 +22,7 @@ public class TrackingRepository: BaseRepository<TrackedEntry>, ITrackingReposito
 
         return entryIsTagged;
     }
-
-    public async Task<TrackedEntry> CreateTrackedEntryAsync(TrackedEntry trackedEntry)
-    {
-        await _context.TrackedEntries.AddAsync(trackedEntry);
-        
-        return trackedEntry;
-    }
-
+    
     public async Task<TrackedEntry?> ReadTrackedEntryByIdsAsync(string ent_seq, Guid userId)
     {
         return await _context.TrackedEntries
@@ -42,7 +36,9 @@ public class TrackingRepository: BaseRepository<TrackedEntry>, ITrackingReposito
             .Join(_context.EntryIsTagged, te => te.ent_seq, eit => eit.ent_seq, (te, eit) => new { te, eit })
             .Where(join => join.eit.TagId == tagId && join.te.UserId == userId)
             .Select(join => join.te)
-            .Include(te => te.Entry);
+            .Include(te => te.Entry)
+            .Include(te => te.EntryIsTaggeds)
+            .ThenInclude(eit => eit.Tag);
         
         var totalEntities = await query.CountAsync();
 

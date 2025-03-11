@@ -1,44 +1,33 @@
 import NavBar from "@/components/header/NavBar";
-import { Tag, TagSchema } from "@/types/Tag";
-import api, { ApiResponse, api_url, fetchTags } from "@/utils/api";
+import { Tag } from "@/types/Tag";
+import api, { ApiResponse, api_url, fetchTag_EITs } from "@/utils/api";
 import { useAuth } from "@/utils/auth";
 import { Separator } from "@radix-ui/react-separator";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { z } from "zod";
 import TagShowcase from "./TagShowcase";
 
 const Tags = () => {
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
   const { user } = useAuth();
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["tags", user?.id],
-    queryFn: async () => {
-      let response = await fetchTags();
-      if (!response) throw new Error("Tags query not OK.");
-      const tagArraySchema = z.array(TagSchema);
-      const parsed = tagArraySchema.safeParse(response.data);
-      if (!parsed.success) {
-        console.error(parsed.error);
-        throw new Error("Failed to parse Tag[]");
-      }
-      // console.log(parsed.data);
-      return parsed.data;
-    },
+  // TODO: optimization: replace tag-eits with a new Dto that
+  // only contains tagId and it's eits.
+  const query = useQuery({
+    queryKey: ["tag-eits", user?.id],
+    queryFn: async () => await fetchTag_EITs(),
     enabled: !!user,
   });
 
   let contents = <p>data is null or undefined</p>;
 
-  if (isLoading) contents = <p>Loading...</p>;
-  else if (error) contents = <p>Error: {error.message}</p>;
-  else if (data) {
+  if (query.isLoading) contents = <p>Loading...</p>;
+  else if (query.error) contents = <p>Error: {query.error.message}</p>;
+  else if (query.isSuccess) {
     contents = (
       <>
-        {data?.map((tag, index) => {
+        {query.data.data.map((tag, index) => {
           return <TagShowcase key={index} tag={tag} />;
         })}
       </>

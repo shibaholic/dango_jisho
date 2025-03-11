@@ -17,6 +17,7 @@ public record AddEntryToTagRequest : IRequest<Response>
     public Guid UserId { get; init; }
 }
 
+// not in use
 public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -36,36 +37,34 @@ public class AddEntryToTag: IRequestHandler<AddEntryToTagRequest, Response>
 
     public async Task<Response> Handle(AddEntryToTagRequest request, CancellationToken cancellationToken)
     {
-        // first, query entry and tag to see if they exist
-        var entry = await _entryRepo.ReadByEntSeq(request.ent_seq);
-        if (entry == null) throw new ProblemException("Entry not found", $"Entry with ent_seq: {request.ent_seq} does not exist.");
+        // get entry with include trackedEntry where userId match
+        var entryWithTracked = await _entryRepo.ReadByEntSeqIncludeTracked(request.ent_seq, request.UserId);
+        if (entryWithTracked == null) throw new ProblemException("Entry not found", $"Entry with ent_seq: {request.ent_seq} does not exist.");
         
-        var tag = await _tagRepo.ReadByIdUserIdAsync(request.TagId, request.UserId);
-        if(tag == null) throw new ProblemException("Tag not found", $"Tag with id: {request.TagId} does not exist.");
-        
-        // Use tag.TotalEntries to order this EntryIsTagged to the last index
-        var entryIsTagged = new EntryIsTagged() { ent_seq = entry.ent_seq, TagId = tag.Id, UserOrder = tag.TotalEntries };
-        await _trackingRepo.CreateEntryIsTaggedAsync(entryIsTagged);
-        
-        // Update tag.TotalEntries to += 1
-        tag.TotalEntries += 1;
-        
-        // If this user does not already track this entry, then add TrackedEntry entity so it is tracked
-        var trackedEntry = await _trackingRepo.ReadTrackedEntryByIdsAsync(entry.ent_seq, request.UserId);
+        // if trackedEntry does not exist then create trackedEntry
+        var trackedEntry = entryWithTracked.TrackedEntries.FirstOrDefault();
         if (trackedEntry == null)
         {
-            trackedEntry = new TrackedEntry
-            {
-                ent_seq = entry.ent_seq, UserId = request.UserId, NextReviewDays = null, NextReviewMinutes = null, 
-                Score = 0, LevelStateType = LevelStateType.New
-            };
-            await _trackingRepo.CreateTrackedEntryAsync(trackedEntry);
-            Console.WriteLine("[AddEntryToTag] Added entry to user tracking.");
+            trackedEntry = new TrackedEntry(entryWithTracked, request.UserId);
+            // Persist TrackedEntry to repo
+            await _trackingRepo.CreateAsync(trackedEntry);
         }
         
-        await _unitOfWork.Commit(cancellationToken);
+        // get the Tag object
+        var tag = await _tagRepo.ReadByIdUserIdAsync(request.TagId, request.UserId);
+        if (tag == null) throw new ProblemException("Tag not found", $"Tag with id: {request.TagId} does not exist.");
         
-        Console.WriteLine("[AddEntryToTag] Added entry to tag.");
+        // add trackedEntry to Tag
+        tag.TryAddTrackedEntry(trackedEntry);
+
+        // Persist the new EntryIsTagged
+        var entryIsTagged = tag.EntryIsTaggeds.First(eit => eit.TagId == tag.Id && eit.ent_seq == trackedEntry.ent_seq);
+        await _trackingRepo.CreateEntryIsTaggedAsync(entryIsTagged);
+        
+        // update tag
+        await _tagRepo.UpdateAsync(tag);
+        
+        await _unitOfWork.Commit(cancellationToken);
         
         return Response.NoContent();
     }

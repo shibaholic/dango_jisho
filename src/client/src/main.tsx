@@ -11,24 +11,33 @@ import Vocab from "./pages/vocab/Vocab.tsx";
 import { AuthProvider } from "./utils/auth.tsx";
 import { HelmetProvider } from "react-helmet-async";
 import Tags from "./pages/tags/Tags.tsx";
+import { UserDataProvider } from "./utils/userDataProvider.tsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <HelmetProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/search" element={<SearchResults />} />
-              <Route path="/vocab/:ent_seq" element={<Vocab />} />
-              <Route path="/tags" element={<Tags />} />
-              <Route path="/testing" element={<Testing />} />
-            </Routes>
-          </BrowserRouter>
-        </HelmetProvider>
+        <UserDataProvider>
+          <HelmetProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/vocab/:ent_seq" element={<Vocab />} />
+                <Route path="/tags" element={<Tags />} />
+                <Route path="/testing" element={<Testing />} />
+              </Routes>
+            </BrowserRouter>
+          </HelmetProvider>
+        </UserDataProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>

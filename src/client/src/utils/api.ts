@@ -1,5 +1,6 @@
+import { Entry } from "@/types/JMDict";
 import { Tag } from "@/types/Tag";
-import { TrackedEntry } from "@/types/TrackedEntry";
+import { TrackedEntry, TrackedEntrySchema } from "@/types/TrackedEntry";
 import { User } from "@/types/User";
 import axios, { AxiosError } from "axios";
 
@@ -115,12 +116,19 @@ export async function fetchUserAuth() {
   return response.data;
 }
 
+export async function fetchTag_EITs(): Promise<ApiResponse<TrackedEntry[]>> {
+  const response = await api.get(`/tags/entryIsTagged`);
+
+  return response.data;
+}
+
 export async function fetchTags(): Promise<ApiResponse<Tag[]>> {
   const response = await api.get(`/tags`);
 
   return response.data;
 }
 
+// use this one for paginated tag entry queries
 export async function fetchTagTrackedEntries(
   tagId: string,
   pageIndex: number,
@@ -131,6 +139,28 @@ export async function fetchTagTrackedEntries(
   );
 
   return response.data;
+}
+
+export async function fetchSearch(
+  query: string
+): Promise<ApiResponse<Entry[]>> {
+  const response = await api.get(`/entry/search?query=${query}`);
+
+  return response.data;
+}
+
+export interface CommandEntryTagsProps {
+  ent_seq: string;
+  tagValues: Record<string, boolean>;
+}
+
+export async function commandEntryTags({
+  ent_seq,
+  tagValues,
+}: CommandEntryTagsProps) {
+  await api.post(`/entry/${ent_seq}/tags`, { tagValues: tagValues });
+
+  return;
 }
 
 export default api;

@@ -336,10 +336,14 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
             .ThenInclude(sense => sense.lsource)
             .FirstOrDefaultAsync();
     }
-    public async Task<List<Entry>> Search(string query)
+    public async Task<Entry?> ReadByEntSeqIncludeTracked(string ent_seq, Guid userId)
     {
-        // TODO: implement exact match as top result
-        
+        return await _context.Entries.Where(entry => entry.ent_seq == ent_seq)
+            .Include(e => e.TrackedEntries.Where(te => te.UserId == userId))
+            .FirstOrDefaultAsync();
+    }
+    public async Task<List<Entry>> Search(string query, Guid? userId)
+    {
         var pageSize = 10;  // Number of entries per page
         var pageNumber = 1; // Current page (1-based index)
         
@@ -369,12 +373,19 @@ public class EntryRepository : BaseRepository<Entry>, IEntryRepository
         }
         
         // Start with base queryable
-        var queryable = _context.Entries
+        IQueryable<Entry> queryable = _context.Entries
             .Where(whereExpr)
             .Include(q => q.KanjiElements)
             .Include(q => q.ReadingElements)
             .Include(q => q.Senses)
             .ThenInclude(s => s.lsource);
+
+        if (userId != null)
+        {
+            queryable = queryable.Include(e => e.TrackedEntries)
+                .ThenInclude(te => te.EntryIsTaggeds)
+                .ThenInclude(eit => eit.Tag);
+        }
         
         var list = await queryable
             .ToListAsync();

@@ -12,6 +12,7 @@ import { Separator } from "../ui/separator";
 import { useAuth } from "@/utils/auth";
 import { fetchLogout } from "@/utils/api";
 import { useNavigate } from "react-router-dom";
+import { DropdownRow } from "../dropdown/Dropdown";
 
 export interface UserBadgeProps {
   user: User;
@@ -36,7 +37,7 @@ export const UserBadge = ({ user }: UserBadgeProps) => {
   );
 };
 
-export interface UserBadgeDropdownRef {
+interface UserBadgeDropdownRef {
   openDropdown: () => void;
   closeDropdown: () => void;
 }
@@ -109,21 +110,3 @@ const UserBadgeDropdown = forwardRef<UserBadgeDropdownRef>((_, ref) => {
     </div>
   );
 });
-
-interface DropdownRowProps {
-  children?: ReactNode; // icons
-  text: string;
-  action: () => void;
-}
-
-const DropdownRow = ({ children, text, action }: DropdownRowProps) => {
-  return (
-    <div
-      className="flex flex-row px-4 py-2 hover:bg-gray-100 hover:text-[#535bf2] cursor-pointer items-center rounded-lg"
-      onClick={action}
-    >
-      {children}
-      <span className="font-medium block ml-2 text-sm">{text}</span>
-    </div>
-  );
-};

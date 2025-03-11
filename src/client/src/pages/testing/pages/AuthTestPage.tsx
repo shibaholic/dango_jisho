@@ -1,6 +1,6 @@
 import LoginModal, { AuthModalHandle } from "@/components/auth/LoginModal";
 import { Button } from "@/components/ui/button";
-import { fetchLogout, fetchUserAuth } from "@/utils/api";
+import { fetchLogout, fetchSearch, fetchUserAuth } from "@/utils/api";
 import { useAuth } from "@/utils/auth";
 import { useRef } from "react";
 
@@ -51,6 +51,15 @@ export default function AuthTestPage() {
           }}
         >
           User auth endpoint
+        </Button>
+        <Button
+          variant={"outline"}
+          className="text-xl py-6"
+          onClick={async () => {
+            console.log((await fetchSearch("geography")).data);
+          }}
+        >
+          Search (personalized)
         </Button>
       </div>
       <LoginModal ref={authModalRef} />

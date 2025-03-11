@@ -70,9 +70,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
         return entity;
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(T entity)
     {
-        var entity = await ReadByIdAsync(id);
         if (entity != null)
         {
             _dbSet.Remove(entity);
@@ -98,5 +97,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity
                 throw new ValidationException($"Entity validation failed: {errors}");
             }
         }
+    }
+
+    public void DetectChangesAsync()
+    {
+        _context.ChangeTracker.DetectChanges();
     }
 }

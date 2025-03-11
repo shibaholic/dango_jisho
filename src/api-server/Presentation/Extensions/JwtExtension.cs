@@ -54,7 +54,7 @@ public static class JwtExtension
                     ValidateAudience = true,
                     ValidAudience = MySecretConfiguration.Secrets.Audience,
                     ValidateLifetime = true,
-                    // ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero
                 };
 
                 // x.Authority = "Authority URL"; // replace with URL?
@@ -67,7 +67,6 @@ public static class JwtExtension
                 {
                     OnMessageReceived = context =>
                     {
-                        // var accessToken = context.Request.Query["access_token"];
                         context.Request.Cookies.TryGetValue("accessToken", out var accessToken); 
 
                         if (!string.IsNullOrEmpty(accessToken))
@@ -77,7 +76,20 @@ public static class JwtExtension
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
+                    // OnAuthenticationFailed = context =>
+                    // {
+                    //     Console.WriteLine("\nAuthentication Failed");
+                    //     
+                    //     if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                    //     {
+                    //         Console.WriteLine("  ExpiredException");
+                    //         context.Response.Headers.Add("Token-Expired", "true");
+                    //         context.Response.StatusCode = 401;
+                    //         return Task.CompletedTask;
+                    //     }
+                    //     return Task.CompletedTask;
+                    // }
                 };
             });
         builder.Services.AddAuthorization();
@@ -89,7 +101,7 @@ public static class JwtExtension
         {
             context.Response.Cookies.Append("accessToken", accessToken, new CookieOptions
             {
-                Expires = DateTimeOffset.UtcNow.AddMinutes(5),
+                Expires = DateTimeOffset.UtcNow.AddDays(30),
                 HttpOnly = true,
                 IsEssential = true,
                 Secure = true,
@@ -116,7 +128,6 @@ public static class JwtExtension
         {
             context.Response.Cookies.Delete("refreshToken");
         }
-
     }
     
     public static string Generate(UserAuthDto data)
@@ -132,7 +143,7 @@ public static class JwtExtension
             Issuer = MySecretConfiguration.Secrets.Issuer,
             Audience = MySecretConfiguration.Secrets.Audience,
             Subject = GenerateClaims(data),
-            Expires = DateTime.UtcNow.AddMinutes(10),
+            Expires = DateTime.UtcNow.AddMinutes(15),
             SigningCredentials = credentials,
         };
         var token = handler.CreateToken(tokenDescriptor);

@@ -34,7 +34,7 @@ public class EntryControllerUnitTests {
     public async void GetById_ValidInput_ReturnsOk()
     {
         // Arrange
-        var response = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
+        var response = Response<Entry_TEDto>.Ok("Entry found", new Entry_TEDto { ent_seq = "1234" });
         
         _mockMediator.Setup(m => m.Send(It.IsAny<EntryEntSeqGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -44,14 +44,14 @@ public class EntryControllerUnitTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(response.Data, (okResult.Value as Response<EntryDto>).Data);
+        Assert.Equal(response.Data, (okResult.Value as Response<Entry_TEDto>).Data);
     }
     
     [Fact]
     public async void GetById_MediatrUnsuccessful_ReturnsBadRequest()
     {
         // Arrange
-        var response = Response<EntryDto>.ServerError("Test error");
+        var response = Response<Entry_TEDto>.ServerError("Test error");
         
         _mockMediator.Setup(m => m.Send(It.IsAny<EntryEntSeqGetRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -70,8 +70,8 @@ public class EntryControllerUnitTests {
     public async void Search_ValidInput_ReturnsOk()
     {
         // Arrange
-        var responseData = new List<EntryDto> { { new EntryDto() { ent_seq = "1234" } } };
-        var response = Response<List<EntryDto>>.Ok("Test response", responseData);
+        var responseData = new List<Entry_TEDto> { { new Entry_TEDto() { ent_seq = "1234" } } };
+        var response = Response<List<Entry_TEDto>>.Ok("Test response", responseData);
         
         _mockMediator.Setup(m => m.Send(It.IsAny<EntryQueryRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -84,9 +84,9 @@ public class EntryControllerUnitTests {
         result.Should().BeOfType<OkObjectResult>();
         
         var objectResult = result.As<OkObjectResult>();
-        objectResult.Value.Should().BeOfType<Response<List<EntryDto>>>();
+        objectResult.Value.Should().BeOfType<Response<List<Entry_TEDto>>>();
         
-        var resultContent = objectResult.Value.As<Response<List<EntryDto>>>();
+        var resultContent = objectResult.Value.As<Response<List<Entry_TEDto>>>();
         resultContent.Should().BeEquivalentTo(response);
     }
 

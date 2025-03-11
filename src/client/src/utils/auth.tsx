@@ -29,6 +29,7 @@ interface AuthContextType {
       Error
     >
   >;
+  tried: boolean;
 }
 
 // Create the AuthContext
@@ -40,6 +41,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [tried, setTried] = useState<boolean>(false);
 
   // like useEffect [], where we attempt to get the jwtToken using refreshToken.
   const { isError, error, refetch } = useQuery({
@@ -47,7 +49,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     queryFn: async () => {
       const data = await fetchRefreshTokenNewSession();
       setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
+      // localStorage.setItem("user", JSON.stringify(data)); TODO: localStorage of user to update user state faster than a refresh.
+      setTried(true);
+      console.log("Auth success setTried(true).");
       console.log("Used refresh token to log in as ", data.username);
       return data;
     },
@@ -60,7 +64,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     setUser,
     refreshToken: refetch, // only used by testing/auth
+    tried: tried,
   };
+
+  useEffect(() => {
+    if (isError) {
+      console.log("Auth isError setTried(true).");
+      setTried(true);
+    }
+  }, [isError]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

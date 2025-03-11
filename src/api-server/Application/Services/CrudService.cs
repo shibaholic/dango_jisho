@@ -11,7 +11,7 @@ public interface ICrudService<T, TDto>
 {
     Task<Response<TDto>> CreateAsync(T entity);
     Task<T> UpdateAsync(T entity);
-    Task DeleteAsync(Guid id);
+    Task DeleteAsync(T entity);
     Task<Response<T>> GetByIdAsync(object id);
     Task<Response<TDto>> GetDtoByIdAsync(object id);
     Task<Response<IEnumerable<TDto>>> GetAllDtoAsync();
@@ -48,9 +48,9 @@ public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
         return await _repo.UpdateAsync(entity);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(T entity)
     {
-        await _repo.DeleteAsync(id);
+        await _repo.DeleteAsync(entity);
     }
 
     public async Task<Response<TDto>> GetDtoByIdAsync(object id)

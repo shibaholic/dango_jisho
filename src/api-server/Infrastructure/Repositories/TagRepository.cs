@@ -39,4 +39,12 @@ public class TagRepository : BaseRepository<Tag>, ITagRepository
         
         return await query.ToListAsync();
     }
+
+    public async Task<List<Tag>> ReadMultipleTagIdAsync(IEnumerable<Guid> tagIds, Guid userId)
+    {
+        var query = _context.Tags.Where(t => tagIds.Contains(t.Id) && t.UserId == userId)
+            .Include(t => t.EntryIsTaggeds);
+        
+        return await query.ToListAsync();
+    }
 }

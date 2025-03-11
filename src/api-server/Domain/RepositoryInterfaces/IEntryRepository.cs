@@ -8,5 +8,6 @@ public interface IEntryRepository : IBaseRepository<Entry>
     Task<List<Entry>> BulkReadAllAsync();
     Task BulkInsertAsync(List<Entry> entries);
     Task<Entry?> ReadByEntSeq(string ent_seq);
-    Task<List<Entry>> Search(string query);
+    Task<Entry?> ReadByEntSeqIncludeTracked(string ent_seq, Guid userId);
+    Task<List<Entry>> Search(string query, Guid? userId);
 }

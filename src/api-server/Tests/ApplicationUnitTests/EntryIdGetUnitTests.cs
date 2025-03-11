@@ -49,7 +49,7 @@ public class EntryIdGetUnitTests
         var result = await _handler.Handle(request, It.IsAny<CancellationToken>());
         
         // Assert
-        var expectedResult = Response<EntryDto>.Ok("Entry found", new EntryDto { ent_seq = "1234" });
+        var expectedResult = Response<Entry_TEDto>.Ok("Entry found", new Entry_TEDto { ent_seq = "1234" });
         result.Should().BeEquivalentTo(expectedResult);
     }
     
