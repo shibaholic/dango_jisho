@@ -14,6 +14,13 @@ import TagsModal, { TagsModalHandle } from "./TagsModal";
 import { VocabDropdown } from "./VocabDropdown";
 import { Entry } from "@/types/JMDict";
 import { createPortal } from "react-dom";
+import { convertTimeSpanToMs, humanizeDelta as humanizeMs } from "@/utils/time";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface SmallListCardProps {
   trackedEntry: TrackedEntry;
@@ -99,6 +106,32 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
     </div>
   );
 
+  let dueBool: boolean | undefined = undefined;
+  let lastReviewDeltaDate: string | undefined = undefined;
+  let humanizedSpacedTime: string | undefined = undefined;
+
+  if (trackedEntry.spacedTime) {
+    const now = new Date();
+    const spacedTime = convertTimeSpanToMs(entry.trackedEntry.spacedTime);
+    humanizedSpacedTime = humanizeMs(spacedTime);
+    const lastReviewDate = new Date(entry.trackedEntry.lastReviewDate);
+    lastReviewDeltaDate = humanizeMs(
+      new Date(now.getTime() - lastReviewDate.getTime()).getTime()
+    );
+    const dueDateTime = new Date(lastReviewDate.getTime() + spacedTime);
+
+    dueBool = dueDateTime < now;
+
+    console.log(`now: ${now}`);
+    console.log(
+      `entry.trackedEntry.spacedTime: ${entry.trackedEntry.spacedTime}`
+    );
+    console.log(`spacedTime: ${spacedTime}`);
+    console.log(`lastReviewDate: ${lastReviewDate}`);
+    console.log(`dueDateTime: ${dueDateTime}`);
+    console.log(`dueBool: ${dueBool}`);
+  }
+
   return (
     <TableRow className="flex flex-col w-full">
       {/* {flexRender(cell.column.columnDef.cell, cell.getContext())} */}
@@ -108,11 +141,28 @@ const SmallListCard = ({ trackedEntry }: SmallListCardProps) => {
           <div className="flex flex-col">
             <div className="flex flex-row pr-2">
               {entry.trackedEntry && (
-                <div
-                  className={`text-${levelStateColors[entry.trackedEntry.levelStateType]} leading-none p-1 font-semibold self-center`}
-                >
-                  {entry.trackedEntry.levelStateType}
-                </div>
+                <>
+                  {dueBool && (
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="text-white leading-none p-1 font-semibold self-center px-2 rounded-lg bg-red-500 cursor-help">
+                            Due
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Last review was {lastReviewDeltaDate} ago.</p>
+                          <p>After an interval of {humanizedSpacedTime}.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  <div
+                    className={`text-${levelStateColors[entry.trackedEntry.levelStateType]} leading-none p-1 font-semibold self-center`}
+                  >
+                    {entry.trackedEntry.levelStateType}
+                  </div>
+                </>
               )}
               {tagsModalRef.current && (
                 <VocabDropdown openTagsModal={tagsModalRef.current.open} />

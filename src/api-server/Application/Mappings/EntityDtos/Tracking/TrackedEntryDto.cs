@@ -13,8 +13,7 @@ public class TE_EntryDto
     public SpecialCategory? SpecialCategory { get; set; } = null;
     public int Score { get; set; } = 0;
     public DateTime? LastReviewDate { get; set; } = null;
-    public int? NextReviewDays { get; set; } = null;
-    public int? NextReviewMinutes { get; set; } = null;
+    public TimeSpan? SpacedTime { get; set; } = null;
     public EntryDto? Entry { get; set; }
 }
 
@@ -27,8 +26,7 @@ public class TE_Entry_EITDto
     public SpecialCategory? SpecialCategory { get; set; } = null;
     public int Score { get; set; } = 0;
     public DateTime? LastReviewDate { get; set; } = null;
-    public int? NextReviewDays { get; set; } = null;
-    public int? NextReviewMinutes { get; set; } = null;
+    public TimeSpan? SpacedTime { get; set; } = null;
     public EntryDto? Entry { get; set; }
     public List<EIT_TagDto> EntryIsTaggeds { get; set; } = [];
 }
@@ -40,7 +38,6 @@ public class TE_EITDto
     public SpecialCategory? SpecialCategory { get; set; } = null;
     public int Score { get; set; } = 0;
     public DateTime? LastReviewDate { get; set; } = null;
-    public int? NextReviewDays { get; set; } = null;
-    public int? NextReviewMinutes { get; set; } = null;
+    public TimeSpan? SpacedTime { get; set; } = null;
     public List<EIT_TagDto> EntryIsTaggeds { get; set; } = [];
 }

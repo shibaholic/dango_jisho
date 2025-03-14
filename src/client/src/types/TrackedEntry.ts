@@ -21,8 +21,7 @@ export const TrackedEntrySchema = z.lazy(() =>
     specialCategory: z.enum(SpecialCategory).nullable(),
     score: z.number(),
     lastReviewDate: z.string().datetime({ local: true }).nullable(),
-    nextReviewDays: z.number().nullable(),
-    nextReviewMinutes: z.number().nullable(),
+    spacedTime: z.string().nullable(),
     entry: EntrySchema.optional(),
     entryIsTaggeds: z.array(EntryIsTaggedSchema).default([]),
   })
@@ -32,8 +31,8 @@ export type TrackedEntry = z.infer<typeof TrackedEntrySchema>;
 
 export const levelStateColors: Record<LevelStateType, string> = {
   New: "blue-500",
-  Learning: "orange-500",
-  Reviewing: "yellow-500",
+  Learning: " text-[#D97706]",
+  Reviewing: " text-[#FCD34D]",
   Known: "green-500",
 };
 

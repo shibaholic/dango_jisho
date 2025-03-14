@@ -4,13 +4,17 @@ import api, { ApiResponse, api_url, fetchTag_EITs } from "@/utils/api";
 import { useAuth } from "@/utils/auth";
 import { Separator } from "@radix-ui/react-separator";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { z } from "zod";
 import TagShowcase from "./TagShowcase";
+import { Button } from "@/components/ui/button";
+import NewTagModal, { NewTagModalHandle } from "@/components/tags/NewTagModal";
 
 const Tags = () => {
   const { user } = useAuth();
+
+  const newTagRef = useRef<NewTagModalHandle>(null);
 
   // TODO: optimization: replace tag-eits with a new Dto that
   // only contains tagId and it's eits.
@@ -40,7 +44,7 @@ const Tags = () => {
         <title> Your Tags - Dango Jisho </title>
       </Helmet>
       <div className="w-full flex flex-col items-center">
-        <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)]">
+        <div className="flex flex-col gap-6 xl:w-[1000px] lg:w-[940px] md:w-[736px] w-[calc(100%-2rem)] pb-4">
           <NavBar />
           <Separator />
           <h2>Your Tags</h2>
@@ -49,9 +53,19 @@ const Tags = () => {
             non-mutally exclusive. These tags are later added to StudySets where
             you actually review the words.
           </p>
+          <div>
+            <Button
+              className="w-full"
+              variant="outline"
+              onClick={() => newTagRef.current?.open()}
+            >
+              New tag
+            </Button>
+          </div>
           <div className="flex flex-col w-full gap-2">{contents}</div>
         </div>
       </div>
+      <NewTagModal ref={newTagRef} refreshTags={query.refetch} />
     </>
   );
 };

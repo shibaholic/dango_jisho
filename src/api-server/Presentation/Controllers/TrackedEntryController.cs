@@ -32,10 +32,13 @@ public class TrackedEntryController: BaseApiController
     [HttpGet("{ent_seq}")]
     public async Task<IActionResult> GetByEnt_Seq(string ent_seq, CancellationToken cancellationToken)
     {
+        var userId = new Guid(User.FindFirst("Id")!.Value);
+        if(userId.Equals(Guid.Empty)) return BadRequest();
+        
         var request = new TrackedEntryIdGetRequest
         {
             ent_seq = ent_seq,
-            UserId = new Guid("faeb2480-fbdc-4921-868b-83bd93324099") // TODO: implement user authentication
+            UserId = userId
         };
         
         var response = await _mediator.Send(request, cancellationToken);

@@ -12,6 +12,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 interface UserDataContextType {
   tags: Tag[] | null;
+  refreshTags: () => void;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(
@@ -29,6 +30,10 @@ export const UserDataProvider: React.FC<UserDataProps> = ({ children }) => {
 
   const value: UserDataContextType = {
     tags,
+    refreshTags: () => {
+      console.log("refreshTags");
+      query.refetch();
+    },
   };
 
   const query = useQuery({

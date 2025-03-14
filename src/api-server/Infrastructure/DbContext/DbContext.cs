@@ -1,5 +1,4 @@
 using Domain.Entities;
-using Domain.Entities.CardData;
 using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
 using EntityFramework.Exceptions.PostgreSQL;

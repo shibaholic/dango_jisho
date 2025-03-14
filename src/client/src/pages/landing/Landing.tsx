@@ -31,8 +31,9 @@ function Landing() {
               I am trying to improve on full-stack skills, so I am exploring
               ways to do things better. On the frontend side I have been using
               react-router, react-query, axios, react-hook-form, shadcn and
-              TailwindCSS. On the backend side, I have used C# ASP.NET, Mediatr,
-              EF Core, npgsql, XUnit, Moq and FluentAssertions.
+              TailwindCSS. On the backend side, I have used C# ASP.NET, Clean
+              Architecture, Mediatr, EF Core, npgsql, XUnit, Moq and
+              FluentAssertions.
             </p>
             <p>
               This project uses the{" "}

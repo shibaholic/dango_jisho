@@ -31,9 +31,8 @@ public class CrudService<T, TDto> : ICrudService<T, TDto> where T: IBaseEntity
 
     public async Task<Response<TDto>> CreateAsync(T entity)
     {
-        var result = await _repo.CreateAsync(entity);
-        var dto = _mapper.Map<TDto>(result);
-        return Response<TDto>.Ok("Entity added", dto);
+        await _repo.CreateAsync(entity);
+        return Response<TDto>.NoContent();
     }
 
     public async Task<Response<IEnumerable<TDto>>> CreateRangeAsync(IEnumerable<T> entities)

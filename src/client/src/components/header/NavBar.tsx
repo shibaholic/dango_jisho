@@ -67,8 +67,7 @@ export const NavBar = (props: NavBarProps) => {
     <div>
       <div className="py-4 flex flex-row place-content-between items-center">
         <Link className="hover:bg-gray-100 px-3 py-1 pb-2 rounded-lg" to="/">
-          <h1 className="text-black text-[40px]">My Vocab App</h1>
-          {/*🍡 Dango Jisho*/}
+          <h1 className="text-black text-[40px]">🍡 Dango Jisho</h1>
         </Link>
         {contents}
       </div>

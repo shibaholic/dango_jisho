@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Grip, PanelTopClose, PanelTopOpen } from "lucide-react";
 import { fetchTagTrackedEntries } from "@/utils/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export interface TagShowcaseProps {
   tag: Tag;
@@ -29,13 +30,23 @@ const TagShowcase = ({ tag }: TagShowcaseProps) => {
   const reviewingOrKnown = tag.totalReviewing + tag.totalKnown;
   const percentage = (reviewingOrKnown / tag.totalEntries) * 100;
 
+  const navigate = useNavigate();
+
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between space-y-0">
         <CardTitle>
           <h3>{tag.name}</h3>
         </CardTitle>
-        <Grip className="cursor-grab" />
+        <div className="relative flex flex-row gap-2 justify-center items-center">
+          <Button
+            className="absolute right-8"
+            onClick={() => navigate(`/review/${tag.id}`)}
+          >
+            Start review
+          </Button>
+          <Grip className="cursor-grab" />
+        </div>
       </CardHeader>
       <CardContent>
         <div>
@@ -106,7 +117,7 @@ const TagWords = ({ tag }: TagWordsProps) => {
       >
         {!isExpanded && (
           <>
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-white flex justify-center z-20">
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-white flex justify-center z-10">
               <div className="self-end text-gray-600">Click to expand</div>
             </div>
           </>

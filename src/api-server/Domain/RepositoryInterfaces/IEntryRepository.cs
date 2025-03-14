@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Entities.JMDict;
+using Domain.Entities.Tracking;
 
 namespace Domain.RepositoryInterfaces;
 

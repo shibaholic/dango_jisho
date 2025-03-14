@@ -14,8 +14,7 @@ public class TrackedEntry : IBaseEntity
     public SpecialCategory? SpecialCategory { get; set; } = null;
     public int Score { get; set; } = 0;
     public DateTime? LastReviewDate { get; set; } = null;
-    public int? NextReviewDays { get; set; } = null;
-    public int? NextReviewMinutes { get; set; } = null;
+    public TimeSpan? SpacedTime { get; set; } = null;
     
     public List<EntryEvent> EntryEvents { get; set; } = []; // child nav
     public Entry Entry { get; set; } // parent
@@ -106,7 +105,8 @@ public class LevelStateNew : ILevelState
         TrackedEntry.Score = 0;
         // don't forget to set NextReviewMinutes and LastReview
         // TODO: implement user defined Minutes and Score curves.
-        TrackedEntry.NextReviewMinutes = 5;
+        // TrackedEntry.NextReviewMinutes = 5;
+        TrackedEntry.SpacedTime = TimeSpan.FromMinutes(5);
         TrackedEntry.LastReviewDate = now;
     }
 
@@ -134,19 +134,22 @@ public class LevelStateLearning : ILevelState
                 // increment Score by 1
                 TrackedEntry.Score += 1;
                 // change nextReviewMinutes
-                TrackedEntry.NextReviewMinutes = TrackedEntry.Score * 10;
+                // TrackedEntry.NextReviewMinutes = TrackedEntry.Score * 10;
+                TrackedEntry.SpacedTime = TimeSpan.FromMinutes(TrackedEntry.Score * 10);
                 TrackedEntry.LastReviewDate = now;
                 if (TrackedEntry.Score >= 5)
                 {
                     TrackedEntry.Score = 0;
                     TrackedEntry.LevelStateType = LevelStateType.Reviewing;
-                    TrackedEntry.NextReviewDays = 1;
-                    TrackedEntry.NextReviewMinutes = null;
+                    // TrackedEntry.NextReviewDays = 1;
+                    TrackedEntry.SpacedTime = TimeSpan.FromDays(1);
+                    // TrackedEntry.NextReviewMinutes = null;
                 }
             } else if (entryEvent.ReviewValue == ReviewValue.Again)
             {
                 TrackedEntry.Score = 0;
-                TrackedEntry.NextReviewMinutes = 5;
+                // TrackedEntry.NextReviewMinutes = 5;
+                TrackedEntry.SpacedTime = TimeSpan.FromMinutes(5);
                 TrackedEntry.LastReviewDate = now;
             }
         }
@@ -181,7 +184,8 @@ public class LevelStateReview : ILevelState
                 // increment Score by 1
                 TrackedEntry.Score += 1;
                 // change nextReviewMinutes
-                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                // TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.SpacedTime = TimeSpan.FromDays(TrackedEntry.Score);
                 TrackedEntry.LastReviewDate = now;
                 if (TrackedEntry.Score >= 6)
                 {
@@ -226,17 +230,20 @@ public class LevelStateKnown : ILevelState
             {
                 // increment Score by 1
                 TrackedEntry.Score += 3;
-                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                // TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.SpacedTime = TimeSpan.FromDays(TrackedEntry.Score);
                 TrackedEntry.LastReviewDate = now;
             } else if (entryEvent.ReviewValue == ReviewValue.Easy)
             {
                 TrackedEntry.Score += 10;
-                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                // TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.SpacedTime = TimeSpan.FromDays(TrackedEntry.Score);
                 TrackedEntry.LastReviewDate = now;
             } else if(entryEvent.ReviewValue == ReviewValue.Soon)
             {
                 TrackedEntry.Score = 3;
-                TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                // TrackedEntry.NextReviewDays = TrackedEntry.Score;
+                TrackedEntry.SpacedTime = TimeSpan.FromDays(TrackedEntry.Score);
                 TrackedEntry.LastReviewDate = now;
                 // TODO: implement temporary soon
             } else if (entryEvent.ReviewValue == ReviewValue.Again)

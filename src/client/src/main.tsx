@@ -12,6 +12,7 @@ import { AuthProvider } from "./utils/auth.tsx";
 import { HelmetProvider } from "react-helmet-async";
 import Tags from "./pages/tags/Tags.tsx";
 import { UserDataProvider } from "./utils/userDataProvider.tsx";
+import Review from "./pages/review/Review.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +34,12 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/vocab/:ent_seq" element={<Vocab />} />
                 <Route path="/tags" element={<Tags />} />
+                <Route path="/review/:tagId" element={<Review />} />
+                <Route
+                  path="/review/:tagId/:ent_seq/:side"
+                  element={<Review />}
+                />
+                <Route path="/review/:tagId/:finished" element={<Review />} />
                 <Route path="/testing" element={<Testing />} />
               </Routes>
             </BrowserRouter>

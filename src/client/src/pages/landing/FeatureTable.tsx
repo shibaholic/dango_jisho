@@ -26,12 +26,12 @@ const featureRows: row[] = [
     status: "✅ Done",
   },
   {
-    desc: "Tag words and create study sets",
-    status: "🛠️ In progress",
+    desc: "Tag words",
+    status: "✅ Done",
   },
   {
     desc: "Review words",
-    status: "🛠️ In progress",
+    status: "🛠️ Works but not pretty",
   },
   {
     desc: "Personal stats",
@@ -46,7 +46,7 @@ const featureRows: row[] = [
     status: "🗓️ Planned",
   },
   {
-    desc: "Japanese to English review",
+    desc: "E-J review",
     status: "🗓️ Planned",
   },
   {

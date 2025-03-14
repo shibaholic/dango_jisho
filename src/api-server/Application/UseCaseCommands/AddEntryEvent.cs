@@ -44,7 +44,7 @@ public class AddEntryEvent : IRequestHandler<AddEntryEventRequest, Response>
         {
             var successfulParse = Enum.TryParse(eventRequest.Value, out ReviewValue changeValue);
             if (!successfulParse)
-                throw new ProblemException("Invalid value for Value for EventType.Change", "Value for EventType.Change must be either 'New', 'Learning', 'Reviewing', or 'Known'");
+                throw new ProblemException("Invalid value for Value for EventType.Review", "Value for EventType.Review must be either 'Again', 'Soon', 'Okay', or 'Easy'");
             entryEvent = new EntryEvent() { ent_seq = eventRequest.ent_seq, UserId = eventRequest.UserId, EventType = EventType.Review, ReviewValue = changeValue}; 
         }
         else
@@ -57,7 +57,7 @@ public class AddEntryEvent : IRequestHandler<AddEntryEventRequest, Response>
         
         trackedEntry.SetLevelState(LevelStateFactory.Create(trackedEntry.LevelStateType));
         
-        trackedEntry.UpdateBasedOnEntryEvent(entryEvent, _time.Now);
+        trackedEntry.UpdateBasedOnEntryEvent(entryEvent, DateTime.UtcNow);
 
         await _trackingRepository.CreateReviewEventAsync(entryEvent);
         

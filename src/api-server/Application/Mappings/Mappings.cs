@@ -1,10 +1,8 @@
 using Application.Mappings.EntityDtos;
-using Application.Mappings.EntityDtos.CardData;
 using Application.Mappings.EntityDtos.JMDict;
 using Application.Mappings.EntityDtos.Tracking;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Entities.CardData;
 using Domain.Entities.JMDict;
 using Domain.Entities.Tracking;
 
@@ -36,9 +34,6 @@ public class Mappings : Profile
         CreateMap<EntryIsTagged, EIT_TagDto>();
         
         // Tracking custom
-        
-        // Card
-        CreateMap<Card, CardDto>();
         
         // Other
         CreateMap<User, UserDto>();

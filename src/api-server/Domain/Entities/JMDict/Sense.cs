@@ -1,5 +1,4 @@
 using System.Text;
-using Domain.Entities.CardData;
 
 namespace Domain.Entities.JMDict;
 
@@ -20,7 +19,6 @@ public class Sense
     public List<string> gloss { get; set; }
 
     public Entry Entry  { get; set; }   // Nav
-    public List<CardSense> CardSenses { get; set; } = new(); // many-to-many external aggregation navigation reference
 
     public Sense()
     {

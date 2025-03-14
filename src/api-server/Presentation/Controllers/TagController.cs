@@ -9,6 +9,7 @@ using Presentation.Utilities;
 using Application.Response;
 using Application.UseCaseQueries;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Tag = Domain.Entities.Tracking.Tag;
 
 namespace Presentation.Controllers;
@@ -18,9 +19,10 @@ public class TagController : BaseApiController
 {
     private readonly ICrudService<Tag, Tag_EITDto> _crudService;
     private readonly IMediator _mediator;
-    public TagController(IMediator mediator)
+    public TagController(IMediator mediator, ICrudService<Tag, Tag_EITDto> crudService)
     {
         _mediator = mediator;
+        _crudService = crudService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -59,31 +61,31 @@ public class TagController : BaseApiController
         return this.ToActionResult(response);
     }
     
-    // public record CreateTagRequest
-    // {
-    //     public string Name { get; init; }
-    //     public Guid UserId { get; init; }
-    // }
-    //
-    // [HttpPost]
-    // public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
-    // {
-    //     if (request.Name is null) return BadRequest();
-    //
-    //     // replace with getting userId from Identity
-    //     var userId = new Guid(User.FindFirst("Id")!.Value);
-    //     
-    //     var tag = new Tag
-    //     {
-    //         Id = Guid.NewGuid(),
-    //         Name = request.Name,
-    //         UserId = userId
-    //     };
-    //     
-    //     var response = await _crudService.CreateAsync(tag);
-    //
-    //     return this.ToActionResult(response);
-    // }
+    public record CreateTagRequest
+    {
+        public string Name { get; init; }
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> Create([FromBody] CreateTagRequest request) // uses CrudService for convenience
+    {
+        if (request.Name.IsNullOrEmpty()) return BadRequest();
+    
+        // replace with getting userId from Identity
+        var userId = new Guid(User.FindFirst("Id")!.Value);
+        
+        var tag = new Tag
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            UserId = userId
+        };
+        
+        var response = await _crudService.CreateAsync(tag);
+    
+        return this.ToActionResult(response);
+    }
 
     // [HttpPost("{tagId}/entry/{ent_seq}")]
     // [Authorize(Roles="User")]

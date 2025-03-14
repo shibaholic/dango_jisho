@@ -27,6 +27,17 @@ public class TrackingRepository: BaseRepository<TrackedEntry>, ITrackingReposito
     {
         return await _context.TrackedEntries
             .Where(te => te.ent_seq == ent_seq && te.UserId == userId)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.KanjiElements)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.ReadingElements)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.Senses)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.Senses)
+            .ThenInclude(s => s.lsource)
+            .Include(te => te.EntryIsTaggeds)
+            .ThenInclude(eit => eit.Tag)
             .FirstOrDefaultAsync();
     }
 
@@ -60,5 +71,27 @@ public class TrackingRepository: BaseRepository<TrackedEntry>, ITrackingReposito
         await _context.EntryEvents.AddAsync(entryEvent);
         
         return entryEvent;
+    }
+
+    public async Task<TrackedEntry?> ReadNextReview(Guid userId, Guid tagId)
+    {
+        var now = DateTime.UtcNow;
+        
+        var query = _context.TrackedEntries
+            .Where(te => te.UserId == userId && (te.LastReviewDate == null || te.SpacedTime == null || te.LastReviewDate.Value + te.SpacedTime.Value <= now))
+            .OrderBy(te => te.LevelStateType == LevelStateType.New ? 0 : 1)
+            .ThenBy(te => te.SpacedTime)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.KanjiElements)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.ReadingElements)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.Senses)
+            .Include(te => te.Entry)
+            .ThenInclude(e => e.Senses)
+            .ThenInclude(s => s.lsource)
+            .Include(te => te.EntryIsTaggeds);
+
+        return await query.FirstOrDefaultAsync();
     }
 }

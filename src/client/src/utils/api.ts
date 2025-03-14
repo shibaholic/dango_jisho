@@ -3,6 +3,7 @@ import { Tag } from "@/types/Tag";
 import { TrackedEntry, TrackedEntrySchema } from "@/types/TrackedEntry";
 import { User } from "@/types/User";
 import axios, { AxiosError } from "axios";
+import { z } from "zod";
 
 export const api_url = import.meta.env.VITE_API_URL;
 
@@ -155,6 +156,22 @@ export async function fetchSearch(
   return response.data;
 }
 
+export async function fetchNextReview(
+  tagId: string
+): Promise<ApiResponse<TrackedEntry>> {
+  const response = await api.get(`/review/tag/${tagId}`);
+
+  return response.data;
+}
+
+export async function fetchTrackedEntry(
+  ent_seq: string
+): Promise<ApiResponse<TrackedEntry>> {
+  const response = await api.get(`/trackedentry/${ent_seq}`);
+
+  return response.data;
+}
+
 export interface CommandEntryTagsProps {
   ent_seq: string;
   tagValues: Record<string, boolean>;
@@ -165,6 +182,33 @@ export async function commandEntryTags({
   tagValues,
 }: CommandEntryTagsProps) {
   await api.post(`/entry/${ent_seq}/tags`, { tagValues: tagValues });
+
+  return;
+}
+
+export interface NewTagInput {
+  name: string;
+}
+
+export async function commandNewTag(data: NewTagInput) {
+  await api.post(`/tag`, data);
+
+  return;
+}
+
+export interface EntryEventInput {
+  ent_seq: string;
+  value: string;
+}
+
+export async function commandReviewEvent(data: EntryEventInput) {
+  await api.post(`/review`, { ...data, eventType: "Review" });
+
+  return;
+}
+
+export async function commandChangeEvent(data: EntryEventInput) {
+  await api.post(`/review`, { ...data, eventType: "Change" });
 
   return;
 }
